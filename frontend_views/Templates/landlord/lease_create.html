@@ -1,0 +1,184 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
+  <title>Create Lease - RentEasy</title>
+  <link rel="icon" href="{% static 'img/faviclogo.png' %}">
+  <style>
+    .lease-form-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:16px; }
+    .lease-field { display:flex; flex-direction:column; gap:4px; }
+    .lease-field label { font-size:12px; font-weight:600; color:var(--re-text-muted); text-transform:uppercase; letter-spacing:.5px; }
+    .lease-field input, .lease-field select, .lease-field textarea { padding:8px 12px; border:1px solid var(--re-border); border-radius:8px; font-size:14px; background:var(--re-input-bg); color:var(--re-text); font-family:inherit; }
+    .lease-field textarea { min-height:80px; resize:vertical; }
+    .lease-field .helptext { font-size:11px; color:var(--re-text-muted); margin-top:2px; }
+  </style>
+</head>
+<body class="theme-landlord">
+<script src="{% static 'Js/theme.js' %}?v=22"></script>
+
+<nav>
+  <div class="navbar" id="navbar">
+    <button id="icon"><i class="fa-solid fa-bars"></i></button>
+    <img src="{% static 'img/renteasylogo.png' %}" alt="Logo">
+    <div class="logoss"><span>RENT</span><span style="color:var(--re-primary);">EASY</span></div>
+    <div class="userbox">
+      <a href="{% url 'profile' %}">
+        <img id="Profile" src="{% static 'img/user.jpg' %}" alt="Profile Picture">
+        <span class="welcuser">Hi, {{ request.user.name|default:"User" }}!</span>
+      </a>
+    </div>
+  </div>
+</nav>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelector("#icon").addEventListener("click", function() {
+    document.querySelector(".sidebar").classList.toggle("active");
+  });
+});
+</script>
+
+{% include "landlord/_sidebar.html" %}
+<script>function toggleDropdown(){event.preventDefault();var d=event.target.closest(".dropdown");var m=d?d.querySelector(".dropdown-menu"):null;if(d&&m){d.classList.toggle("active");m.style.maxHeight=m.style.maxHeight?"":m.scrollHeight+"px";}}</script>
+
+{% if messages %}
+<div style="max-width:1100px;margin:16px auto 0;padding:0 16px;">
+  {% for message in messages %}
+    <div class="re-alert {{ message.tags|default:'info' }}"><i class="fa-solid fa-circle-info"></i> {{ message }}</div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<div class="dashcont">
+
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+    <a href="{% url 'landlord_leases' %}" class="re-btn re-btn-secondary re-btn-sm"><i class="fa-solid fa-arrow-left"></i> Back</a>
+    <h2 style="color:var(--re-primary);margin:0;font-size:1.2rem;"><i class="fa-solid fa-plus-circle"></i> Create New Lease</h2>
+  </div>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <!-- Property & Unit -->
+    <div class="re-card" style="margin-bottom:16px;">
+      <h3 style="margin:0 0 16px;font-size:1rem;color:var(--re-text);"><i class="fa-solid fa-building" style="color:var(--re-primary);margin-right:6px;"></i> Property & Unit</h3>
+      <div class="lease-form-grid">
+        <div class="lease-field">
+          <label>Property *</label>
+          <select name="property_id" id="propertySelect" required>
+            <option value="">-- Select Property --</option>
+            {% for p in properties %}
+              <option value="{{ p.id }}">{{ p.name }} ({{ p.address }})</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="lease-field">
+          <label>Unit</label>
+          <select name="unit_id" id="unitSelect">
+            <option value="">-- Select Unit --</option>
+            {% for u in units %}
+              <option value="{{ u.id }}" data-property="{{ u.property_id }}" data-rent="{{ u.monthly_rent }}">{{ u.property.name }} – {{ u.unit_number }} ({{ u.get_status_display }})</option>
+            {% endfor %}
+          </select>
+          <span class="helptext">Leave empty if property has no units.</span>
+        </div>
+        <div class="lease-field">
+          <label>Tenant (optional)</label>
+          <input type="text" name="tenant_email_lookup" id="tenantLookup" placeholder="Search by email…" autocomplete="off">
+          <input type="hidden" name="tenant_id" id="tenantId">
+          <span class="helptext">You can assign a tenant later. Type a tenant's email to find them.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lease Terms -->
+    <div class="re-card" style="margin-bottom:16px;">
+      <h3 style="margin:0 0 16px;font-size:1rem;color:var(--re-text);"><i class="fa-solid fa-gavel" style="color:var(--re-primary);margin-right:6px;"></i> Lease Terms</h3>
+      <div class="lease-form-grid">
+        <div class="lease-field">
+          <label>Monthly Rent (KSh)</label>
+          <input type="number" name="monthly_rent" id="rentInput" min="0" placeholder="e.g. 15000">
+        </div>
+        <div class="lease-field">
+          <label>Security Deposit (KSh)</label>
+          <input type="number" name="security_deposit" min="0" value="0">
+        </div>
+        <div class="lease-field">
+          <label>Start Date</label>
+          <input type="date" name="start_date">
+        </div>
+        <div class="lease-field">
+          <label>End Date</label>
+          <input type="date" name="end_date">
+          <span class="helptext">Leave empty for open-ended/month-to-month.</span>
+        </div>
+        <div class="lease-field">
+          <label>Rent Due Day</label>
+          <input type="number" name="rent_due_day" min="1" max="28" value="1">
+        </div>
+        <div class="lease-field">
+          <label>Grace Period (days)</label>
+          <input type="number" name="grace_period_days" min="0" value="5">
+        </div>
+        <div class="lease-field">
+          <label>Late Fee (KSh)</label>
+          <input type="number" name="late_fee_amount" min="0" value="0">
+        </div>
+      </div>
+    </div>
+
+    <!-- Agreement & Notes -->
+    <div class="re-card" style="margin-bottom:16px;">
+      <h3 style="margin:0 0 16px;font-size:1rem;color:var(--re-text);"><i class="fa-solid fa-file-pdf" style="color:var(--re-primary);margin-right:6px;"></i> Agreement & Notes</h3>
+      <div class="lease-field" style="margin-bottom:14px;">
+        <label>Upload Lease Agreement (PDF, DOC, JPG, PNG – max 10MB)</label>
+        <input type="file" name="agreement_file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+        <span class="helptext">Upload a scanned paper lease or digitally prepared agreement.</span>
+      </div>
+      <div class="lease-field">
+        <label>Notes / Additional Terms</label>
+        <textarea name="notes" placeholder="Any special terms, conditions, or notes for this lease…"></textarea>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:10px;">
+      <button type="submit" class="re-btn re-btn-primary"><i class="fa-solid fa-save"></i> Create Lease (Draft)</button>
+      <a href="{% url 'landlord_leases' %}" class="re-btn re-btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  // Filter units by selected property
+  const propSelect = document.getElementById("propertySelect");
+  const unitSelect = document.getElementById("unitSelect");
+  const rentInput = document.getElementById("rentInput");
+  const allUnitOptions = Array.from(unitSelect.querySelectorAll("option[data-property]"));
+
+  propSelect.addEventListener("change", function() {
+    const pid = this.value;
+    unitSelect.innerHTML = '<option value="">-- Select Unit --</option>';
+    allUnitOptions.forEach(function(opt) {
+      if (opt.dataset.property === pid) {
+        unitSelect.appendChild(opt.cloneNode(true));
+      }
+    });
+  });
+
+  // Auto-fill rent from unit selection
+  unitSelect.addEventListener("change", function() {
+    const sel = this.options[this.selectedIndex];
+    if (sel && sel.dataset.rent && !rentInput.value) {
+      rentInput.value = sel.dataset.rent;
+    }
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
+  <title>My Properties - RentEasy</title>
+  <link href="{% static 'img/faviclogo.png' %}" rel="icon">
+  <style>
+    .occ-bar{height:8px;border-radius:4px;background:var(--re-border);overflow:hidden;margin-top:4px;min-width:80px}
+    .occ-bar-fill{height:100%;border-radius:4px;transition:width .4s ease}
+    .occ-bar-fill.full{background:var(--re-success)}
+    .occ-bar-fill.partial{background:var(--re-warning)}
+    .occ-bar-fill.empty{background:var(--re-border)}
+  </style>
+</head>
+<body class="theme-landlord">
+<script src="{% static 'Js/theme.js' %}?v=22"></script>
+
+<nav>
+  <div class="navbar" id="navbar">
+    <button id="icon"><i class="fa-solid fa-bars"></i></button>
+    <img src="{% static 'img/renteasylogo.png' %}" alt="Logo">
+    <div class="logoss"><span>RENT</span><span style="color:var(--re-primary);">EASY</span></div>
+    <div class="userbox">
+      <a href="{% url 'profile' %}">
+        <img id="Profile" src="{% static 'img/user.jpg' %}" alt="Profile Picture">
+        <span class="welcuser">Hi, {{ request.user.name|default:"User" }}!</span>
+      </a>
+    </div>
+  </div>
+</nav>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelector("#icon").addEventListener("click", function() {
+    document.querySelector(".sidebar").classList.toggle("active");
+  });
+});
+</script>
+
+{% include "landlord/_sidebar.html" %}
+<script>function toggleDropdown(){event.preventDefault();var d=event.target.closest(".dropdown");var m=d?d.querySelector(".dropdown-menu"):null;if(d&&m){d.classList.toggle("active");m.style.maxHeight=m.style.maxHeight?"":m.scrollHeight+"px";}}</script>
+
+<div class="dashcont">
+
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px;">
+    <h2 style="color:var(--re-primary);margin:0;font-size:1.3rem;"><i class="fa-solid fa-building"></i> My Properties</h2>
+    <a href="{% url 'myproperties' %}" class="re-btn re-btn-primary re-btn-sm"><i class="fa-solid fa-plus"></i> Add Property</a>
+  </div>
+
+  <!-- Summary Stats -->
+  <div class="re-stat-grid" style="margin-bottom:24px;">
+    <div class="re-stat-card">
+      <div class="re-stat-icon blue"><i class="fa-solid fa-building"></i></div>
+      <div class="re-stat-info">
+        <p class="re-stat-label">Properties</p>
+        <p class="re-stat-value">{{ property_rows|length }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Properties Table -->
+  <div class="re-card">
+    <div class="re-card-header">
+      <span>Properties Overview</span>
+      <input type="text" id="searchInput" placeholder="Search…" style="padding:6px 12px;border-radius:8px;border:1px solid var(--re-border);font-size:13px;background:var(--re-input-bg);color:var(--re-text);width:180px;">
+    </div>
+    <div class="re-card-body" style="padding:0;">
+      <div class="re-table-wrap">
+        <table class="re-table" id="recordsTable">
+          <thead>
+            <tr>
+              <th>Property</th>
+              <th>Location</th>
+              <th>Rooms</th>
+              <th>Occupied</th>
+              <th>Vacant</th>
+              <th>Occupancy</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for row in property_rows %}
+            <tr>
+              <td><strong>{{ row.property.get_property_type_display }}</strong></td>
+              <td>{{ row.property.address }}</td>
+              <td>{{ row.property.rooms_total }}</td>
+              <td>
+                <span class="re-badge green">{{ row.occupied }}</span>
+              </td>
+              <td>
+                {% if row.vacant > 0 %}
+                <span class="re-badge yellow">{{ row.vacant }}</span>
+                {% else %}
+                <span class="re-badge green">0</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if row.property.rooms_total > 0 %}
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <div class="occ-bar" style="flex:1;">
+                    {% widthratio row.occupied row.property.rooms_total 100 as pct %}
+                    <div class="occ-bar-fill {% if row.vacant == 0 %}full{% elif row.occupied > 0 %}partial{% else %}empty{% endif %}" data-width="{% widthratio row.occupied row.property.rooms_total 100 %}"></div>
+                  </div>
+                  <span style="font-size:12px;font-weight:600;color:var(--re-text-secondary);white-space:nowrap;">{% widthratio row.occupied row.property.rooms_total 100 %}%</span>
+                </div>
+                {% else %}
+                <span style="color:var(--re-text-muted);">—</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="6" style="text-align:center;color:var(--re-text-muted);padding:32px;">
+              No properties yet. <a href="{% url 'myproperties' %}">Add your first property</a>.
+            </td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="pagination" id="paginationControls"></div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  // Search
+  const searchInput = document.getElementById("searchInput");
+  if (searchInput) {
+    searchInput.addEventListener("keyup", function() {
+      const filter = this.value.toLowerCase();
+      document.querySelectorAll("#recordsTable tbody tr").forEach(function(row) {
+        row.style.display = row.textContent.toLowerCase().includes(filter) ? "" : "none";
+      });
+    });
+  }
+
+  // Pagination
+  const table = document.getElementById("recordsTable");
+  const tbody = table.querySelector("tbody");
+  const rows = Array.from(tbody.querySelectorAll("tr"));
+  const rowsPerPage = 8;
+  let currentPage = 1;
+  const maxVisiblePages = 4;
+
+  function displayTable() {
+    tbody.innerHTML = "";
+    let start = (currentPage - 1) * rowsPerPage;
+    rows.slice(start, start + rowsPerPage).forEach(row => tbody.appendChild(row));
+    updatePagination();
+  }
+
+  function updatePagination() {
+    const pc = document.getElementById("paginationControls");
+    pc.innerHTML = "";
+    let totalPages = Math.ceil(rows.length / rowsPerPage);
+    if (totalPages <= 1) return;
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+    if (endPage - startPage + 1 < maxVisiblePages) startPage = Math.max(1, endPage - maxVisiblePages + 1);
+
+    if (startPage > 1) { pc.appendChild(createPageButton(1)); if (startPage > 2) pc.appendChild(createDots()); }
+    for (let i = startPage; i <= endPage; i++) pc.appendChild(createPageButton(i));
+    if (endPage < totalPages) { if (endPage < totalPages - 1) pc.appendChild(createDots()); pc.appendChild(createPageButton(totalPages)); }
+  }
+
+  function createPageButton(page) {
+    let btn = document.createElement("button");
+    btn.textContent = page;
+    btn.classList.add("page-btn");
+    if (page === currentPage) btn.classList.add("active");
+    btn.addEventListener("click", function () { currentPage = page; displayTable(); });
+    return btn;
+  }
+
+  function createDots() { let d = document.createElement("span"); d.textContent = "..."; d.classList.add("dots"); return d; }
+
+  displayTable();
+});
+</script>
+<script>
+document.querySelectorAll('.occ-bar-fill[data-width]').forEach(function(el) {
+  el.style.width = el.dataset.width + '%';
+});
+</script>
+</body>
+</html>
+
+
+

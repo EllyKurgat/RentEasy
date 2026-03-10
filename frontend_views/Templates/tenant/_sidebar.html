@@ -1,0 +1,61 @@
+<!-- Tenant Sidebar Partial -->
+<div class="sidebar">
+  <ul>
+    <li><a {% if request.resolver_match.url_name == 'userdash' %}class="active"{% endif %} href="{% url 'userdash' %}"><i class="fa-solid fa-briefcase"></i> Dashboard</a></li>
+    <li><a {% if request.resolver_match.url_name == 'myrental' or request.resolver_match.url_name == 'tenant_lease_review' %}class="active"{% endif %} href="{% url 'myrental' %}"><i class="fa-solid fa-house"></i> My Rental</a></li>
+    <li><a {% if request.resolver_match.url_name == 'rentspay' or request.resolver_match.url_name == 'payrent' %}class="active"{% endif %} href="{% url 'rentspay' %}"><i class="fa-solid fa-coins"></i> Rent &amp; Payments</a></li>
+    <li><a {% if request.resolver_match.url_name == 'maintenance' %}class="active"{% endif %} href="{% url 'maintenance' %}"><i class="fa-solid fa-gears"></i> Maintenance</a></li>
+    <li><a {% if request.resolver_match.url_name == 'message' %}class="active"{% endif %} href="{% url 'message' %}"><i class="fa-solid fa-envelope"></i> Messages</a></li>
+    <li><a {% if request.resolver_match.url_name == 'notifications' %}class="active"{% endif %} href="{% url 'notifications' %}"><i class="fa-solid fa-bell"></i> Notifications <span id="notif-badge" style="background:var(--re-primary);color:#fff;border-radius:50%;padding:2px 7px;font-size:0.7rem;margin-left:4px;display:none;"></span></a></li>
+    <form method="POST" action="{% url 'logout' %}">
+      {% csrf_token %}
+      <button type="submit" class="logoutb"><i class="fa-solid fa-door-open"></i> Logout</button>
+    </form>
+  </ul>
+</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('active');this.classList.remove('active');document.body.classList.remove('sidebar-open');"></div>
+
+<script>
+(function(){
+  var sb=document.querySelector('.sidebar');
+  if(!sb)return;
+  new MutationObserver(function(){document.body.classList.toggle('sidebar-open',sb.classList.contains('active'));}).observe(sb,{attributes:true,attributeFilter:['class']});
+})();
+// Notification badge polling
+(function(){
+  function updateBadge(){
+    fetch('{% url "notification_unread_count" %}')
+      .then(r=>r.json())
+      .then(d=>{
+        var b=document.getElementById('notif-badge');
+        if(b){b.textContent=d.unread_count;b.style.display=d.unread_count>0?'inline':'none';}
+      }).catch(()=>{});
+  }
+  updateBadge();
+  setInterval(updateBadge,30000);
+})();
+</script>
+
+<!-- Mobile Bottom Nav -->
+<nav class="mobile-bottom-nav">
+  <a href="{% url 'userdash' %}" class="mobile-nav-item {% if request.resolver_match.url_name == 'userdash' %}active{% endif %}">
+    <i class="fa-solid fa-briefcase"></i>
+    <span>Dashboard</span>
+  </a>
+  <a href="{% url 'myrental' %}" class="mobile-nav-item {% if request.resolver_match.url_name == 'myrental' %}active{% endif %}">
+    <i class="fa-solid fa-house"></i>
+    <span>My Rental</span>
+  </a>
+  <a href="{% url 'rentspay' %}" class="mobile-nav-item {% if request.resolver_match.url_name == 'rentspay' or request.resolver_match.url_name == 'payrent' %}active{% endif %}">
+    <i class="fa-solid fa-coins"></i>
+    <span>Payments</span>
+  </a>
+  <a href="{% url 'message' %}" class="mobile-nav-item {% if request.resolver_match.url_name == 'message' %}active{% endif %}">
+    <i class="fa-solid fa-envelope"></i>
+    <span>Messages</span>
+  </a>
+  <a href="#" class="mobile-nav-item mobile-nav-more" onclick="document.querySelector('.sidebar').classList.toggle('active');document.querySelector('.sidebar-overlay').classList.toggle('active');return false;">
+    <i class="fa-solid fa-ellipsis"></i>
+    <span>More</span>
+  </a>
+</nav>

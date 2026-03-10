@@ -1,0 +1,207 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
+  <title>Maintenance - RentEasy</title>
+  <link href="{% static 'img/faviclogo.png' %}" rel="icon">
+</head>
+
+<body class="theme-tenant">
+  <script src="{% static 'Js/theme.js' %}?v=22"></script>
+  {% if messages %}
+    <div style="max-width:1000px;margin:16px auto 0;padding:0 16px">
+      {% for message in messages %}
+        <div class="re-alert success"><i class="fas fa-check-circle"></i> {{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+  <nav>
+    <div class="navbar" id="navbar">
+      <button id="icon"><i class="fa-solid fa-bars"></i></button>
+      <img src="{% static 'img/renteasylogo.png' %}" alt="Logo">
+
+      <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          const sidebar = document.querySelector(".sidebar");
+          const toggleBtn = document.querySelector("#icon");
+
+          toggleBtn.addEventListener("click", function () {
+            sidebar.classList.toggle("active");
+          });
+        });
+      </script>
+
+      <div class="logoss">
+        <span>RENT</span><span style="color: var(--re-primary);">EASY</span>
+      </div>
+
+      <div class="userbox">
+        <a href="{% url 'profile' %}">
+          <img id="Profile" src="{% static 'img/user.jpg' %}" alt="Profile Picture">
+          <span class="welcuser">Hi, {{ request.user.name|default:"User" }}!</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  {% include "tenant/_sidebar.html" %}
+
+  <div class="dashcont">
+    <!-- Page header -->
+    <div class="page-header">
+      <h1><i class="fas fa-wrench"></i> Maintenance Request</h1>
+      <p>Report an issue with your unit and track progress</p>
+    </div>
+
+    <!-- Request form -->
+    <div class="re-card" style="margin-bottom:1.5rem">
+      <h3 style="margin:0 0 1rem;font-size:1.05rem;color:var(--re-text)"><i class="fas fa-plus-circle" style="color:var(--re-primary);margin-right:.5rem"></i>Submit New Request</h3>
+      <form action="{% url 'maintenance' %}" method="POST" class="re-form" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="namef">Your Name</label>
+            <input type="text" id="namef" name="namef" value="{{ request.user.name|default:'-' }}" disabled>
+          </div>
+          <div class="form-group">
+            <label for="namel">Room / Unit</label>
+            <input type="text" id="namel" name="namel" value="{{ active_lease.room_label|default:'Not assigned' }}" disabled>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="issuecategory">Issue Category <span class="required">*</span></label>
+            <select id="issuecategory" name="issue_category" required>
+              <option value="" disabled selected>Select Issue</option>
+              <option value="plumbing">🔧 Plumbing</option>
+              <option value="electrical">⚡ Electrical</option>
+              <option value="hvac">❄️ HVAC</option>
+              <option value="structural">🏠 Structural</option>
+              <option value="genmaintenance">🛠️ General Maintenance</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="urgencylev">Urgency Level <span class="required">*</span></label>
+            <select id="urgencylev" name="urgency" required>
+              <option value="" disabled selected>Select Urgency</option>
+              <option value="Critical">🔴 Critical</option>
+              <option value="High">🟠 High</option>
+              <option value="Medium">🟡 Medium</option>
+              <option value="Low">🟢 Low</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="subject">Describe the Issue <span class="required">*</span></label>
+          <textarea id="subject" name="body" rows="5" placeholder="Describe the issue in detail — what happened, where, and when…" required></textarea>
+        </div>
+
+        <div class="file-drop-area" id="drop-area">
+          <span class="file-label"><i class="fas fa-cloud-upload-alt"></i> Upload Image (optional)</span>
+          <input type="file" id="imgissue" name="issue_image" class="file-input" accept="image/*">
+        </div>
+
+        <div class="preview-container">
+          <img id="preview" class="preview-image" alt="File Preview">
+          <button type="button" id="remove-btn" class="remove-btn">Remove</button>
+        </div>
+
+        <button type="submit" class="btn-submit accent"><i class="fas fa-paper-plane"></i> Submit Request</button>
+      </form>
+    </div>
+
+    <!-- Recent requests -->
+    <div class="re-card">
+      <h3 style="margin:0 0 1rem;font-size:1.05rem;color:var(--re-text)"><i class="fas fa-history" style="color:var(--re-primary);margin-right:.5rem"></i>Recent Requests</h3>
+      <div class="request-list">
+        {% for r in requests %}
+          <div class="request-item">
+            <div class="request-icon {{ r.urgency|lower }}">
+              <i class="fas fa-{% if r.urgency == 'Critical' %}exclamation-triangle{% elif r.urgency == 'High' %}arrow-up{% elif r.urgency == 'Medium' %}minus{% else %}arrow-down{% endif %}"></i>
+            </div>
+            <div class="request-info">
+              <h4>{{ r.get_issue_category_display }}</h4>
+              <p>{{ r.body|truncatechars:160 }}</p>
+            </div>
+            <div style="text-align:right;white-space:nowrap">
+              <span class="re-badge {% if r.status == 'resolved' %}success{% elif r.status == 'in_progress' %}warning{% else %}info{% endif %}">{{ r.status }}</span>
+              <div style="font-size:.75rem;color:var(--re-text-light);margin-top:.25rem">{{ r.urgency }}</div>
+            </div>
+          </div>
+        {% empty %}
+          <div class="empty-state">
+            <i class="fas fa-check-circle"></i>
+            <h3>All Clear!</h3>
+            <p>You haven't submitted any maintenance requests yet.</p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const dropArea = document.getElementById("drop-area");
+    const fileInput = document.getElementById("imgissue");
+    const previewImage = document.getElementById("preview");
+    const removeBtn = document.getElementById("remove-btn");
+
+    dropArea.addEventListener("click", () => fileInput.click());
+
+    dropArea.addEventListener("dragover", (event) => {
+      event.preventDefault();
+      dropArea.classList.add("dragover");
+    });
+
+    dropArea.addEventListener("dragleave", () => {
+      dropArea.classList.remove("dragover");
+    });
+
+    dropArea.addEventListener("drop", (event) => {
+      event.preventDefault();
+      dropArea.classList.remove("dragover");
+
+      if (event.dataTransfer.files.length > 0) {
+        fileInput.files = event.dataTransfer.files;
+        updateFilePreview(fileInput.files[0]);
+      }
+    });
+
+    fileInput.addEventListener("change", () => {
+      if (fileInput.files.length > 0) {
+        updateFilePreview(fileInput.files[0]);
+      }
+    });
+
+    removeBtn.addEventListener("click", () => {
+      fileInput.value = "";
+      previewImage.src = "";
+      previewImage.style.display = "none";
+      removeBtn.style.display = "none";
+    });
+
+    function updateFilePreview(file) {
+      const reader = new FileReader();
+      reader.onload = function (event) {
+        previewImage.src = event.target.result;
+        previewImage.style.display = "block";
+        removeBtn.style.display = "inline-block";
+      };
+      reader.readAsDataURL(file);
+    }
+  </script>
+</body>
+
+</html>
+
+
+

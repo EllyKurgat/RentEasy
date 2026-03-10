@@ -1,0 +1,269 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
+  <title>My Earnings - RentEasy</title>
+  <link rel="icon" href="{% static 'img/faviclogo.png' %}">
+</head>
+<body class="theme-landlord">
+<script src="{% static 'Js/theme.js' %}?v=22"></script>
+
+<nav>
+  <div class="navbar" id="navbar">
+    <button id="icon"><i class="fa-solid fa-bars"></i></button>
+    <img src="{% static 'img/renteasylogo.png' %}" alt="Logo">
+    <div class="logoss"><span>RENT</span><span style="color:var(--re-primary);">EASY</span></div>
+    <div class="userbox">
+      <a href="{% url 'profile' %}">
+        <img id="Profile" src="{% static 'img/user.jpg' %}" alt="Profile Picture">
+        <span class="welcuser">Hi, {{ request.user.name|default:"User" }}!</span>
+      </a>
+    </div>
+  </div>
+</nav>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelector("#icon").addEventListener("click", function() {
+    document.querySelector(".sidebar").classList.toggle("active");
+  });
+});
+</script>
+
+{% include "landlord/_sidebar.html" %}
+<script>function toggleDropdown(){event.preventDefault();var d=event.target.closest(".dropdown");var m=d?d.querySelector(".dropdown-menu"):null;if(d&&m){d.classList.toggle("active");m.style.maxHeight=m.style.maxHeight?"":m.scrollHeight+"px";}}</script>
+
+{% if messages %}
+<div style="max-width:1100px;margin:16px auto 0;padding:0 16px;">
+  {% for message in messages %}
+    <div class="re-alert {{ message.tags|default:'info' }}"><i class="fa-solid fa-circle-info"></i> {{ message }}</div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<div class="dashcont">
+
+  <!-- ── Stat Cards ──────────────────────────────────────── -->
+  <div class="re-stat-grid">
+    <div class="re-stat-card">
+      <div class="re-stat-icon green"><i class="fa-solid fa-money-bill-trend-up"></i></div>
+      <div class="re-stat-info">
+        <p class="re-stat-label">Total Earnings</p>
+        <p class="re-stat-value">KSh {{ total_confirmed|default:0|intcomma }}</p>
+      </div>
+    </div>
+    <div class="re-stat-card">
+      <div class="re-stat-icon orange"><i class="fa-solid fa-hourglass-half"></i></div>
+      <div class="re-stat-info">
+        <p class="re-stat-label">Pending</p>
+        <p class="re-stat-value">KSh {{ total_pending|default:0|intcomma }}</p>
+      </div>
+    </div>
+    <div class="re-stat-card">
+      <div class="re-stat-icon red"><i class="fa-solid fa-triangle-exclamation"></i></div>
+      <div class="re-stat-info">
+        <p class="re-stat-label">Overdue</p>
+        <p class="re-stat-value">KSh {{ total_overdue|default:0|intcomma }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Two-Column: Record Payment + Transaction History ── -->
+  <div class="grid-2" style="align-items:start;">
+
+    <!-- Record Manual Payment -->
+    <div class="re-card">
+      <div class="re-card-header"><i class="fa-solid fa-plus-circle"></i> Record Cash / Manual Payment</div>
+      <div class="re-card-body">
+        {% if active_leases %}
+        <form method="POST" action="{% url 'myearnings' %}" data-loading>
+          {% csrf_token %}
+          <input type="hidden" name="action" value="record_payment">
+
+          <div style="margin-bottom:14px;">
+            <label style="display:block;font-size:13px;font-weight:600;color:var(--re-text-secondary);margin-bottom:4px;">Tenant (Lease)</label>
+            <select name="lease_id" required style="width:100%;padding:10px 14px;background:var(--re-input-bg);border:1px solid var(--re-input-border);border-radius:var(--re-input-radius);font-size:14px;font-family:var(--re-font);color:var(--re-text);">
+              {% for l in active_leases %}
+              <option value="{{ l.id }}">{{ l.tenant.name }} — {{ l.property.name }}{% if l.unit %} ({{ l.unit.unit_number }}){% endif %}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div style="margin-bottom:14px;">
+            <label style="display:block;font-size:13px;font-weight:600;color:var(--re-text-secondary);margin-bottom:4px;">Amount (KSh)</label>
+            <input type="number" name="amount" required min="1" step="100" placeholder="e.g. 15000" style="width:100%;padding:10px 14px;background:var(--re-input-bg);border:1px solid var(--re-input-border);border-radius:var(--re-input-radius);font-size:14px;font-family:var(--re-font);color:var(--re-text);">
+          </div>
+
+          <div style="margin-bottom:14px;">
+            <label style="display:block;font-size:13px;font-weight:600;color:var(--re-text-secondary);margin-bottom:4px;">Method</label>
+            <select name="method" style="width:100%;padding:10px 14px;background:var(--re-input-bg);border:1px solid var(--re-input-border);border-radius:var(--re-input-radius);font-size:14px;font-family:var(--re-font);color:var(--re-text);">
+              <option value="cash">Cash</option>
+              <option value="bank_transfer">Bank Transfer</option>
+              <option value="mpesa">M-Pesa</option>
+            </select>
+          </div>
+
+          <div style="margin-bottom:14px;">
+            <label style="display:block;font-size:13px;font-weight:600;color:var(--re-text-secondary);margin-bottom:4px;">Reference (optional)</label>
+            <input type="text" name="reference" placeholder="Receipt / transaction number" style="width:100%;padding:10px 14px;background:var(--re-input-bg);border:1px solid var(--re-input-border);border-radius:var(--re-input-radius);font-size:14px;font-family:var(--re-font);color:var(--re-text);">
+          </div>
+
+          <button type="submit" class="re-btn re-btn-primary" style="width:100%;justify-content:center;">
+            <i class="fa-solid fa-check"></i> Record Payment
+          </button>
+        </form>
+        {% else %}
+        <p style="color:var(--re-text-muted);text-align:center;padding:20px 0;">No active leases to record payments for.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Quick Stats / Pending Actions -->
+    <div>
+      <!-- Pending payments needing confirmation -->
+      <div class="re-card" style="margin-bottom:20px;">
+        <div class="re-card-header"><i class="fa-solid fa-clock"></i> Pending Confirmations</div>
+        <div class="re-card-body" style="padding:12px 20px;">
+          {% for p in payments %}
+            {% if p.status == "pending" %}
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--re-border);">
+              <div>
+                <div style="font-weight:600;font-size:14px;color:var(--re-text);">{{ p.lease.tenant.name }}</div>
+                <div style="font-size:12px;color:var(--re-text-secondary);">KSh {{ p.amount|intcomma }} &middot; {{ p.get_method_display }} &middot; {{ p.paid_at|date:"d M Y" }}</div>
+              </div>
+              <form method="POST" action="{% url 'myearnings' %}" style="margin:0;">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="confirm_payment">
+                <input type="hidden" name="payment_id" value="{{ p.pk }}">
+                <button type="submit" class="re-btn re-btn-accent re-btn-sm"><i class="fa-solid fa-check"></i> Confirm</button>
+              </form>
+            </div>
+            {% endif %}
+          {% endfor %}
+          <p id="noPendingMsg" style="color:var(--re-text-muted);text-align:center;padding:16px 0;display:none;">All payments confirmed <i class="fa-solid fa-circle-check" style="color:var(--re-success);"></i></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Transaction History ───────────────────────────────── -->
+  <div class="re-card" style="margin-top:28px;">
+    <div class="re-card-header">
+      <span><i class="fa-solid fa-list"></i> Transaction History</span>
+      <input type="text" id="searchInput" placeholder="Search…" style="padding:6px 12px;border-radius:8px;border:1px solid var(--re-border);font-size:13px;background:var(--re-input-bg);color:var(--re-text);width:180px;">
+    </div>
+    <div class="re-card-body" style="padding:0;">
+      <div class="re-table-wrap">
+        <table class="re-table" id="recordsTable">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Tenant</th>
+              <th>Property</th>
+              <th>Method</th>
+              <th>Reference</th>
+              <th>Amount</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in payments %}
+            <tr>
+              <td>{{ p.paid_at|date:"d/m/Y" }}</td>
+              <td>{{ p.lease.tenant.name }}</td>
+              <td>{{ p.lease.property.name }}</td>
+              <td>{{ p.get_method_display }}</td>
+              <td>{{ p.reference|default:"-" }}</td>
+              <td><strong>KSh {{ p.amount|intcomma }}</strong></td>
+              <td>
+                <span class="re-badge {% if p.status == 'confirmed' %}green{% elif p.status == 'pending' %}yellow{% elif p.status == 'overdue' %}red{% else %}blue{% endif %}">
+                  {{ p.get_status_display }}
+                </span>
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="7" style="text-align:center;color:var(--re-text-muted);padding:32px;">No payments recorded yet.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="pagination" id="paginationControls"></div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  // Show "All confirmed" if no pending rows
+  const pendingRows = document.querySelectorAll('input[name=action][value=confirm_payment]');
+  if (pendingRows.length === 0) {
+    const msg = document.getElementById("noPendingMsg");
+    if (msg) msg.style.display = "block";
+  }
+
+  // Search
+  const searchInput = document.getElementById("searchInput");
+  if (searchInput) {
+    searchInput.addEventListener("keyup", function() {
+      const filter = this.value.toLowerCase();
+      document.querySelectorAll("#recordsTable tbody tr").forEach(function(row) {
+        row.style.display = row.textContent.toLowerCase().includes(filter) ? "" : "none";
+      });
+    });
+  }
+
+  // Pagination
+  const table = document.getElementById("recordsTable");
+  const tbody = table.querySelector("tbody");
+  const rows = Array.from(tbody.querySelectorAll("tr"));
+  const rowsPerPage = 10;
+  let currentPage = 1;
+  const maxVisiblePages = 4;
+
+  function displayTable() {
+    tbody.innerHTML = "";
+    let start = (currentPage - 1) * rowsPerPage;
+    rows.slice(start, start + rowsPerPage).forEach(row => tbody.appendChild(row));
+    updatePagination();
+  }
+
+  function updatePagination() {
+    const pc = document.getElementById("paginationControls");
+    pc.innerHTML = "";
+    let totalPages = Math.ceil(rows.length / rowsPerPage);
+    if (totalPages <= 1) return;
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+    if (endPage - startPage + 1 < maxVisiblePages) startPage = Math.max(1, endPage - maxVisiblePages + 1);
+
+    if (startPage > 1) { pc.appendChild(createPageButton(1)); if (startPage > 2) pc.appendChild(createDots()); }
+    for (let i = startPage; i <= endPage; i++) pc.appendChild(createPageButton(i));
+    if (endPage < totalPages) { if (endPage < totalPages - 1) pc.appendChild(createDots()); pc.appendChild(createPageButton(totalPages)); }
+  }
+
+  function createPageButton(page) {
+    let btn = document.createElement("button");
+    btn.textContent = page;
+    btn.classList.add("page-btn");
+    if (page === currentPage) btn.classList.add("active");
+    btn.addEventListener("click", function () { currentPage = page; displayTable(); });
+    return btn;
+  }
+
+  function createDots() { let d = document.createElement("span"); d.textContent = "..."; d.classList.add("dots"); return d; }
+
+  displayTable();
+});
+</script>
+</body>
+</html>
+
+
+

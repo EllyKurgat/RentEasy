@@ -1,0 +1,112 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+    <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
+    <title>RentEasy — {% if mode == 'change' %}Change Password{% else %}Reset Password{% endif %}</title>
+    <link href="{% static 'img/faviclogo.png' %}" rel="icon">
+</head>
+<body class="auth-page">
+<script src="{% static 'Js/theme.js' %}?v=22"></script>
+
+<!-- Top nav -->
+<nav class="auth-nav">
+    <a href="{% url 'index' %}"><img src="{% static 'img/faviclogo.png' %}" alt="RentEasy" style="height:32px"> RentEasy</a>
+</nav>
+
+<div class="auth-container">
+    <div class="auth-card">
+
+        <!-- Header -->
+        <div class="auth-header">
+            {% if mode == 'change' %}
+            <i class="fas fa-key" style="font-size:2rem;color:var(--re-primary);margin-bottom:.5rem"></i>
+            <h1>Change Password</h1>
+            <p>Enter your current password and choose a new one</p>
+            {% else %}
+            <i class="fas fa-lock-open" style="font-size:2rem;color:var(--re-primary);margin-bottom:.5rem"></i>
+            <h1>Reset Password</h1>
+            <p>Choose a new password for your account</p>
+            {% endif %}
+        </div>
+
+        <!-- Messages -->
+        {% if messages %}
+        {% for msg in messages %}
+        <div class="re-alert {% if msg.tags == 'success' %}success{% else %}error{% endif %}">
+            <i class="fas {% if msg.tags == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i>
+            {{ msg }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <!-- Change password form -->
+        {% if mode == 'change' %}
+        <form method="POST" action="{% url 'updatepass' %}" class="re-form">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="current_password">Current Password <span class="required">*</span></label>
+                <input type="password" id="current_password" name="current_password" placeholder="Enter current password" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">New Password <span class="required">*</span></label>
+                <input type="password" id="password" name="password" placeholder="Enter new password" required>
+                <span class="form-hint">Use at least 8 characters with a mix of letters and numbers</span>
+            </div>
+
+            <div class="form-group" style="flex-direction:row;align-items:center;gap:.5rem">
+                <input type="checkbox" id="showpw" onclick="togglePasswords()" style="width:auto">
+                <label for="showpw" style="margin:0;font-weight:400;font-size:.85rem;color:var(--re-text-light)">Show passwords</label>
+            </div>
+
+            <button type="submit" class="btn-submit accent"><i class="fas fa-save"></i> Update Password</button>
+        </form>
+
+        <!-- Reset password form -->
+        {% else %}
+        <form method="POST" action="{% url 'password_reset_confirm' uidb64=uidb64 token=token %}" class="re-form">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="password">New Password <span class="required">*</span></label>
+                <input type="password" id="password" name="password" placeholder="Enter new password" required>
+                <span class="form-hint">Use at least 8 characters with a mix of letters and numbers</span>
+            </div>
+
+            <div class="form-group" style="flex-direction:row;align-items:center;gap:.5rem">
+                <input type="checkbox" id="showpw" onclick="togglePasswords()" style="width:auto">
+                <label for="showpw" style="margin:0;font-weight:400;font-size:.85rem;color:var(--re-text-light)">Show password</label>
+            </div>
+
+            <button type="submit" class="btn-submit accent"><i class="fas fa-lock-open"></i> Reset Password</button>
+        </form>
+        {% endif %}
+
+        <script>
+        function togglePasswords(){
+            document.querySelectorAll('input[type="password"], input[data-pw]').forEach(function(el){
+                if(el.type==='password'){el.type='text';el.dataset.pw='1';}
+                else{el.type='password';delete el.dataset.pw;}
+            });
+        }
+        </script>
+
+        <!-- Footer -->
+        <div class="auth-footer">
+            <p>RentEasy &copy; <script>document.write(new Date().getFullYear());</script> All rights reserved</p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+
+
+

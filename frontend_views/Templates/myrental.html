@@ -1,0 +1,164 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
+    <title>MyRental - RentEasy</title>
+    <link href="{% static 'img/faviclogo.png' %}" rel="icon">
+</head>
+
+<body class="theme-tenant">
+  <script src="{% static 'Js/theme.js' %}?v=22"></script>
+  <nav>
+    <div class="navbar" id="navbar">
+      <button id="icon"><i class="fa-solid fa-bars"></i></button>
+      <img src="{% static 'img/renteasylogo.png' %}" alt="Renteasy Logo">
+      <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const sidebar = document.querySelector(".sidebar");
+            const toggleBtn = document.querySelector("#icon");
+
+            toggleBtn.addEventListener("click", function() {
+                sidebar.classList.toggle("active");
+            });
+        });
+      </script>
+      <div class="logoss">
+        <span>RENT</span><span style="color: var(--re-primary);">EASY</span>
+      </div>
+      <div class="userbox">
+        <a href="{% url 'profile' %}">
+          <img id="Profile" src="{% static 'img/user.jpg' %}" alt="Profile Picture">
+          <span class="welcuser">Hi, {{ request.user.name|default:'User' }}!</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  {% include "tenant/_sidebar.html" %}
+
+  <div class="dashcont">
+    <!-- Page header -->
+    <div class="page-header">
+      <h1><i class="fas fa-home"></i> My Rental</h1>
+      <p>View your property details and lease agreement</p>
+    </div>
+
+    {% if pending_lease %}
+    <!-- Pending Lease Banner -->
+    <div class="re-card" style="margin-bottom:1.5rem;border-left:4px solid #3b82f6;background:linear-gradient(135deg,rgba(59,130,246,0.08),transparent);">
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+        <i class="fa-solid fa-file-signature" style="font-size:36px;color:#3b82f6;"></i>
+        <div style="flex:1;">
+          <h3 style="margin:0 0 4px;color:var(--re-text);font-size:1.1rem;">Lease Agreement Awaiting Your Signature</h3>
+          <p style="margin:0;color:var(--re-text-muted);font-size:13px;">
+            {{ pending_lease.property.landlord.name }} has sent you a lease for
+            <strong>{{ pending_lease.property.name }}</strong>{% if pending_lease.unit %} – Unit {{ pending_lease.unit.unit_number }}{% endif %}.
+            Monthly rent: <strong>KSh {{ pending_lease.monthly_rent|default:0 }}</strong>
+          </p>
+        </div>
+        <a href="{% url 'tenant_lease_review' %}" class="re-btn re-btn-primary" style="white-space:nowrap;">
+          <i class="fa-solid fa-pen-nib"></i> Review & Sign
+        </a>
+      </div>
+    </div>
+    {% endif %}
+
+    {% if not lease and not pending_lease %}
+      <div class="empty-state">
+        <i class="fas fa-building"></i>
+        <h3>No Rental Assigned Yet</h3>
+        <p>Once a landlord assigns you a room or unit, your lease details will appear here.</p>
+      </div>
+    {% else %}
+
+    <!-- Property Details -->
+    <div class="re-card" style="margin-bottom:1.5rem">
+      <h3 style="margin:0 0 1rem;font-size:1.05rem;color:var(--re-text)"><i class="fas fa-building" style="color:var(--re-primary);margin-right:.5rem"></i>Property Details</h3>
+      <div class="detail-grid">
+        <div class="detail-card">
+          <div class="detail-icon"><i class="fas fa-door-open"></i></div>
+          <span class="detail-label">Room / Unit</span>
+          <span class="detail-value">{{ lease.room_label|default:"-" }}</span>
+        </div>
+        <div class="detail-card">
+          <div class="detail-icon"><i class="fas fa-home"></i></div>
+          <span class="detail-label">Property Type</span>
+          <span class="detail-value">{{ property.get_property_type_display|default:"-" }}</span>
+        </div>
+        <div class="detail-card">
+          <div class="detail-icon"><i class="fas fa-user-tie"></i></div>
+          <span class="detail-label">Landlord</span>
+          <span class="detail-value">{{ property.landlord.name|default:"-" }}</span>
+          <a href="{% url 'message' %}" class="re-btn re-btn-sm" style="margin-top:.5rem"><i class="fas fa-comment"></i> Chat</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lease Agreement -->
+    <div class="re-card">
+      <h3 style="margin:0 0 1rem;font-size:1.05rem;color:var(--re-text)"><i class="fas fa-file-contract" style="color:var(--re-primary);margin-right:.5rem"></i>Lease Agreement</h3>
+      <div class="detail-grid">
+        <div class="detail-card">
+          <div class="detail-icon"><i class="fas fa-calendar-alt"></i></div>
+          <span class="detail-label">Date Joined</span>
+          <span class="detail-value">{{ lease.start_date|date:"d M Y"|default:"-" }}</span>
+        </div>
+        <div class="detail-card">
+          <div class="detail-icon"><i class="fas fa-calendar-check"></i></div>
+          <span class="detail-label">Lease Ends</span>
+          <span class="detail-value">{{ lease.end_date|date:"d M Y"|default:"Open-ended" }}</span>
+        </div>
+        <div class="detail-card">
+          <div class="detail-icon"><i class="fas fa-info-circle"></i></div>
+          <span class="detail-label">Status</span>
+          <span class="detail-value">
+            <span class="re-badge {% if lease.status == 'active' %}green{% elif lease.status == 'expiring' %}orange{% else %}yellow{% endif %}">
+              {{ lease.get_status_display }}
+            </span>
+          </span>
+        </div>
+        <div class="detail-card">
+          <div class="detail-icon"><i class="fas fa-coins"></i></div>
+          <span class="detail-label">Monthly Rent</span>
+          <span class="detail-value">KSh {{ lease.monthly_rent|default:0 }}</span>
+        </div>
+        <div class="detail-card">
+          <div class="detail-icon"><i class="fas fa-calendar-day"></i></div>
+          <span class="detail-label">Rent Due Day</span>
+          <span class="detail-value">{{ lease.rent_due_day }}{% if lease.rent_due_day == 1 %}st{% elif lease.rent_due_day == 2 %}nd{% elif lease.rent_due_day == 3 %}rd{% else %}th{% endif %} of each month</span>
+        </div>
+        <div class="detail-card">
+          <div class="detail-icon"><i class="fas fa-file-pdf"></i></div>
+          <span class="detail-label">Agreement File</span>
+          {% if lease and lease.agreement_file %}
+            <a href="{{ lease.agreement_file.url }}" download class="re-btn re-btn-sm" style="margin-top:.5rem"><i class="fas fa-download"></i> Download</a>
+          {% else %}
+            <span class="detail-value" style="opacity:.6">No file uploaded</span>
+          {% endif %}
+        </div>
+      </div>
+
+      {% if lease.status == 'expiring' %}
+      <div class="re-alert info" style="margin-top:12px;">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        Your lease is expiring on {{ lease.end_date|date:"d M Y" }}. Please contact your landlord about renewal.
+      </div>
+      {% endif %}
+    </div>
+
+    {% endif %}
+  </div>
+</body>
+
+</html>
+
+
+

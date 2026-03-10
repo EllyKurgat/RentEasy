@@ -1,0 +1,320 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+	<script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
+    <title>Property - RentEasy</title>
+	<link href="{% static 'img/faviclogo.png' %}" rel="icon">
+</head>
+
+<body class="theme-landlord landing-body">
+<script src="{% static 'Js/theme.js' %}?v=22"></script>
+<nav>
+<div class="topnav" id="topnav">
+<img src="{% static 'img/renteasylogo10.png' %}">
+<a href="javascript:void(0);" class="icon" onclick="document.getElementById('topnav').classList.toggle('responsive');">
+<i class="fa-solid fa-bars"></i>
+</a>
+<div class="top2">
+<a href="{% url 'home' %}">HOME</a>
+<a href="{% url 'about' %}">ABOUT</a>
+<a href="{% url 'properties' %}" class="active10">PROPERTY</a>
+<a href="{% url 'contact' %}">CONTACT</a>
+<a class="loginsmall" href="{% url 'user_login' %}">Login/Sign Up</a>
+</div>
+<div class="userbox2">
+<a class="login2" href="{% url 'user_login' %}">Login/Sign Up</a>
+</div>
+</div>
+</nav>
+
+<div class="about">
+<h1 class="abouth">Property</h1>
+</div>
+
+<div class="container2">
+<h1 class="advant3">Find Your Perfect Rental</h1>
+<div class="bars">
+<img src="{% static 'img/renteasylogo.png' %}">
+</div>
+<div class="filter-container">
+<div class="filter-item">
+<select id="category" name="category">
+<option disabled selected>Category</option>
+<option value="1bedroom">1 Bedroom</option>
+<option value="2bedroom">2 Bedroom</option>
+<option value="bedsitter">Bedsitter</option>
+<option value="officeroom">Office room</option>
+</select>
+</div>
+<div class="filter-item">
+<input type="text" id="location" name="location" placeholder="Location">
+</div>
+<div class="filter-item">
+<input type="submit" id="searchButton" name="Search" value="Search Property">
+</div>
+</div>
+
+
+
+			  <div class="containercont2">
+			  <div class="rentals-grid">
+			  			<div class="container2cont">
+			<div class="property-slideshow">
+                 <div class="slide-image">
+                     <img src="{% static 'Img/housessrent.jpg' %}" alt="Slide 1">
+                 </div>
+                   <div class="slide-image">
+                    <img src="{% static 'img/user.jpg' %}" alt="Slide 2">
+                        </div>
+                     <div class="slide-image">
+                     <img src="{% static 'Img/housessrent.jpg' %}" alt="Slide 3">
+                      </div>
+                        <a class="slide-prev">&#10094;</a>
+                        <a class="slide-next">&#10095;</a>
+                        </div>
+			<div class="container2text">
+			<p class="newsd"><i class="fa-solid fa-location-dot"></i>  CHEPKOILEL</p>
+                <h2 class="newsh">2 BEDROOM</h2>
+                <p class="newsp">Comes with balcony and Kitchen</p>
+				</div>
+				<div class="containerprice">
+                <h2 class="newsh">KES 7500</h2>
+				<div class="contactlandlord">
+	  <a class="contactnow"  href="{% url 'listing_list' %}">Contact Landlord</a>
+	  </div>
+				</div>
+            </div>
+			
+			
+			<div class="container2cont">
+			<div class="property-slideshow">
+                 <div class="slide-image">
+                     <img src="{% static 'Img/housessrent.jpg' %}" alt="Slide 1">
+                 </div>
+                   <div class="slide-image">
+                    <img src="{% static 'img/user.jpg' %}" alt="Slide 2">
+                        </div>
+                     <div class="slide-image">
+                     <img src="{% static 'Img/housessrent.jpg' %}" alt="Slide 3">
+                      </div>
+                        <a class="slide-prev">&#10094;</a>
+                        <a class="slide-next">&#10095;</a>
+                        </div>
+			<div class="container2text">
+			<p class="newsd"><i class="fa-solid fa-location-dot"></i>  CHEPKOILEL</p>
+                <h2 class="newsh">2 BEDROOM</h2>
+                <p class="newsp">Comes with balcony and Kitchen</p>
+				</div>
+				<div class="containerprice">
+                <h2 class="newsh">KES 7500</h2>
+				<div class="contactlandlord">
+	  <a class="contactnow"  href="{% url 'listing_list' %}">Contact Landlord</a>
+	  </div>
+				</div>
+            </div>
+			
+			
+			<div class="container2cont">
+			<div class="property-slideshow">
+                 <div class="slide-image">
+                     <img src="{% static 'Img/housessrent.jpg' %}" alt="Slide 1">
+                 </div>
+                   <div class="slide-image">
+                    <img src="{% static 'img/user.jpg' %}" alt="Slide 2">
+                        </div>
+                     <div class="slide-image">
+                     <img src="{% static 'Img/housessrent.jpg' %}" alt="Slide 3">
+                      </div>
+                        <a class="slide-prev">&#10094;</a>
+                        <a class="slide-next">&#10095;</a>
+                        </div>
+			<div class="container2text">
+			<p class="newsd"><i class="fa-solid fa-location-dot"></i>  CHEPKOILEL</p>
+                <h2 class="newsh">2 BEDROOM</h2>
+                <p class="newsp">Comes with balcony and Kitchen</p>
+				</div>
+				<div class="containerprice">
+                <h2 class="newsh">KES 7500</h2>
+				<div class="contactlandlord">
+	  <a class="contactnow"  href="{% url 'listing_list' %}">Contact Landlord</a>
+	  </div>
+				</div>
+            </div>
+			
+			<div class="container2cont">
+			<div class="property-slideshow">
+                 <div class="slide-image">
+                     <img src="{% static 'Img/housessrent.jpg' %}" alt="Slide 1">
+                 </div>
+                   <div class="slide-image">
+                    <img src="{% static 'img/user.jpg' %}" alt="Slide 2">
+                        </div>
+                     <div class="slide-image">
+                     <img src="{% static 'Img/housessrent.jpg' %}" alt="Slide 3">
+                      </div>
+                        <a class="slide-prev">&#10094;</a>
+                        <a class="slide-next">&#10095;</a>
+                        </div>
+			<div class="container2text">
+			<p class="newsd"><i class="fa-solid fa-location-dot"></i>  CHEPKOILEL</p>
+                <h2 class="newsh">2 BEDROOM</h2>
+                <p class="newsp">Comes with balcony and Kitchen</p>
+				</div>
+				<div class="containerprice">
+                <h2 class="newsh">KES 7500</h2>
+				<div class="contactlandlord">
+	  <a class="contactnow"  href="{% url 'listing_list' %}">Contact Landlord</a>
+	  </div>
+				</div>
+            </div>
+			
+			
+			<div class="container2cont">
+			<div class="property-slideshow">
+                 <div class="slide-image">
+                     <img src="{% static 'Img/housessrent.jpg' %}" alt="Slide 1">
+                 </div>
+                   <div class="slide-image">
+                    <img src="{% static 'img/user.jpg' %}" alt="Slide 2">
+                        </div>
+                     <div class="slide-image">
+                     <img src="{% static 'Img/housessrent.jpg' %}" alt="Slide 3">
+                      </div>
+                        <a class="slide-prev">&#10094;</a>
+                        <a class="slide-next">&#10095;</a>
+                        </div>
+			<div class="container2text">
+			<p class="newsd"><i class="fa-solid fa-location-dot"></i>  CHEPKOILEL</p>
+                <h2 class="newsh">2 BEDROOM</h2>
+                <p class="newsp">Comes with balcony and Kitchen</p>
+				</div>
+				<div class="containerprice">
+                <h2 class="newsh">KES 7500</h2>
+				<div class="contactlandlord">
+	  <a class="contactnow"  href="{% url 'listing_list' %}">Contact Landlord</a>
+	  </div>
+				</div>
+            </div>
+            </div><!-- /rentals-grid -->
+            </div><!-- /containercont2 -->
+			<div class="browse">
+	  <a class="more"  id="load-more">Load more</a>
+	  </div>
+            </div>
+			<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const cards = document.querySelectorAll(".containercont2 .container2cont");
+    const loadMoreBtn = document.getElementById("load-more");
+
+    let visibleCards = 3;
+
+    function showCards() {
+      cards.forEach((card, index) => {
+        if (index < visibleCards) {
+          card.style.display = "block";
+        }
+      });
+
+      if (visibleCards >= cards.length) {
+        loadMoreBtn.style.display = "none";
+      }
+    }
+
+    loadMoreBtn.addEventListener("click", () => {
+      visibleCards += 3;
+      showCards();
+    });
+
+    showCards();
+  });
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const slideshows = document.querySelectorAll(".property-slideshow");
+
+  slideshows.forEach((slideshow) => {
+    let currentSlide = 0;
+    const slides = slideshow.querySelectorAll(".slide-image");
+    const prevButton = slideshow.querySelector(".slide-prev");
+    const nextButton = slideshow.querySelector(".slide-next");
+
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        slide.classList.remove("active");
+        if (i === index) slide.classList.add("active");
+      });
+    }
+
+    function changeSlide(n) {
+      currentSlide = (currentSlide + n + slides.length) % slides.length;
+      showSlide(currentSlide);
+    }
+
+    showSlide(currentSlide);
+
+    prevButton.addEventListener("click", () => changeSlide(-1));
+    nextButton.addEventListener("click", () => changeSlide(1));
+
+    setInterval(() => changeSlide(1), 5000);
+  });
+});
+</script>
+			
+
+<footer class="footer">
+    <div class="col-contfoot">
+	<div class="colfoot">
+                <img src="{% static 'img/renteasylogo10.png' %}">
+				<p class="address4">Renteasy is an innovative platform 
+				designed to streamline the management of rental properties for 
+				both landlords and tenants. Whether you are a property owner or a tenant 
+				looking for a place to call home, Renteasy provides an intuitive
+				and efficient system to simplify rental processes.</p>
+            </div>
+            <div class="colfoot">
+                <h2 class="address3">OUR LOCATION</h2>
+                <p class="address4">Eldoret, Uasin Gishu County, Kenya</p>
+                <h2 class="address3">EMAIL US AT</h2>
+                <p class="address4"><a href="mailto:renteasyk@gmail.com" style="color:inherit;text-decoration:none;">renteasyk@gmail.com</a></p>
+                <h2 class="address3">CALL US</h2>
+                <p class="address4"><a href="tel:+254799892427" style="color:inherit;text-decoration:none;">+254 799 892 427</a></p>
+                <h2 class="address3">TEXT US ON WHATSAPP</h2>
+                <p class="address4"><a href="https://wa.me/254799892427" style="color:inherit;text-decoration:none;">+254 799 892 427</a></p>
+            </div>
+          
+		  		  <div class="colfoot">
+            <h3 class="textd">Quick Links</h3>
+            <div class="quicklinks">
+               <a href="{% url 'index' %}" class="active10">Home</a>
+	           <a href="{% url 'about' %}">About</a>
+	           <a href="{% url 'properties' %}">Property</a>
+	           <a href="{% url 'contact' %}">Contact</a>
+	           <a href="{% url 'user_login' %}">Login/Sign Up</a>
+            </div>
+          </div>
+		  <div class="colfoot">
+		  <h3 class="textd">Socials</h3>
+           <a href="#" class="fa-brands fa-facebook"></a>
+          <a href="#" class="fa-brands fa-x-twitter"></a>
+		  <a href="#" class="fa-brands fa-instagram"></a>
+		  <a href="#" class="fa-brands fa-youtube"></a>
+        </div>
+		  </div>
+		  <div class="developer">
+		  RentEasy &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved
+		  </div>		  
+  </footer>
+</body>
+</html>
+
+
+

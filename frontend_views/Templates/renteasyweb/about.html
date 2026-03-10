@@ -1,0 +1,267 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - RentEasy</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
+    <!-- Favicon -->
+    <link href="{% static 'img/faviclogo.png' %}" rel="icon">
+    <style>
+        .landing-body { background: var(--re-bg, #F3F4F6); margin: 0; font-family: 'Poppins', sans-serif; }
+    </style>
+</head>
+
+<body class="theme-landlord landing-body">
+<script src="{% static 'Js/theme.js' %}?v=22"></script>
+    <!-- Navigation Section -->
+    <nav>
+        <div class="topnav" id="topnav">
+            <img src="{% static 'img/renteasylogo10.png' %}" alt="RentEasy Logo">
+            <a href="javascript:void(0);" class="icon" onclick="document.getElementById('topnav').classList.toggle('responsive');">
+                <i class="fa-solid fa-bars"></i>
+            </a>
+            <div class="top2">
+                <a href="{% url 'home' %}">HOME</a>
+                <a href="{% url 'listing_list' %}">BROWSE RENTALS</a>
+                <a href="{% url 'about' %}" class="active10">ABOUT</a>
+                <a href="{% url 'properties' %}">PROPERTY</a>
+                <a href="{% url 'contact' %}">CONTACT</a>
+            </div>
+            <div class="userbox2">
+                <a class="login2" href="{% url 'user_login' %}">Login</a>
+                <a class="login2 primary" href="{% url 'register' %}">Sign Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- About Header Section -->
+    <div class="about">
+        <h1 class="abouth">About Us</h1>
+    </div>
+
+    <!-- Mission Section -->
+    <div class="vision-card">
+        <div class="vision-image">
+            <img src="{% static 'img/housessrent.jpg' %}" alt="Rental Properties">
+        </div>
+        <div class="vision-text">
+            <h3>Our Mission</h3>
+            <p>At Renteasy, our mission is simple: to streamline property management by providing an intuitive and efficient platform for both landlords and tenants. We aim to reduce the complexity of rental processes, saving you time and effort while ensuring secure, transparent transactions.</p>
+        </div>
+    </div>
+
+    <!-- Counter Section -->
+    <div class="counter-container">
+        <div class="counter">
+            <h3>Tenants</h3>
+            <p id="tenants" data-target="980000">0</p>
+        </div>
+        <div class="counter">
+            <h3>Landlords</h3>
+            <p id="landlords" data-target="1000">0</p>
+        </div>
+        <div class="counter">
+            <h3>Properties Leased</h3>
+            <p id="properties" data-target="680000">0</p>
+        </div>
+    </div>
+
+    <!-- Counter Animation Script -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const counters = document.querySelectorAll('.counter p');
+
+            function updateCounter(counter) {
+                const target = +counter.getAttribute('data-target');
+                let current = 0;
+                const increment = target / 100;
+
+                const interval = setInterval(function() {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(interval);
+                    }
+                    counter.textContent = formatNumber(current);
+                }, 10);
+            }
+
+            function formatNumber(num) {
+                return num.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+
+            counters.forEach(counter => {
+                updateCounter(counter);
+            });
+        });
+    </script>
+
+    <!-- Vision Section -->
+    <div class="vision-card">
+        <div class="vision-text">
+            <h3>Our Vision</h3>
+            <p>We envision a future where property management is seamless, and renting is no longer a complicated process. We're dedicated to continuously improving our platform, introducing new features that help landlords and tenants work together in a more efficient way.</p>
+        </div>
+        <div class="vision-image">
+            <img src="{% static 'img/housessrent.jpeg' %}" alt="Future Vision">
+        </div>
+    </div>
+
+    <!-- How It Works Section -->
+    <div class="how">
+        <h2>How It Works</h2>
+        <div class="steps">
+            <div class="step">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <h3>SEARCH</h3>
+                <p>Browse through a variety of properties based on your needs and location.</p>
+            </div>
+            <div class="step">
+                <i class="fa-solid fa-envelope"></i>
+                <h3>CONTACT</h3>
+                <p>Reach out directly to the landlord for more details.</p>
+            </div>
+            <div class="step">
+                <i class="fa-solid fa-handshake"></i>
+                <h3>AGREEMENT</h3>
+                <p>Review and agree on the rental terms, then sign your rental agreement.</p>
+            </div>
+            <div class="step">
+                <i class="fa-solid fa-coins"></i>
+                <h3>PAY & OCCUPY</h3>
+                <p>Complete your payment securely and move into your new home with ease.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Get Started Section -->
+    <div class="col-cont" data-aos="fade-up">
+        <div class="col">
+            <h2 class="missionh">GET STARTED</h2>
+            <p class="mission">Whether you're a landlord or a tenant, getting started with Renteasy is easy. Follow these simple steps to begin managing or finding your perfect property.</p>
+            <div class="gettingstarted">
+                <a class="more" href="{% url 'register' %}">GET STARTED</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Testimonials Section -->
+    <div class="testimonial-section">
+        <h2>What Our Tenants Say</h2>
+        <div class="testimonial-slider">
+            {% for testimonial in testimonials %}
+            <div class="testimonial-slide {% if forloop.first %}active{% endif %}">
+                <img src="{% static 'img/user.jpg' %}" alt="Tenant Photo">
+                <p>{{ testimonial.text }}</p>
+                <h4>~ {{ testimonial.name }}, {{ testimonial.location }}</h4>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Testimonial Slider Script -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const slides = document.querySelectorAll(".testimonial-slide");
+            const prev = document.querySelector(".testimonial-prev");
+            const next = document.querySelector(".testimonial-next");
+            let current = 0;
+            let slideInterval;
+
+            function showSlide(index) {
+                slides.forEach((slide, i) => {
+                    slide.classList.remove("active");
+                    if (i === index) slide.classList.add("active");
+                });
+            }
+
+            function nextSlide() {
+                current = (current + 1) % slides.length;
+                showSlide(current);
+            }
+
+            function prevSlide() {
+                current = (current - 1 + slides.length) % slides.length;
+                showSlide(current);
+            }
+
+            function startAutoSlide() {
+                slideInterval = setInterval(nextSlide, 5000);
+            }
+
+            function stopAutoSlide() {
+                clearInterval(slideInterval);
+            }
+
+            if (next) {
+                next.addEventListener("click", () => {
+                    stopAutoSlide();
+                    nextSlide();
+                    startAutoSlide();
+                });
+            }
+
+            if (prev) {
+                prev.addEventListener("click", () => {
+                    stopAutoSlide();
+                    prevSlide();
+                    startAutoSlide();
+                });
+            }
+
+            showSlide(current);
+            startAutoSlide();
+        });
+    </script>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+        <div class="col-contfoot">
+            <div class="colfoot" style="vertical-align:top">
+                <img src="{% static 'img/renteasylogo10.png' %}" alt="RentEasy Logo">
+                <p class="address4">Renteasy is an innovative platform designed to streamline the management of rental properties for both landlords and tenants. Whether you are a property owner or a tenant looking for a place to call home, Renteasy provides an intuitive and efficient system to simplify rental processes.</p>
+            </div>
+            <div class="colfoot" style="vertical-align:top">
+                <h2 class="address3">OUR LOCATION</h2>
+                <p class="address4">Eldoret, Uasin Gishu County, Kenya</p>
+                <h2 class="address3">EMAIL US AT</h2>
+                <p class="address4"><a href="mailto:renteasyk@gmail.com" style="color:inherit;text-decoration:none;">renteasyk@gmail.com</a></p>
+                <h2 class="address3">CALL US</h2>
+                <p class="address4"><a href="tel:+254799892427" style="color:inherit;text-decoration:none;">+254 799 892 427</a></p>
+                <h2 class="address3">TEXT US ON WHATSAPP</h2>
+                <p class="address4"><a href="https://wa.me/254799892427" style="color:inherit;text-decoration:none;">+254 799 892 427</a></p>
+            </div>
+            <div class="colfoot" style="vertical-align:top;">
+                <h3 class="textd">Quick Links</h3>
+                <div class="quicklinks">
+                    <a href="{% url 'index' %}" class="active10">Home</a>
+                    <a href="{% url 'about' %}">About</a>
+                    <a href="{% url 'properties' %}">Property</a>
+                    <a href="{% url 'contact' %}">Contact</a>
+                    <a href="{% url 'user_login' %}">Login/Sign Up</a>
+                </div>
+            </div>
+            <div class="colfoot">
+                <h3 class="textd">Socials</h3>
+                <a href="#" class="fa-brands fa-facebook"></a>
+                <a href="#" class="fa-brands fa-x-twitter"></a>
+                <a href="#" class="fa-brands fa-instagram"></a>
+                <a href="#" class="fa-brands fa-youtube"></a>
+            </div>
+        </div>
+        <div class="developer">
+            RentEasy &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved
+        </div>
+    </footer>
+</body>
+</html>
+
+

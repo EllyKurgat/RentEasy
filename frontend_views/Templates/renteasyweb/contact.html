@@ -1,0 +1,102 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
+    <title>Contact - RentEasy</title>
+    <link href="{% static 'img/faviclogo.png' %}" rel="icon">
+</head>
+
+<body class="theme-landlord landing-body">
+<script src="{% static 'Js/theme.js' %}?v=22"></script>
+  <nav>
+    <div class="topnav" id="topnav">
+        <img src="{% static 'img/renteasylogo10.png' %}">
+        <a href="javascript:void(0);" class="icon" onclick="document.getElementById('topnav').classList.toggle('responsive');">
+            <i class="fa-solid fa-bars"></i>
+        </a>
+        <div class="top2">
+            <a href="{% url 'index' %}">HOME</a>
+            <a href="{% url 'about' %}">ABOUT</a>
+            <a href="{% url 'properties' %}">PROPERTY</a>
+            <a href="{% url 'contact' %}" class="active10">CONTACT</a>
+            <a class="loginsmall" href="{% url 'user_login' %}">Login/Sign Up</a>
+        </div>
+        <div class="userbox2">
+            <a class="login2" href="{% url 'user_login' %}">Login/Sign Up</a>
+        </div>
+    </div>
+  </nav>
+
+  <div class="about">
+    <h1 class="abouth">Contact</h1>
+  </div>
+  
+  <div class="contact">
+    <h1 class="advant3" style="text-align: center">Send us a Message</h1>
+    <div class="contactform">
+      <form action="{% url 'contact' %}" method="POST" class="containercontact">
+        {% csrf_token %}
+        <label for="fname">Name</label>
+        <input type="text" id="name" name="name" placeholder="Enter Your Name" required>
+
+        <label for="lname">Email</label>
+        <input type="email" id="email" name="email" placeholder="Enter Your Email" required>
+
+        <label for="subject">Write Message</label>
+        <textarea id="subject" name="body" style="height:200px" required></textarea>
+
+        <input type="submit" value="Send Message">
+      </form>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="col-contfoot">
+      <div class="colfoot" style="vertical-align:top">
+        <img src="{% static 'img/renteasylogo10.png' %}">
+        <p class="address4">Renteasy is an innovative platform designed to streamline the management of rental properties for both landlords and tenants.</p>
+      </div>
+      <div class="colfoot" style="vertical-align:top">
+        <h2 class="address3">OUR LOCATION</h2>
+        <p class="address4">Eldoret, Uasin Gishu County, Kenya</p>
+        <h2 class="address3">EMAIL US AT</h2>
+        <p class="address4"><a href="mailto:renteasyk@gmail.com" style="color:inherit;text-decoration:none;">renteasyk@gmail.com</a></p>
+        <h2 class="address3">CALL US</h2>
+        <p class="address4"><a href="tel:+254799892427" style="color:inherit;text-decoration:none;">+254 799 892 427</a></p>
+        <h2 class="address3">TEXT US ON WHATSAPP</h2>
+        <p class="address4"><a href="https://wa.me/254799892427" style="color:inherit;text-decoration:none;">+254 799 892 427</a></p>
+      </div>
+      <div class="colfoot" style="vertical-align:top;">
+        <h3 class="textd">Quick Links</h3>
+        <div class="quicklinks">
+          <a href="{% url 'index' %}" class="active10">Home</a>
+          <a href="{% url 'about' %}">About</a>
+          <a href="{% url 'properties' %}">Property</a>
+          <a href="{% url 'contact' %}">Contact</a>
+          <a href="{% url 'user_login' %}">Login/Sign Up</a>
+        </div>
+      </div>
+      <div class="colfoot">
+        <h3 class="textd">Socials</h3>
+        <a href="#" class="fa-brands fa-facebook"></a>
+        <a href="#" class="fa-brands fa-x-twitter"></a>
+        <a href="#" class="fa-brands fa-instagram"></a>
+        <a href="#" class="fa-brands fa-youtube"></a>
+      </div>
+    </div>
+    <div class="developer">
+      RentEasy &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved
+    </div>
+  </footer>
+</body>
+</html>
+
+
+

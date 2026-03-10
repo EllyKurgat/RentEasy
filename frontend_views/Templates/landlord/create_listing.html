@@ -1,0 +1,57 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
+    <title>Create Listing - RentEasy</title>
+    <link rel="icon" href="{% static 'img/faviclogo.png' %}">
+</head>
+<body class="theme-landlord">
+<script src="{% static 'Js/theme.js' %}?v=22"></script>
+<nav><div class="navbar" id="navbar">
+    <button id="icon"><i class="fa-solid fa-bars"></i></button>
+    <a href="{% url 'home' %}"><img src="{% static 'img/renteasylogo.png' %}" alt="RentEasy"></a>
+    <div class="logoss"><span>RENT</span><span style="color: var(--re-primary);">EASY</span></div>
+    <div class="userbox"><a href="{% url 'profile' %}"><img src="{% static 'img/user.jpg' %}" alt=""><span class="welcuser">Hi, {{ request.user.name }}!</span></a></div>
+</div></nav>
+{% include "landlord/_sidebar.html" %}
+<script>document.addEventListener("DOMContentLoaded",function(){var s=document.querySelector(".sidebar"),i=document.querySelector("#icon");i&&s&&i.addEventListener("click",function(){s.classList.toggle("active")})});function toggleDropdown(){event.preventDefault();var d=event.target.closest(".dropdown"),m=d?d.querySelector(".dropdown-menu"):null;if(d&&m){d.classList.toggle("active");m.style.maxHeight=m.style.maxHeight?"":m.scrollHeight+"px";}}</script>
+<div class="dashcont">
+    <p><a href="{% url 'landlord_listings' %}" style="color:var(--re-primary);text-decoration:none;">← Back to Listings</a></p>
+    <h1 class="advant3" style="color:var(--re-primary);">Create Listing</h1>
+    {% if messages %}{% for m in messages %}<div>{{ m }}</div>{% endfor %}{% endif %}
+    <form method="post">
+        {% csrf_token %}
+        <label>Unit *</label>
+        <select name="unit_id" required>
+            <option value="">Select unit</option>
+            {% for u in units %}
+            <option value="{{ u.id }}">{{ u.property.name }} - {{ u.unit_number }} (KSh {{ u.monthly_rent|intcomma }}/mo)</option>
+            {% endfor %}
+        </select>
+        <label>Title *</label>
+        <input type="text" name="title" required>
+        <label>Description</label>
+        <textarea name="description" rows="4"></textarea>
+        <label>Rent (KSh) *</label>
+        <input type="number" name="rent_amount" step="500" required>
+        <label>Deposit (KSh)</label>
+        <input type="number" name="deposit_amount" value="0" step="500">
+        <label>Location</label>
+        <input type="text" name="property_location" placeholder="Address">
+        <label>Available from</label>
+        <input type="date" name="available_from">
+        <button type="submit" class="re-btn re-btn-primary" style="width:100%;margin-top:8px;">Create Listing</button>
+    </form>
+</div>
+</body>
+</html>
+
+
+

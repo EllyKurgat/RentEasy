@@ -1,0 +1,176 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
+    <title>Browse Listings - RentEasy</title>
+    <link rel="icon" href="{% static 'img/faviclogo.png' %}">
+    <style>
+        .listing-card { background:var(--re-surface); border-radius:12px; overflow:hidden; box-shadow:0 4px 16px rgba(0,0,0,0.08); transition:transform 0.2s,box-shadow 0.2s; text-decoration:none; color:inherit; display:flex; flex-direction:column; }
+        .listing-card:hover { transform:translateY(-4px); box-shadow:0 12px 28px rgba(0,0,0,0.14); }
+        .listing-card-body { padding:20px; flex:1; }
+        .listing-card-body h3 { margin:0 0 6px; color:var(--re-text); font-size:1.1rem; }
+        .listing-card-loc { color:var(--re-text-secondary); font-size:0.9rem; margin:0 0 10px; }
+        .listing-card-loc i { margin-right:4px; color:var(--re-primary); }
+        .listing-card-price { font-weight:700; color:var(--re-primary); font-size:1.15rem; margin:0 0 8px; }
+        .listing-card-rating { display:flex; align-items:center; gap:6px; margin-bottom:8px; }
+        .listing-card-rating .stars { color:#f59e0b; font-size:0.85rem; }
+        .listing-card-rating .stars .empty { color:var(--re-input-border); }
+        .listing-card-rating .count { color:var(--re-text-secondary); font-size:0.8rem; }
+        .listing-card-footer { padding:12px 20px; border-top:1px solid var(--re-border); display:flex; justify-content:space-between; align-items:center; }
+        .listing-card-footer .avail { font-size:0.8rem; color:var(--re-text-secondary); }
+        .listing-card-footer .view-link { color:var(--re-primary); font-weight:600; font-size:0.9rem; }
+        .search-bar { background:var(--re-surface); border-radius:12px; padding:20px 24px; margin-bottom:24px; box-shadow:0 2px 12px rgba(0,0,0,0.06); }
+        .search-row { display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end; }
+        .search-field { flex:1; min-width:160px; }
+        .search-field label { display:block; margin-bottom:4px; font-weight:500; font-size:0.85rem; color:var(--re-text-secondary); }
+        .search-field input, .search-field select { width:100%; padding:10px 12px; border:1px solid var(--re-input-border); border-radius:8px; font-size:0.95rem; background:var(--re-input-bg); color:var(--re-text); box-sizing:border-box; }
+        .search-btn { padding:10px 24px; background:var(--re-primary); color:#fff; border:none; border-radius:8px; font-weight:600; cursor:pointer; font-size:0.95rem; white-space:nowrap; }
+        .search-btn:hover { background:var(--re-primary-hover); }
+        .sort-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:8px; }
+        .sort-row .result-count { color:var(--re-text-secondary); font-size:0.95rem; }
+        .sort-row select { padding:8px 12px; border:1px solid var(--re-input-border); border-radius:8px; background:var(--re-input-bg); color:var(--re-text); font-size:0.9rem; }
+        .listings-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr)); gap:24px; }
+        @media (max-width: 480px) {
+            .search-field { min-width: 100%; }
+            .search-btn { width: 100%; text-align: center; justify-content: center; }
+        }
+        body.dark .search-bar { background:var(--re-surface); box-shadow:0 2px 12px rgba(0,0,0,0.2); }
+        body.dark .listing-card { background:var(--re-surface); box-shadow:0 4px 16px rgba(0,0,0,0.2); }
+    </style>
+</head>
+<body class="theme-landlord landing-body">
+<script src="{% static 'Js/theme.js' %}?v=22"></script>
+<nav>
+    <div class="topnav" id="topnav">
+        <a href="{% url 'home' %}"><img src="{% static 'img/renteasylogo10.png' %}" alt="RentEasy"></a>
+        <div class="top2">
+            <a href="{% url 'home' %}">HOME</a>
+            <a href="{% url 'listing_list' %}" class="active10">BROWSE RENTALS</a>
+            <a href="{% url 'about' %}">ABOUT</a>
+            <a href="{% url 'contact' %}">CONTACT</a>
+        </div>
+        <div class="userbox2">
+            {% if user.is_authenticated %}
+            <a class="login2 primary" href="{% url 'userdash' %}">Dashboard</a>
+            <form method="post" action="{% url 'logout' %}" style="display:inline;">{% csrf_token %}<button type="submit" class="login2" style="background:none;border:none;cursor:pointer;font:inherit;color:inherit;padding:0;">Logout</button></form>
+            {% else %}
+            <a class="login2" href="{% url 'user_login' %}">Login</a>
+            <a class="login2 primary" href="{% url 'register' %}">Sign Up</a>
+            {% endif %}
+        </div>
+    </div>
+    <a href="javascript:void(0);" class="icon" onclick="document.getElementById('topnav').classList.toggle('responsive');">
+        <div class="bars1">
+            <span class="line20 line21"></span>
+            <span class="line20 line22"></span>
+            <span class="line20 line23"></span>
+        </div>
+    </a>
+</nav>
+
+<div style="max-width:1200px;margin:0 auto;padding:32px 24px;">
+    <h1 style="color:var(--re-primary);font-size:1.75rem;margin:0 0 4px;">Browse Rentals</h1>
+    <p style="color:var(--re-text-secondary);margin:0 0 20px;">Find your perfect rental property</p>
+
+    <!-- ── Search / Filter Bar ── -->
+    <form method="get" class="search-bar" id="searchForm">
+        <div class="search-row">
+            <div class="search-field" style="flex:2;">
+                <label><i class="fa-solid fa-magnifying-glass"></i> Search</label>
+                <input type="text" name="q" value="{{ q }}" placeholder="Location, title, keyword...">
+            </div>
+            <div class="search-field">
+                <label>Category</label>
+                <select name="category">
+                    <option value="">All types</option>
+                    <option value="1bedroom" {% if category == '1bedroom' %}selected{% endif %}>1 Bedroom</option>
+                    <option value="2bedroom" {% if category == '2bedroom' %}selected{% endif %}>2 Bedroom</option>
+                    <option value="bedsitter" {% if category == 'bedsitter' %}selected{% endif %}>Bedsitter</option>
+                    <option value="officeroom" {% if category == 'officeroom' %}selected{% endif %}>Office</option>
+                    <option value="residential" {% if category == 'residential' %}selected{% endif %}>Residential</option>
+                </select>
+            </div>
+            <div class="search-field" style="min-width:120px;">
+                <label>Min rent</label>
+                <input type="number" name="rent_min" value="{{ rent_min }}" placeholder="0" step="500">
+            </div>
+            <div class="search-field" style="min-width:120px;">
+                <label>Max rent</label>
+                <input type="number" name="rent_max" value="{{ rent_max }}" placeholder="Any" step="500">
+            </div>
+            <div class="search-field" style="min-width:140px;">
+                <label>Available by</label>
+                <input type="date" name="available_from" value="{{ available_from }}">
+            </div>
+            <!-- hidden sort field preserved across searches -->
+            <input type="hidden" name="sort" id="sortInput" value="{{ sort }}">
+            <button type="submit" class="search-btn"><i class="fa-solid fa-search"></i> Search</button>
+        </div>
+    </form>
+
+    <!-- ── Sort Row ── -->
+    <div class="sort-row">
+        <span class="result-count">{{ listings|length }} listing{{ listings|length|pluralize }} found</span>
+        <div style="display:flex;align-items:center;gap:8px;">
+            <label style="font-size:0.9rem;color:var(--re-text-secondary);white-space:nowrap;">Sort by:</label>
+            <select id="sortSelect" onchange="document.getElementById('sortInput').value=this.value;document.getElementById('searchForm').submit();">
+                <option value="newest" {% if sort == 'newest' %}selected{% endif %}>Newest first</option>
+                <option value="price_asc" {% if sort == 'price_asc' %}selected{% endif %}>Price: Low → High</option>
+                <option value="price_desc" {% if sort == 'price_desc' %}selected{% endif %}>Price: High → Low</option>
+                <option value="rating" {% if sort == 'rating' %}selected{% endif %}>Top rated</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- ── Listings Grid ── -->
+    <div class="listings-grid">
+        {% for l in listings %}
+        <a href="{% url 'listing_detail' l.pk %}" class="listing-card">
+            <div style="height:170px;overflow:hidden;background:#F1F5F9;">
+                {% if l.photos and l.photos.0 %}
+                <img src="{{ MEDIA_URL }}{{ l.photos.0 }}" alt="{{ l.title }}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+                {% else %}
+                <img src="{% static 'Img/housessrent.jpg' %}" alt="{{ l.title }}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
+                {% endif %}
+            </div>
+            <div class="listing-card-body">
+                <h3>{{ l.title }}</h3>
+                <p class="listing-card-loc"><i class="fa-solid fa-location-dot"></i> {{ l.property_location }}</p>
+                <p class="listing-card-price">KSh {{ l.rent_amount|intcomma }}/mo</p>
+                {% if l.avg_rating %}
+                <div class="listing-card-rating">
+                    <span class="stars">
+                        {% for i in "12345" %}
+                            {% if l.avg_rating >= forloop.counter %}<i class="fa-solid fa-star"></i>{% elif l.avg_rating >= forloop.counter|add:"-0.5" %}<i class="fa-solid fa-star-half-stroke"></i>{% else %}<i class="fa-regular fa-star empty"></i>{% endif %}
+                        {% endfor %}
+                    </span>
+                    <span class="count">{{ l.avg_rating|floatformat:1 }} ({{ l.review_count }})</span>
+                </div>
+                {% endif %}
+                <p style="color:var(--re-text-secondary);font-size:0.9rem;margin:0;">{{ l.description|truncatewords:18|default:"Available for rent" }}</p>
+            </div>
+            <div class="listing-card-footer">
+                <span class="avail">{% if l.available_from %}<i class="fa-regular fa-calendar"></i> {{ l.available_from|date:"M d, Y" }}{% else %}Available now{% endif %}</span>
+                <span class="view-link">View details <i class="fa-solid fa-arrow-right"></i></span>
+            </div>
+        </a>
+        {% empty %}
+        <div style="grid-column:1/-1;text-align:center;padding:48px;background:var(--re-surface);border-radius:12px;">
+            <i class="fa-solid fa-house-circle-xmark" style="font-size:2.5rem;color:var(--re-text-secondary);margin-bottom:12px;"></i>
+            <p style="color:var(--re-text-secondary);font-size:1.1rem;">No listings found. Try different search filters.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+</body>
+</html>
+
+
+

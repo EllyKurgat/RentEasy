@@ -1,0 +1,67 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
+    <title>Maintenance - RentEasy</title>
+    <link rel="icon" href="{% static 'img/faviclogo.png' %}">
+</head>
+<body class="theme-landlord">
+<script src="{% static 'Js/theme.js' %}?v=22"></script>
+<nav><div class="navbar" id="navbar">
+    <button id="icon"><i class="fa-solid fa-bars"></i></button>
+    <a href="{% url 'home' %}"><img src="{% static 'img/renteasylogo.png' %}" alt="RentEasy"></a>
+    <div class="logoss"><span>RENT</span><span style="color: var(--re-primary);">EASY</span></div>
+    <div class="userbox"><a href="{% url 'profile' %}"><img src="{% static 'img/user.jpg' %}" alt=""><span class="welcuser">Hi, {{ request.user.name }}!</span></a></div>
+</div></nav>
+{% include "landlord/_sidebar.html" %}
+<script>document.addEventListener("DOMContentLoaded",function(){var s=document.querySelector(".sidebar"),i=document.querySelector("#icon");i&&s&&i.addEventListener("click",function(){s.classList.toggle("active")})});function toggleDropdown(){event.preventDefault();var d=event.target.closest(".dropdown"),m=d?d.querySelector(".dropdown-menu"):null;if(d&&m){d.classList.toggle("active");m.style.maxHeight=m.style.maxHeight?"":m.scrollHeight+"px";}}</script>
+<div class="dashcont">
+    <h1 class="advant3" style="color:var(--re-primary);">Maintenance Requests</h1>
+    {% if messages %}{% for m in messages %}<div class="alert alert-{{ m.tags|default:'info' }}">{{ m }}</div>{% endfor %}{% endif %}
+
+    <div style="margin:16px 0;">
+        <a href="{% url 'landlord_maintenance' %}?status=open" class="btn-tab {% if status_filter == 'open' %}active{% endif %}">Open</a>
+        <a href="{% url 'landlord_maintenance' %}?status=in_progress" class="btn-tab {% if status_filter == 'in_progress' %}active{% endif %}">In Progress</a>
+        <a href="{% url 'landlord_maintenance' %}?status=completed" class="btn-tab {% if status_filter == 'completed' %}active{% endif %}">Completed</a>
+    </div>
+
+    <div class="recordstb">
+        <table id="maintenanceTable">
+            <thead>
+                <tr>
+                    <th>Tenant Name</th>
+                    <th>Property</th>
+                    <th>Issue Title</th>
+                    <th>Date Submitted</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in requests %}
+                <tr>
+                    <td>{{ r.lease.tenant.name|default:"—" }}</td>
+                    <td>{{ r.lease.property.name }}</td>
+                    <td>{% if r.title %}{{ r.title }}{% else %}{{ r.get_issue_category_display }}{% endif %}</td>
+                    <td>{{ r.created_at|date:"M d, Y H:i" }}</td>
+                    <td>{{ r.get_status_display }}</td>
+                    <td><a href="{% url 'landlord_maintenance_detail' r.id %}" style="color:var(--re-primary);">View</a></td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6">No maintenance requests in this status.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>
+
+
+

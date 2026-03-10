@@ -1,0 +1,191 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
+  <title>My Tenants - RentEasy</title>
+  <link rel="icon" href="{% static 'img/faviclogo.png' %}">
+</head>
+<body class="theme-landlord">
+<script src="{% static 'Js/theme.js' %}?v=22"></script>
+
+<nav>
+  <div class="navbar" id="navbar">
+    <button id="icon"><i class="fa-solid fa-bars"></i></button>
+    <img src="{% static 'img/renteasylogo.png' %}" alt="Logo">
+    <div class="logoss"><span>RENT</span><span style="color:var(--re-primary);">EASY</span></div>
+    <div class="userbox">
+      <a href="{% url 'profile' %}">
+        <img id="Profile" src="{% static 'img/user.jpg' %}" alt="Profile Picture">
+        <span class="welcuser">Hi, {{ request.user.name|default:"User" }}!</span>
+      </a>
+    </div>
+  </div>
+</nav>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelector("#icon").addEventListener("click", function() {
+    document.querySelector(".sidebar").classList.toggle("active");
+  });
+});
+</script>
+
+{% include "landlord/_sidebar.html" %}
+<script>function toggleDropdown(){event.preventDefault();var d=event.target.closest(".dropdown");var m=d?d.querySelector(".dropdown-menu"):null;if(d&&m){d.classList.toggle("active");m.style.maxHeight=m.style.maxHeight?"":m.scrollHeight+"px";}}</script>
+
+{% if messages %}
+<div style="max-width:1100px;margin:16px auto 0;padding:0 16px;">
+  {% for message in messages %}
+    <div class="re-alert {{ message.tags|default:'info' }}"><i class="fa-solid fa-circle-info"></i> {{ message }}</div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<div class="dashcont">
+
+  <!-- Header with Actions -->
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px;">
+    <h2 style="color:var(--re-primary);margin:0;font-size:1.3rem;"><i class="fa-solid fa-users"></i> My Tenants</h2>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <a href="{% url 'invite_tenant' %}" class="re-btn re-btn-primary re-btn-sm"><i class="fa-solid fa-envelope"></i> Invite Tenant</a>
+      <a href="{% url 'landlord_add_tenant' %}" class="re-btn re-btn-secondary re-btn-sm"><i class="fa-solid fa-user-plus"></i> Add Tenant</a>
+    </div>
+  </div>
+
+  {% if invites %}
+  <div class="re-alert info" style="margin-bottom:16px;">
+    <i class="fa-solid fa-clock"></i>
+    <span><strong>Pending invites:</strong>
+    {% for i in invites %}{{ i.tenant_email }}{% if not forloop.last %}, {% endif %}{% endfor %}</span>
+  </div>
+  {% endif %}
+
+  <!-- Tenants Table -->
+  <div class="re-card">
+    <div class="re-card-header">
+      <span>Lease Records</span>
+      <input type="text" id="searchInput" placeholder="Search…" style="padding:6px 12px;border-radius:8px;border:1px solid var(--re-border);font-size:13px;background:var(--re-input-bg);color:var(--re-text);width:180px;">
+    </div>
+    <div class="re-card-body" style="padding:0;">
+      <div class="re-table-wrap">
+        <table class="re-table" id="recordsTable">
+          <thead>
+            <tr>
+              <th>Tenant</th>
+              <th>Email</th>
+              <th>Property</th>
+              <th>Room</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for lease in leases %}
+            <tr>
+              <td><strong>{{ lease.tenant.name }}</strong></td>
+              <td>{{ lease.tenant.email }}</td>
+              <td>{{ lease.property.get_property_type_display }}</td>
+              <td>{% if lease.unit %}{{ lease.unit.unit_number }}{% else %}{{ lease.room_label|default:"-" }}{% endif %}</td>
+              <td>
+                <span class="re-badge {% if lease.status == 'active' %}green{% elif lease.status == 'expired' %}red{% elif lease.status == 'terminated' %}red{% else %}yellow{% endif %}">
+                  {{ lease.get_status_display }}
+                </span>
+              </td>
+              <td>
+                <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                  <a href="{% url 'landlord_lease_detail' pk=lease.pk %}" class="re-btn re-btn-sm re-btn-secondary"><i class="fa-solid fa-eye"></i> Lease</a>
+                  <form method="post" action="{% url 'lease_action' %}" style="margin:0;">
+                    {% csrf_token %}
+                    <input type="hidden" name="lease_id" value="{{ lease.id }}">
+                    <input type="hidden" name="action" value="renew">
+                    <button type="submit" class="re-btn re-btn-accent re-btn-sm"><i class="fa-solid fa-rotate"></i> Renew</button>
+                  </form>
+                  <form method="post" action="{% url 'lease_action' %}" style="margin:0;">
+                    {% csrf_token %}
+                    <input type="hidden" name="lease_id" value="{{ lease.id }}">
+                    <input type="hidden" name="action" value="terminate">
+                    <button type="submit" class="re-btn re-btn-danger re-btn-sm" onclick="return confirm('Terminate this lease?');"><i class="fa-solid fa-xmark"></i> End</button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="6" style="text-align:center;color:var(--re-text-muted);padding:32px;">
+              No tenants yet. <a href="{% url 'invite_tenant' %}">Invite a tenant</a> or add properties and assign leases.
+            </td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="pagination" id="paginationControls"></div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  // Search
+  const searchInput = document.getElementById("searchInput");
+  if (searchInput) {
+    searchInput.addEventListener("keyup", function() {
+      const filter = this.value.toLowerCase();
+      document.querySelectorAll("#recordsTable tbody tr").forEach(function(row) {
+        row.style.display = row.textContent.toLowerCase().includes(filter) ? "" : "none";
+      });
+    });
+  }
+
+  // Pagination
+  const table = document.getElementById("recordsTable");
+  const tbody = table.querySelector("tbody");
+  const rows = Array.from(tbody.querySelectorAll("tr"));
+  const rowsPerPage = 8;
+  let currentPage = 1;
+  const maxVisiblePages = 4;
+
+  function displayTable() {
+    tbody.innerHTML = "";
+    let start = (currentPage - 1) * rowsPerPage;
+    rows.slice(start, start + rowsPerPage).forEach(row => tbody.appendChild(row));
+    updatePagination();
+  }
+
+  function updatePagination() {
+    const pc = document.getElementById("paginationControls");
+    pc.innerHTML = "";
+    let totalPages = Math.ceil(rows.length / rowsPerPage);
+    if (totalPages <= 1) return;
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+    if (endPage - startPage + 1 < maxVisiblePages) startPage = Math.max(1, endPage - maxVisiblePages + 1);
+
+    if (startPage > 1) { pc.appendChild(createPageButton(1)); if (startPage > 2) pc.appendChild(createDots()); }
+    for (let i = startPage; i <= endPage; i++) pc.appendChild(createPageButton(i));
+    if (endPage < totalPages) { if (endPage < totalPages - 1) pc.appendChild(createDots()); pc.appendChild(createPageButton(totalPages)); }
+  }
+
+  function createPageButton(page) {
+    let btn = document.createElement("button");
+    btn.textContent = page;
+    btn.classList.add("page-btn");
+    if (page === currentPage) btn.classList.add("active");
+    btn.addEventListener("click", function () { currentPage = page; displayTable(); });
+    return btn;
+  }
+
+  function createDots() { let d = document.createElement("span"); d.textContent = "..."; d.classList.add("dots"); return d; }
+
+  displayTable();
+});
+</script>
+</body>
+</html>
+
+
+

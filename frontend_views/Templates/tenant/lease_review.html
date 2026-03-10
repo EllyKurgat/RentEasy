@@ -1,0 +1,190 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
+  <title>Review Lease - RentEasy</title>
+  <link rel="icon" href="{% static 'img/faviclogo.png' %}">
+  <style>
+    .review-card { max-width:700px; margin:0 auto; }
+    .review-header { text-align:center; padding:24px 0 16px; }
+    .review-header i { font-size:48px; color:var(--re-primary); margin-bottom:12px; display:block; }
+    .review-header h2 { margin:0 0 4px; color:var(--re-text); font-size:1.3rem; }
+    .review-header p { margin:0; color:var(--re-text-muted); font-size:14px; }
+    .term-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:16px 0; }
+    .term-item { background:var(--re-card-bg); border:1px solid var(--re-border); border-radius:10px; padding:14px; }
+    .term-item .term-label { font-size:11px; font-weight:600; text-transform:uppercase; color:var(--re-text-muted); letter-spacing:.5px; margin-bottom:4px; }
+    .term-item .term-value { font-size:15px; font-weight:600; color:var(--re-text); }
+    .term-item .term-value.money { color:var(--re-primary); }
+    .review-notes { background:var(--re-card-bg); border:1px solid var(--re-border); border-radius:10px; padding:16px; margin:16px 0; }
+    .review-notes h4 { margin:0 0 8px; font-size:13px; color:var(--re-text-muted); text-transform:uppercase; }
+    .review-notes p { margin:0; color:var(--re-text); font-size:14px; white-space:pre-wrap; }
+    .review-actions { display:flex; gap:12px; justify-content:center; margin-top:24px; flex-wrap:wrap; }
+    .decline-section { margin-top:16px; display:none; }
+    .decline-section textarea { width:100%; padding:10px; border:1px solid var(--re-border); border-radius:8px; font-size:14px; min-height:60px; resize:vertical; background:var(--re-input-bg); color:var(--re-text); font-family:inherit; }
+    .landlord-info { display:flex; align-items:center; gap:12px; padding:12px 16px; background:var(--re-card-bg); border:1px solid var(--re-border); border-radius:10px; margin:12px 0; }
+    .landlord-info i { font-size:28px; color:var(--re-primary); }
+    .landlord-info .info-text { display:flex; flex-direction:column; }
+    .landlord-info .info-text .name { font-weight:600; color:var(--re-text); }
+    .landlord-info .info-text .email { font-size:12px; color:var(--re-text-muted); }
+    @media (max-width:500px) { .term-grid { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body class="theme-tenant">
+<script src="{% static 'Js/theme.js' %}?v=22"></script>
+<nav>
+  <div class="navbar" id="navbar">
+    <button id="icon"><i class="fa-solid fa-bars"></i></button>
+    <img src="{% static 'img/renteasylogo.png' %}" alt="Renteasy Logo">
+    <div class="logoss"><span>RENT</span><span style="color: var(--re-primary);">EASY</span></div>
+    <div class="userbox">
+      <a href="{% url 'profile' %}">
+        <img id="Profile" src="{% static 'img/user.jpg' %}" alt="Profile Picture">
+        <span class="welcuser">Hi, {{ request.user.name|default:'User' }}!</span>
+      </a>
+    </div>
+  </div>
+</nav>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelector("#icon").addEventListener("click", function() {
+    document.querySelector(".sidebar").classList.toggle("active");
+  });
+});
+</script>
+
+{% include "tenant/_sidebar.html" %}
+
+{% if messages %}
+<div style="max-width:700px;margin:16px auto 0;padding:0 16px;">
+  {% for message in messages %}
+    <div class="re-alert {{ message.tags|default:'info' }}"><i class="fa-solid fa-circle-info"></i> {{ message }}</div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<div class="dashcont">
+  <div class="review-card">
+    <div class="review-header">
+      <i class="fa-solid fa-file-signature"></i>
+      <h2>Lease Agreement Review</h2>
+      <p>Your landlord has sent you a lease agreement to review and sign</p>
+    </div>
+
+    <!-- Landlord Info -->
+    <div class="landlord-info">
+      <i class="fa-solid fa-user-tie"></i>
+      <div class="info-text">
+        <span class="name">{{ lease.property.landlord.name }}</span>
+        <span class="email">{{ lease.property.landlord.email }}</span>
+      </div>
+    </div>
+
+    <!-- Property -->
+    <div class="re-card" style="margin:16px 0;">
+      <h3 style="margin:0 0 8px;font-size:14px;color:var(--re-text-muted);text-transform:uppercase;letter-spacing:.5px;">
+        <i class="fa-solid fa-building" style="color:var(--re-primary);margin-right:4px;"></i> Property
+      </h3>
+      <div style="font-size:16px;font-weight:600;color:var(--re-text);">{{ lease.property.name }}</div>
+      <div style="font-size:13px;color:var(--re-text-muted);">{{ lease.property.address }}</div>
+      {% if lease.unit %}
+        <div style="font-size:13px;color:var(--re-text-muted);margin-top:4px;">Unit: {{ lease.unit.unit_number }}</div>
+      {% endif %}
+    </div>
+
+    <!-- Lease Terms -->
+    <div class="term-grid">
+      <div class="term-item">
+        <div class="term-label">Monthly Rent</div>
+        <div class="term-value money">KSh {{ lease.monthly_rent|default:0 }}</div>
+      </div>
+      <div class="term-item">
+        <div class="term-label">Security Deposit</div>
+        <div class="term-value money">KSh {{ lease.security_deposit|default:0 }}</div>
+      </div>
+      <div class="term-item">
+        <div class="term-label">Start Date</div>
+        <div class="term-value">{{ lease.start_date|date:"d M Y" }}</div>
+      </div>
+      <div class="term-item">
+        <div class="term-label">End Date</div>
+        <div class="term-value">{{ lease.end_date|date:"d M Y"|default:"Open-ended" }}</div>
+      </div>
+      <div class="term-item">
+        <div class="term-label">Rent Due Day</div>
+        <div class="term-value">{{ lease.rent_due_day }}{% if lease.rent_due_day == 1 %}st{% elif lease.rent_due_day == 2 %}nd{% elif lease.rent_due_day == 3 %}rd{% else %}th{% endif %} of each month</div>
+      </div>
+      <div class="term-item">
+        <div class="term-label">Grace Period</div>
+        <div class="term-value">{{ lease.grace_period_days }} days</div>
+      </div>
+      {% if lease.late_fee_amount %}
+      <div class="term-item">
+        <div class="term-label">Late Fee</div>
+        <div class="term-value money">KSh {{ lease.late_fee_amount }}</div>
+      </div>
+      {% endif %}
+    </div>
+
+    {% if lease.notes %}
+    <div class="review-notes">
+      <h4><i class="fa-solid fa-sticky-note" style="margin-right:4px;"></i> Additional Terms</h4>
+      <p>{{ lease.notes }}</p>
+    </div>
+    {% endif %}
+
+    {% if lease.agreement_file %}
+    <div class="re-card" style="margin:16px 0;">
+      <h3 style="margin:0 0 8px;font-size:14px;color:var(--re-text-muted);text-transform:uppercase;letter-spacing:.5px;">
+        <i class="fa-solid fa-file-pdf" style="color:var(--re-primary);margin-right:4px;"></i> Lease Document
+      </h3>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <i class="fa-solid fa-file-circle-check" style="font-size:20px;color:#10b981;"></i>
+        <a href="{{ lease.agreement_file.url }}" download style="color:var(--re-primary);font-weight:500;"><i class="fa-solid fa-download"></i> Download & Review Document</a>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Actions -->
+    <div class="review-actions" id="mainActions">
+      <form method="post" style="display:inline;">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="accept">
+        <button type="submit" class="re-btn re-btn-primary" style="padding:10px 32px;font-size:15px;" onclick="return confirm('By clicking Accept, you acknowledge that you have read and agree to all lease terms. Proceed?');">
+          <i class="fa-solid fa-check-circle"></i> Accept & Sign Lease
+        </button>
+      </form>
+      <button type="button" class="re-btn re-btn-danger" style="padding:10px 32px;font-size:15px;" onclick="document.getElementById('declineSection').style.display='block';this.style.display='none';">
+        <i class="fa-solid fa-times-circle"></i> Decline
+      </button>
+    </div>
+
+    <div class="decline-section" id="declineSection">
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="decline">
+        <label style="font-size:13px;font-weight:600;color:var(--re-text-muted);display:block;margin-bottom:6px;">Reason for declining (optional)</label>
+        <textarea name="decline_reason" placeholder="Let your landlord know why you're declining…"></textarea>
+        <div style="display:flex;gap:10px;margin-top:10px;justify-content:center;">
+          <button type="submit" class="re-btn re-btn-danger" onclick="return confirm('Are you sure you want to decline this lease?');">
+            <i class="fa-solid fa-xmark"></i> Confirm Decline
+          </button>
+          <button type="button" class="re-btn re-btn-secondary" onclick="document.getElementById('declineSection').style.display='none';document.querySelector('#mainActions .re-btn-danger').style.display='';">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <p style="text-align:center;font-size:12px;color:var(--re-text-muted);margin-top:20px;">
+      By signing, you agree to the terms above. This serves as your digital acknowledgment.
+    </p>
+  </div>
+</div>
+</body>
+</html>

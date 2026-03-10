@@ -1,0 +1,287 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+    <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
+    <title>RentEasy - Sign In</title>
+    <link rel="icon" href="{% static 'img/faviclogo.png' %}">
+    <style>
+      .login-page { display: flex; min-height: 100vh; background: var(--re-bg); }
+      .login-left {
+        flex: 1 1 50%; display: flex; align-items: center; justify-content: center;
+        position: relative; overflow: hidden;
+      }
+      .login-left::before {
+        content: ''; position: absolute; inset: 0;
+        background: url("{% static 'Img/housessrent.jpg' %}") center/cover no-repeat;
+      }
+      .login-left::after {
+        content: ''; position: absolute; inset: 0;
+        background: linear-gradient(135deg, rgba(17,24,39,0.82) 0%, rgba(31,41,55,0.7) 100%);
+      }
+      .login-left-content {
+        position: relative; z-index: 2; text-align: center; padding: 48px; color: #fff;
+      }
+      .login-left-content img { height: 56px; margin-bottom: 24px; filter: brightness(0) invert(1); }
+      .login-left-content h1 { font-size: 2rem; font-weight: 700; margin: 0 0 12px; }
+      .login-left-content p { font-size: 1rem; opacity: 0.85; line-height: 1.7; max-width: 380px; margin: 0 auto; }
+
+      .login-right {
+        flex: 1 1 50%; display: flex; align-items: center; justify-content: center;
+        padding: 40px 24px;
+      }
+      .login-card {
+        width: 100%; max-width: 440px;
+        background: #fff;
+        padding: 40px 36px;
+        border-radius: 16px;
+        border-top: 4px solid #1F2937;
+        box-shadow: 0 4px 24px rgba(31,41,55,0.08);
+      }
+      .login-card h2 {
+        font-size: 1.5rem; font-weight: 700; color: #1F2937; margin: 0 0 4px;
+      }
+      .login-card .login-subtitle {
+        font-size: 0.92rem; color: var(--re-text-secondary); margin: 0 0 28px;
+      }
+
+      /* Field groups */
+      .field-group { margin-bottom: 20px; }
+      .field-group label {
+        display: block; font-size: 0.85rem; font-weight: 600; color: #1F2937;
+        margin-bottom: 6px;
+      }
+      .field-group label .req { color: var(--re-error); margin-left: 2px; }
+      .field-group .input-wrap {
+        position: relative;
+      }
+      .field-group input[type="text"],
+      .field-group input[type="email"],
+      .field-group input[type="password"] {
+        width: 100%; padding: 12px 14px; font-size: 0.92rem;
+        border: 1.5px solid var(--re-input-border, #D1D5DB);
+        border-radius: var(--re-input-radius, 8px);
+        background: var(--re-input-bg, #fff);
+        color: var(--re-text); font-family: 'Poppins', sans-serif;
+        box-sizing: border-box; transition: border 0.2s ease, box-shadow 0.2s ease;
+      }
+      .field-group input:focus {
+        outline: none; border-color: #3B82F6;
+        box-shadow: 0 0 0 3px rgba(59,130,246,0.18);
+      }
+      .field-group .input-icon {
+        position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+        color: #9CA3AF; font-size: 15px; transition: color 0.2s;
+      }
+      .field-group .input-wrap.has-icon input {
+        padding-left: 42px;
+      }
+      .field-group .input-wrap.has-icon:focus-within .input-icon {
+        color: #3B82F6;
+      }
+      .pw-toggle {
+        position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+        background: none; border: none; cursor: pointer; display: flex;
+        align-items: center; gap: 5px; font-size: 0.8rem; color: var(--re-text-secondary);
+        font-family: 'Poppins', sans-serif; padding: 0;
+      }
+      .pw-toggle i { font-size: 16px; }
+      .pw-toggle:hover { color: var(--re-primary); }
+
+      /* Options row */
+      .options-row {
+        display: flex; align-items: center; justify-content: space-between;
+        margin-bottom: 24px; flex-wrap: wrap; gap: 8px;
+      }
+      .remember-me {
+        display: flex; align-items: center; gap: 8px; cursor: pointer;
+        font-size: 0.85rem; color: var(--re-text-secondary); user-select: none;
+      }
+      .remember-me input[type="checkbox"] {
+        width: 18px; height: 18px; accent-color: var(--re-primary);
+        border-radius: 4px; cursor: pointer;
+      }
+      .forgot-link {
+        font-size: 0.85rem; font-weight: 600; color: #3B82F6;
+        text-decoration: none;
+      }
+      .forgot-link:hover { text-decoration: underline; color: #2563EB; }
+
+      /* Submit */
+      .login-btn {
+        width: 100%; padding: 14px 20px; font-size: 1rem; font-weight: 600;
+        border: none; border-radius: 10px; cursor: pointer;
+        color: #fff; background: #1F2937;
+        font-family: 'Poppins', sans-serif;
+        transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+        box-shadow: 0 2px 8px rgba(31,41,55,0.25);
+      }
+      .login-btn:hover { background: #111827; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(31,41,55,0.35); }
+      .login-btn:active { transform: translateY(0); box-shadow: 0 2px 6px rgba(31,41,55,0.2); }
+
+      /* Secondary outline button */
+      .login-btn-outline {
+        display: flex; align-items: center; justify-content: center;
+        width: 100%; padding: 13px 20px; font-size: 0.95rem; font-weight: 600;
+        border: 2px solid #3B82F6; border-radius: 10px; cursor: pointer;
+        color: #3B82F6; background: transparent; text-decoration: none;
+        font-family: 'Poppins', sans-serif;
+        transition: all 0.2s ease; margin-top: 12px; box-sizing: border-box;
+      }
+      .login-btn-outline:hover { background: #3B82F6; color: #fff; }
+
+      /* Divider */
+      .login-divider {
+        display: flex; align-items: center; gap: 14px; margin: 24px 0;
+        color: var(--re-text-muted); font-size: 0.82rem;
+      }
+      .login-divider::before, .login-divider::after {
+        content: ''; flex: 1; height: 1px; background: var(--re-border);
+      }
+
+      /* Footer links */
+      .login-footer {
+        text-align: center; font-size: 0.88rem; color: var(--re-text-secondary);
+      }
+      .login-footer a {
+        color: #3B82F6; font-weight: 600; text-decoration: none;
+      }
+      .login-footer a:hover { text-decoration: underline; color: #2563EB; }
+      .login-copyright {
+        text-align: center; font-size: 0.78rem; color: var(--re-text-muted); margin-top: 28px;
+      }
+
+      /* Messages */
+      .login-messages { list-style: none; padding: 0; margin: 0 0 20px; }
+      .login-messages li {
+        padding: 12px 16px; border-radius: 10px; margin-bottom: 8px;
+        font-size: 0.88rem; display: flex; align-items: center; gap: 10px;
+      }
+      .login-messages .error { background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; }
+      .login-messages .success { background: #F0FDF4; color: #166534; border: 1px solid #BBF7D0; }
+      .login-messages .info { background: #EFF6FF; color: #1E40AF; border: 1px solid #BFDBFE; }
+
+      /* Checkbox accent */
+      .remember-me input[type="checkbox"]:checked {
+        accent-color: #1F2937;
+      }
+
+      @media (max-width: 900px) {
+        .login-left { display: none; }
+        .login-right { flex: 1 1 100%; background: linear-gradient(180deg, #F0F5FF 0%, #fff 40%); }
+        .login-card { border-top: 4px solid #3B82F6; }
+      }
+    </style>
+</head>
+
+<body class="theme-landlord">
+<script src="{% static 'Js/theme.js' %}?v=22"></script>
+
+<div class="login-page">
+  <!-- Left panel — branding -->
+  <div class="login-left">
+    <div class="login-left-content">
+      <img src="{% static 'img/renteasylogo.png' %}" alt="RentEasy">
+      <h1>Welcome to RentEasy</h1>
+      <p>One platform for tenants and landlords. Find rentals, manage properties, pay rent, and stay in touch — all in one place.</p>
+    </div>
+  </div>
+
+  <!-- Right panel — form -->
+  <div class="login-right">
+    <div class="login-card">
+      <h2>Sign In</h2>
+      <p class="login-subtitle">Welcome back! Please enter your credentials to continue.</p>
+
+      {% if messages %}
+      <ul class="login-messages">
+        {% for message in messages %}
+        <li class="{{ message.tags|default:'info' }}">
+          <i class="fa-solid {% if message.tags == 'error' %}fa-circle-exclamation{% elif message.tags == 'success' %}fa-check-circle{% else %}fa-info-circle{% endif %}"></i>
+          {{ message }}
+        </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+
+      <form method="POST" action="{% url 'user_login' %}" novalidate>
+        {% csrf_token %}
+
+        <div class="field-group">
+          <label for="email">Email address <span class="req">*</span></label>
+          <div class="input-wrap has-icon">
+            <i class="fa-solid fa-envelope input-icon"></i>
+            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label for="password">Password <span class="req">*</span></label>
+          <div class="input-wrap has-icon">
+            <i class="fa-solid fa-lock input-icon"></i>
+            <input type="password" id="password" name="password" placeholder="Password" required>
+            <button type="button" class="pw-toggle" onclick="togglePassword()">
+              <span id="pw-label">Show Password</span>
+              <i class="fa-solid fa-eye" id="pw-icon"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="options-row">
+          <label class="remember-me">
+            <input type="checkbox" name="remember"> Remember for 30 days
+          </label>
+          <a href="{% url 'forgotpass' %}" class="forgot-link">Forgot Password</a>
+        </div>
+
+        <button type="submit" class="login-btn">Sign In</button>
+      </form>
+
+      <div class="login-divider">or</div>
+
+      <a href="{% url 'register' %}" class="login-btn-outline">
+        <i class="fa-solid fa-user-plus" style="margin-right:6px;"></i> Create Account
+      </a>
+
+      <div class="login-footer" style="margin-top: 20px;">
+        Already have an account? You're in the right place.
+      </div>
+      <div class="login-footer" style="margin-top: 8px;">
+        <a href="{% url 'home' %}" style="font-weight:400; color: var(--re-text-secondary);"><i class="fa-solid fa-arrow-left" style="margin-right: 4px;"></i>Back to home</a>
+      </div>
+
+      <div class="login-copyright">
+        RentEasy &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function togglePassword() {
+  var x = document.getElementById("password");
+  var icon = document.getElementById("pw-icon");
+  var label = document.getElementById("pw-label");
+  if (x.type === "password") {
+    x.type = "text";
+    icon.classList.replace("fa-eye", "fa-eye-slash");
+    label.textContent = "Hide Password";
+  } else {
+    x.type = "password";
+    icon.classList.replace("fa-eye-slash", "fa-eye");
+    label.textContent = "Show Password";
+  }
+}
+</script>
+
+</body>
+</html>
+
+
+

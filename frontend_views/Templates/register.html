@@ -1,0 +1,226 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+  <link rel="icon" href="{% static 'img/faviclogo.png' %}" type="image/png">
+  <title>Sign Up - RentEasy</title>
+  <style>
+    html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+    .reg-page { display: flex; height: 100vh; font-family: 'Poppins', sans-serif; }
+
+    /* Left branding panel */
+    .reg-left {
+      flex: 1 1 45%; display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    .reg-left::before {
+      content: ''; position: absolute; inset: 0;
+      background: url("{% static 'Img/housessrent.jpg' %}") center/cover no-repeat;
+    }
+    .reg-left::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(17,24,39,0.82) 0%, rgba(31,41,55,0.7) 100%);
+    }
+    .reg-left-content {
+      position: relative; z-index: 2; text-align: center; padding: 40px; color: #fff;
+    }
+    .reg-left-content img { height: 50px; margin-bottom: 20px; filter: brightness(0) invert(1); }
+    .reg-left-content h1 { font-size: 1.8rem; font-weight: 700; margin: 0 0 10px; }
+    .reg-left-content p { font-size: 0.95rem; opacity: 0.85; line-height: 1.6; max-width: 340px; margin: 0 auto; }
+
+    /* Right form panel */
+    .reg-right {
+      flex: 1 1 55%; display: flex; align-items: center; justify-content: center;
+      padding: 24px 32px; overflow-y: auto; background: var(--re-bg, #F9FAFB);
+    }
+    .reg-card {
+      width: 100%; max-width: 520px;
+      background: #fff; border-radius: 16px;
+      border-top: 4px solid #1F2937;
+      box-shadow: 0 4px 24px rgba(31,41,55,0.08);
+      padding: 28px 32px 24px;
+    }
+    .reg-card h2 { font-size: 1.35rem; font-weight: 700; color: #1F2937; margin: 0 0 2px; }
+    .reg-card .reg-subtitle { font-size: 0.88rem; color: #6B7280; margin: 0 0 20px; }
+
+    /* 2-column form grid */
+    .reg-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 16px; }
+    .reg-grid .full { grid-column: 1 / -1; }
+    .reg-field { margin-bottom: 14px; }
+    .reg-field label {
+      display: block; font-size: 0.82rem; font-weight: 600; color: #1F2937; margin-bottom: 5px;
+    }
+    .reg-field label .req { color: #EF4444; margin-left: 2px; }
+    .reg-field .input-wrap { position: relative; }
+    .reg-field .input-icon {
+      position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+      color: #9CA3AF; font-size: 14px; transition: color 0.2s;
+    }
+    .reg-field input,
+    .reg-field select {
+      width: 100%; padding: 10px 12px 10px 38px;
+      border: 1.5px solid #D1D5DB; border-radius: 8px;
+      font-size: 0.88rem; font-family: 'Poppins', sans-serif;
+      color: #1F2937; background: #fff; box-sizing: border-box;
+      transition: border 0.2s, box-shadow 0.2s;
+    }
+    .reg-field select { padding-left: 38px; appearance: auto; }
+    .reg-field input:focus,
+    .reg-field select:focus {
+      outline: none; border-color: #3B82F6;
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+    }
+    .reg-field .input-wrap:focus-within .input-icon { color: #3B82F6; }
+    .reg-field .hint {
+      font-size: 0.75rem; color: #9CA3AF; margin-top: 3px; line-height: 1.3;
+    }
+
+    /* Show password row */
+    .show-pw { display: flex; align-items: center; gap: 6px; margin-bottom: 16px; }
+    .show-pw input[type="checkbox"] { width: 16px; height: 16px; accent-color: #1F2937; cursor: pointer; }
+    .show-pw label { font-size: 0.82rem; color: #6B7280; cursor: pointer; margin: 0; }
+
+    /* Submit */
+    .reg-btn {
+      width: 100%; padding: 12px 20px; font-size: 0.95rem; font-weight: 600;
+      border: none; border-radius: 10px; cursor: pointer;
+      color: #fff; background: #1F2937;
+      font-family: 'Poppins', sans-serif;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 2px 8px rgba(31,41,55,0.25);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .reg-btn:hover { background: #111827; transform: translateY(-1px); box-shadow: 0 4px 14px rgba(31,41,55,0.35); }
+
+    /* Footer */
+    .reg-footer {
+      text-align: center; font-size: 0.85rem; color: #6B7280; margin-top: 16px;
+    }
+    .reg-footer a { color: #3B82F6; font-weight: 600; text-decoration: none; }
+    .reg-footer a:hover { text-decoration: underline; color: #2563EB; }
+
+    /* Messages */
+    .reg-messages { list-style: none; padding: 0; margin: 0 0 14px; }
+    .reg-messages li {
+      padding: 10px 14px; border-radius: 8px; margin-bottom: 6px;
+      font-size: 0.84rem; display: flex; align-items: center; gap: 8px;
+    }
+    .reg-messages .error { background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; }
+    .reg-messages .success { background: #F0FDF4; color: #166534; border: 1px solid #BBF7D0; }
+    .reg-messages .info { background: #EFF6FF; color: #1E40AF; border: 1px solid #BFDBFE; }
+
+    @media (max-width: 900px) {
+      .reg-left { display: none; }
+      .reg-right { flex: 1 1 100%; background: linear-gradient(180deg, #F0F5FF 0%, #fff 40%); }
+      .reg-card { border-top: 4px solid #3B82F6; }
+      .reg-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body class="theme-landlord">
+<script src="{% static 'Js/theme.js' %}?v=22"></script>
+
+<div class="reg-page">
+  <!-- Left branding panel -->
+  <div class="reg-left">
+    <div class="reg-left-content">
+      <img src="{% static 'img/renteasylogo.png' %}" alt="RentEasy">
+      <h1>Join RentEasy</h1>
+      <p>Find rentals, manage properties, pay rent, and stay connected — all in one place.</p>
+    </div>
+  </div>
+
+  <!-- Right form panel -->
+  <div class="reg-right">
+    <div class="reg-card">
+      <h2>Create Account</h2>
+      <p class="reg-subtitle">Fill in the details below to get started.</p>
+
+      {% if messages %}
+      <ul class="reg-messages">
+        {% for message in messages %}
+        <li class="{{ message.tags|default:'info' }}">
+          <i class="fa-solid {% if message.tags == 'error' %}fa-circle-exclamation{% elif message.tags == 'success' %}fa-check-circle{% else %}fa-info-circle{% endif %}"></i>
+          {{ message }}
+        </li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+
+      <form method="POST" action="{% url 'register' %}" novalidate>
+        {% csrf_token %}
+
+        <div class="reg-grid">
+          <div class="reg-field">
+            <label for="name">Full Name <span class="req">*</span></label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-user input-icon"></i>
+              <input type="text" id="name" name="name" placeholder="John Doe" required>
+            </div>
+          </div>
+
+          <div class="reg-field">
+            <label for="email">Email <span class="req">*</span></label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-envelope input-icon"></i>
+              <input type="email" id="email" name="email" placeholder="john@example.com" required>
+            </div>
+          </div>
+
+          <div class="reg-field">
+            <label for="phone">Phone <span class="req">*</span></label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-phone input-icon"></i>
+              <input type="tel" id="phone" name="phone" placeholder="0712345678" required>
+            </div>
+          </div>
+
+          <div class="reg-field">
+            <label for="role">I am a… <span class="req">*</span></label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-briefcase input-icon"></i>
+              <select name="role" id="role" required>
+                <option value="Tenant">Tenant</option>
+                <option value="Landlord">Landlord</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="reg-field full">
+            <label for="password">Password <span class="req">*</span></label>
+            <div class="input-wrap">
+              <i class="fa-solid fa-lock input-icon"></i>
+              <input type="password" id="password" name="password" placeholder="Create a strong password" required>
+            </div>
+            <div class="hint">Min 8 chars. Mix letters, numbers & symbols.</div>
+          </div>
+        </div>
+
+        <div class="show-pw">
+          <input type="checkbox" id="showPw" onclick="document.getElementById('password').type=this.checked?'text':'password'">
+          <label for="showPw">Show password</label>
+        </div>
+
+        <button type="submit" class="reg-btn"><i class="fa-solid fa-user-plus"></i> Create Account</button>
+      </form>
+
+      <div class="reg-footer">
+        Already have an account? <a href="{% url 'user_login' %}">Sign In</a>
+      </div>
+      <div class="reg-footer" style="margin-top:8px;">
+        <a href="{% url 'home' %}" style="font-weight:400; color:#9CA3AF;"><i class="fa-solid fa-arrow-left" style="margin-right:4px;"></i>Back to home</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
+
+

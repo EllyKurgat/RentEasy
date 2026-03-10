@@ -1,0 +1,300 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
+    <title>Reports &amp; Analytics - RentEasy</title>
+    <link rel="icon" href="{% static 'img/faviclogo.png' %}">
+    <style>
+        .report-wrap { padding:24px; }
+        .report-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:24px; }
+        .report-header h1 { margin:0; color:var(--re-primary); font-size:1.6rem; }
+        .year-select { display:flex; align-items:center; gap:8px; }
+        .year-select label { font-size:0.9rem; color:var(--re-text-secondary); }
+        .year-select select { padding:8px 14px; border:1px solid var(--re-input-border); border-radius:8px; background:var(--re-input-bg); color:var(--re-text); font-size:0.95rem; }
+
+        /* Stat cards */
+        .rpt-stats { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:16px; margin-bottom:28px; }
+        .rpt-stat { background:var(--re-surface); border-radius:12px; padding:20px; box-shadow:0 2px 12px rgba(0,0,0,0.06); text-align:center; }
+        .rpt-stat .icon { font-size:1.8rem; margin-bottom:8px; }
+        .rpt-stat .icon.blue { color:#3b82f6; }
+        .rpt-stat .icon.green { color:#10b981; }
+        .rpt-stat .icon.orange { color:#f59e0b; }
+        .rpt-stat .icon.red { color:#ef4444; }
+        .rpt-stat .icon.teal { color:#14b8a6; }
+        .rpt-stat .icon.purple { color:#8b5cf6; }
+        .rpt-stat .value { font-size:1.5rem; font-weight:700; color:var(--re-text); margin-bottom:2px; }
+        .rpt-stat .label { font-size:0.85rem; color:var(--re-text-secondary); }
+
+        /* Chart */
+        .chart-card { background:var(--re-surface); border-radius:12px; padding:24px; box-shadow:0 2px 12px rgba(0,0,0,0.06); margin-bottom:28px; }
+        .chart-card h2 { margin:0 0 16px; font-size:1.2rem; color:var(--re-text); }
+        .bar-chart { display:flex; align-items:flex-end; gap:8px; height:200px; }
+        .bar-col { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; }
+        .bar-fill { width:100%; max-width:48px; background:var(--re-primary); border-radius:6px 6px 0 0; transition:height 0.4s ease; min-height:2px; }
+        .bar-label { font-size:0.72rem; color:var(--re-text-secondary); margin-top:6px; text-align:center; }
+        .bar-value { font-size:0.7rem; color:var(--re-text); font-weight:600; margin-bottom:4px; }
+
+        /* Table cards */
+        .rpt-table-card { background:var(--re-surface); border-radius:12px; padding:24px; box-shadow:0 2px 12px rgba(0,0,0,0.06); margin-bottom:28px; }
+        .rpt-table-card h2 { margin:0 0 16px; font-size:1.2rem; color:var(--re-text); }
+        .rpt-table { width:100%; border-collapse:collapse; }
+        .rpt-table th { text-align:left; padding:10px 12px; font-size:0.85rem; color:var(--re-text-secondary); border-bottom:2px solid var(--re-border); }
+        .rpt-table td { padding:10px 12px; font-size:0.9rem; color:var(--re-text); border-bottom:1px solid var(--re-border); }
+        .rpt-table .occ-bar { display:flex; align-items:center; gap:8px; }
+        .occ-track { flex:1; height:8px; background:var(--re-surface-alt); border-radius:4px; overflow:hidden; max-width:120px; }
+        .occ-fill { height:100%; border-radius:4px; background:var(--re-primary); }
+        .occ-pct { font-size:0.8rem; font-weight:600; color:var(--re-text); min-width:36px; }
+
+        /* Two-col layout */
+        .rpt-two-col { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-bottom:28px; }
+        @media(max-width:768px) { .rpt-two-col { grid-template-columns:1fr; } }
+        .maint-donut { display:flex; align-items:center; gap:24px; flex-wrap:wrap; }
+        .donut-stat { text-align:center; }
+        .donut-stat .num { font-size:1.8rem; font-weight:700; }
+        .donut-stat .lbl { font-size:0.8rem; color:var(--re-text-secondary); }
+        .donut-stat .num.green { color:#10b981; }
+        .donut-stat .num.orange { color:#f59e0b; }
+        .donut-stat .num.red { color:#ef4444; }
+
+        .method-row { display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid var(--re-border); }
+        .method-row:last-child { border:0; }
+        .method-icon { width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:1rem; }
+        .method-icon.mpesa { background:#e8f5e9; color:#2e7d32; }
+        .method-icon.bank { background:#e3f2fd; color:#1565c0; }
+        .method-icon.cash { background:#fff3e0; color:#e65100; }
+        .method-icon.card { background:#f3e5f5; color:#7b1fa2; }
+        .method-info { flex:1; }
+        .method-info .name { font-weight:600; color:var(--re-text); font-size:0.9rem; text-transform:capitalize; }
+        .method-info .cnt { font-size:0.8rem; color:var(--re-text-secondary); }
+        .method-total { font-weight:700; color:var(--re-text); font-size:0.95rem; }
+
+        body.dark .rpt-stat, body.dark .chart-card, body.dark .rpt-table-card { background:var(--re-surface); box-shadow:0 2px 12px rgba(0,0,0,0.2); }
+
+        /* Mobile responsive */
+        @media(max-width:600px) {
+            .report-wrap { padding:16px; }
+            .chart-card { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+            .bar-chart { min-width:500px; }
+            .rpt-stats { grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:10px; }
+            .rpt-stat .value { font-size:1.2rem; }
+            .method-row { flex-wrap:wrap; }
+        }
+    </style>
+</head>
+<body class="theme-landlord">
+<script src="{% static 'Js/theme.js' %}?v=22"></script>
+
+    {% include "landlord/_sidebar.html" %}
+    <div class="dashcont report-wrap">
+
+        <!-- ── Header ── -->
+        <div class="report-header">
+            <h1><i class="fa-solid fa-chart-line" style="margin-right:8px;"></i>Reports &amp; Analytics</h1>
+            <form method="get" class="year-select">
+                <label for="yearSel">Year:</label>
+                <select name="year" id="yearSel" onchange="this.form.submit()">
+                    {% for y in available_years %}
+                    <option value="{{ y }}" {% if y == year %}selected{% endif %}>{{ y }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+
+        <!-- ── Summary Stats ── -->
+        <div class="rpt-stats">
+            <div class="rpt-stat">
+                <div class="icon blue"><i class="fa-solid fa-building"></i></div>
+                <div class="value">{{ total_properties }}</div>
+                <div class="label">Properties</div>
+            </div>
+            <div class="rpt-stat">
+                <div class="icon teal"><i class="fa-solid fa-door-open"></i></div>
+                <div class="value">{{ total_units }}</div>
+                <div class="label">Total Units</div>
+            </div>
+            <div class="rpt-stat">
+                <div class="icon green"><i class="fa-solid fa-user-check"></i></div>
+                <div class="value">{{ occupied_units }}</div>
+                <div class="label">Occupied</div>
+            </div>
+            <div class="rpt-stat">
+                <div class="icon orange"><i class="fa-solid fa-door-closed"></i></div>
+                <div class="value">{{ vacant_units }}</div>
+                <div class="label">Vacant</div>
+            </div>
+            <div class="rpt-stat">
+                <div class="icon purple"><i class="fa-solid fa-percentage"></i></div>
+                <div class="value">{{ occupancy_rate }}%</div>
+                <div class="label">Occupancy Rate</div>
+            </div>
+            <div class="rpt-stat">
+                <div class="icon green"><i class="fa-solid fa-users"></i></div>
+                <div class="value">{{ total_tenants }}</div>
+                <div class="label">Active Tenants</div>
+            </div>
+        </div>
+
+        <!-- ── Income Summary Stats ── -->
+        <div class="rpt-stats">
+            <div class="rpt-stat">
+                <div class="icon green"><i class="fa-solid fa-coins"></i></div>
+                <div class="value">KSh {{ total_income_year|default:"0"|intcomma }}</div>
+                <div class="label">Income ({{ year }})</div>
+            </div>
+            <div class="rpt-stat">
+                <div class="icon blue"><i class="fa-solid fa-wallet"></i></div>
+                <div class="value">KSh {{ total_income_all|default:"0"|intcomma }}</div>
+                <div class="label">All-time Income</div>
+            </div>
+            <div class="rpt-stat">
+                <div class="icon orange"><i class="fa-solid fa-clock"></i></div>
+                <div class="value">KSh {{ total_pending|default:"0"|intcomma }}</div>
+                <div class="label">Pending</div>
+            </div>
+            <div class="rpt-stat">
+                <div class="icon red"><i class="fa-solid fa-exclamation-triangle"></i></div>
+                <div class="value">KSh {{ total_overdue|default:"0"|intcomma }}</div>
+                <div class="label">Overdue</div>
+            </div>
+        </div>
+
+        <!-- ── Monthly Income Chart ── -->
+        <div class="chart-card">
+            <h2><i class="fa-solid fa-chart-bar" style="color:var(--re-primary);margin-right:8px;"></i> Monthly Income — {{ year }}</h2>
+            <div class="bar-chart">
+                {% for d in monthly_data %}
+                <div class="bar-col">
+                    <div class="bar-value">{% if d.amount %}{{ d.amount }}{% endif %}</div>
+                    <div class="bar-fill" data-height="{% widthratio d.amount max_month_income 180 %}" {% if not d.amount %}data-empty="1"{% endif %}></div>
+                    <div class="bar-label">{{ d.month }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- ── Two Column: Maintenance & Payment Methods ── -->
+        <div class="rpt-two-col">
+            <!-- Maintenance Overview -->
+            <div class="rpt-table-card">
+                <h2><i class="fa-solid fa-wrench" style="color:var(--re-primary);margin-right:8px;"></i> Maintenance Overview</h2>
+                <div class="maint-donut">
+                    <div class="donut-stat">
+                        <div class="num red">{{ maint_open }}</div>
+                        <div class="lbl">Open</div>
+                    </div>
+                    <div class="donut-stat">
+                        <div class="num orange">{{ maint_progress }}</div>
+                        <div class="lbl">In Progress</div>
+                    </div>
+                    <div class="donut-stat">
+                        <div class="num green">{{ maint_resolved }}</div>
+                        <div class="lbl">Resolved</div>
+                    </div>
+                    <div class="donut-stat">
+                        <div class="num" style="color:var(--re-text);">{{ maint_total }}</div>
+                        <div class="lbl">Total</div>
+                    </div>
+                </div>
+                {% if maint_by_category %}
+                <h3 style="font-size:0.95rem;margin:20px 0 10px;color:var(--re-text);">By Category</h3>
+                {% for mc in maint_by_category %}
+                <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--re-border);font-size:0.9rem;">
+                    <span style="color:var(--re-text);text-transform:capitalize;">{{ mc.issue_category }}</span>
+                    <span style="font-weight:600;color:var(--re-text);">{{ mc.cnt }}</span>
+                </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+
+            <!-- Payment Methods -->
+            <div class="rpt-table-card">
+                <h2><i class="fa-solid fa-credit-card" style="color:var(--re-primary);margin-right:8px;"></i> Payment Methods ({{ year }})</h2>
+                {% for pm in method_dist %}
+                <div class="method-row">
+                    <div class="method-icon {% if pm.method == 'mpesa' %}mpesa{% elif pm.method == 'bank' %}bank{% elif pm.method == 'cash' %}cash{% else %}card{% endif %}">
+                        <i class="fa-solid {% if pm.method == 'mpesa' %}fa-mobile-screen{% elif pm.method == 'bank' %}fa-building-columns{% elif pm.method == 'cash' %}fa-money-bill{% else %}fa-credit-card{% endif %}"></i>
+                    </div>
+                    <div class="method-info">
+                        <div class="name">{{ pm.method|default:"Other" }}</div>
+                        <div class="cnt">{{ pm.cnt }} transaction{{ pm.cnt|pluralize }}</div>
+                    </div>
+                    <div class="method-total">KSh {{ pm.total|intcomma }}</div>
+                </div>
+                {% empty %}
+                <p style="color:var(--re-text-secondary);font-style:italic;">No confirmed payments this year.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- ── Property Breakdown Table ── -->
+        <div class="rpt-table-card">
+            <h2><i class="fa-solid fa-building" style="color:var(--re-primary);margin-right:8px;"></i> Property Performance</h2>
+            <div style="overflow-x:auto;">
+            <table class="rpt-table">
+                <thead>
+                <tr>
+                    <th>Property</th>
+                    <th>Units</th>
+                    <th>Occupancy</th>
+                    <th>Income ({{ year }})</th>
+                    <th>Open Requests</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for row in property_breakdown %}
+                <tr>
+                    <td><strong>{{ row.property.name }}</strong><br><span style="font-size:0.8rem;color:var(--re-text-secondary);">{{ row.property.address }}</span></td>
+                    <td>{{ row.occupied }}/{{ row.units }}</td>
+                    <td>
+                        <div class="occ-bar">
+                            <div class="occ-track"><div class="occ-fill" data-width="{{ row.occupancy_pct }}"></div></div>
+                            <span class="occ-pct">{{ row.occupancy_pct }}%</span>
+                        </div>
+                    </td>
+                    <td>KSh {{ row.income|intcomma }}</td>
+                    <td>
+                        {% if row.open_maintenance %}
+                        <span style="color:#ef4444;font-weight:600;">{{ row.open_maintenance }}</span>
+                        {% else %}
+                        <span style="color:#10b981;">0</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" style="text-align:center;color:var(--re-text-secondary);">No properties yet.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        </div>
+
+        <!-- ── Lease Alerts ── -->
+        {% if expiring_soon %}
+        <div style="background:#fef3c7;border-left:4px solid #f59e0b;border-radius:8px;padding:16px 20px;margin-bottom:24px;">
+            <strong style="color:#92400e;"><i class="fa-solid fa-triangle-exclamation"></i> {{ expiring_soon }} lease{{ expiring_soon|pluralize }} expiring within 60 days.</strong>
+            <a href="{% url 'mytenants' %}" style="margin-left:12px;color:var(--re-primary);font-weight:600;">View tenants →</a>
+        </div>
+        {% endif %}
+
+    </div>
+<script>
+document.querySelectorAll('.bar-fill[data-height]').forEach(function(el) {
+  if (el.dataset.empty) { el.style.height = '2px'; el.style.opacity = '0.3'; }
+  else if (el.dataset.height) { el.style.height = el.dataset.height + 'px'; }
+});
+document.querySelectorAll('.occ-fill[data-width]').forEach(function(el) {
+  el.style.width = el.dataset.width + '%';
+});
+</script>
+</body>
+</html>
+
+
+

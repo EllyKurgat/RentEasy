@@ -1,0 +1,176 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
+  <title>Payment Methods - RentEasy</title>
+  <link rel="icon" href="{% static 'img/faviclogo.png' %}">
+  <style>
+    .pm-card{background:var(--re-surface);border-radius:12px;padding:20px 24px;margin-bottom:16px;box-shadow:var(--re-card-shadow);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;border:1px solid var(--re-border)}
+    .pm-card .pm-info{flex:1;min-width:200px}
+    .pm-card .pm-info h3{margin:0 0 4px;font-size:16px;color:var(--re-primary)}
+    .pm-card .pm-info p{margin:0;font-size:14px;color:var(--re-text-secondary)}
+    .pm-card .pm-actions{display:flex;gap:8px}
+    .pm-card .pm-actions button,.pm-card .pm-actions a{padding:6px 14px;border:none;border-radius:6px;cursor:pointer;font-size:13px;text-decoration:none;transition:all .2s}
+    .btn-toggle{background:var(--re-surface-alt);color:var(--re-text)}.btn-delete{background:#e74c3c;color:#fff}.btn-edit{background:var(--re-primary);color:#fff}
+    .badge-active{display:inline-block;padding:2px 10px;border-radius:12px;font-size:12px;font-weight:600}
+    .badge-active.yes{background:#d4edda;color:#155724}.badge-active.no{background:#f8d7da;color:#721c24}
+    .pm-form{background:var(--re-surface);border-radius:12px;padding:28px;box-shadow:var(--re-card-shadow);margin-bottom:24px;border:1px solid var(--re-border)}
+    .pm-form label{display:block;margin:12px 0 4px;font-weight:500;font-size:14px;color:var(--re-text)}
+    .pm-form input,.pm-form select{width:100%;padding:10px 12px;border:1px solid var(--re-input-border);border-radius:8px;font-size:14px;box-sizing:border-box;background:var(--re-input-bg);color:var(--re-text)}
+    .pm-form .field-group{display:none}
+    .pm-form .field-group.visible{display:block}
+    .pm-form button[type=submit]{margin-top:18px;padding:12px 28px;background:var(--re-primary);color:#fff;border:none;border-radius:8px;font-size:15px;cursor:pointer;transition:background .2s}
+    .pm-form button[type=submit]:hover{background:var(--re-primary-hover)}
+    body.dark .badge-active.yes{background:#14532d50;color:#86efac}body.dark .badge-active.no{background:#450a0a50;color:#fca5a5}
+  </style>
+</head>
+<body class="theme-landlord">
+<script src="{% static 'Js/theme.js' %}?v=22"></script>
+
+<nav>
+  <div class="navbar" id="navbar">
+    <button id="icon"><i class="fa-solid fa-bars"></i></button>
+    <img src="{% static 'img/renteasylogo.png' %}" alt="Logo">
+    <script>
+      document.addEventListener("DOMContentLoaded", function(){
+        document.querySelector("#icon").addEventListener("click", function(){
+          document.querySelector(".sidebar").classList.toggle("active");
+        });
+      });
+    </script>
+    <div class="logoss"><span>RENT</span><span style="color: var(--re-primary);">EASY</span></div>
+    <div class="userbox">
+      <a href="{% url 'profile' %}">
+        <img id="Profile" src="{% static 'img/user.jpg' %}" alt="Profile">
+        <span class="welcuser">Hi, {{ request.user.name|default:"User" }}!</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+{% include "landlord/_sidebar.html" %}
+<script>function toggleDropdown(){event.preventDefault();var d=event.target.closest(".dropdown");var m=d?d.querySelector(".dropdown-menu"):null;if(d&&m){d.classList.toggle("active");m.style.maxHeight=m.style.maxHeight?"":m.scrollHeight+"px";}}</script>
+
+<div class="dashcont">
+
+  {% if messages %}
+  <div style="max-width:900px;margin:0 auto 16px;">
+    {% for message in messages %}
+    <div style="background:var(--re-surface);border-left:4px solid var(--re-primary);padding:12px 16px;border-radius:8px;margin-bottom:10px;box-shadow:0 2px 10px rgba(0,0,0,.06);">{{ message }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <h1 class="advant3" style="color:var(--re-primary);font-size:20px;">HOW TENANTS PAY YOU</h1>
+  <p style="color:var(--re-text-secondary);margin-bottom:24px;">Configure the payment methods your tenants will see when they pay rent. You can add M-Pesa (Paybill, Till, Send Money, Pochi la Biashara) or bank transfer details.</p>
+
+  <!-- ── Existing methods ────────────────────────────────────── -->
+  {% for m in methods %}
+  <div class="pm-card">
+    <div class="pm-info">
+      <h3>{{ m.get_method_type_display }} {% if m.display_name %}— {{ m.display_name }}{% endif %}</h3>
+      <p>{{ m.summary_for_tenant }}</p>
+      <span class="badge-active {% if m.is_active %}yes{% else %}no{% endif %}">{% if m.is_active %}Active{% else %}Disabled{% endif %}</span>
+    </div>
+    <div class="pm-actions">
+      <form method="POST" style="display:inline">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="toggle">
+        <input type="hidden" name="method_id" value="{{ m.pk }}">
+        <button type="submit" class="btn-toggle">{% if m.is_active %}Disable{% else %}Enable{% endif %}</button>
+      </form>
+      <form method="POST" style="display:inline" onsubmit="return confirm('Delete this payment method?')">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="delete">
+        <input type="hidden" name="method_id" value="{{ m.pk }}">
+        <button type="submit" class="btn-delete">Delete</button>
+      </form>
+    </div>
+  </div>
+  {% empty %}
+  <div style="background:#fff3cd;border-radius:10px;padding:20px;margin-bottom:24px;text-align:center;">
+    <i class="fa-solid fa-circle-exclamation" style="color:#856404;font-size:24px;"></i>
+    <p style="margin:8px 0 0;color:#856404;">You haven't added any payment methods yet. Tenants won't be able to pay you until you add at least one.</p>
+  </div>
+  {% endfor %}
+
+  <!-- ── Add / Edit form ─────────────────────────────────────── -->
+  <h2 style="font-size:18px;margin-top:32px;color:var(--re-primary);">Add Payment Method</h2>
+  <div class="pm-form">
+    <form method="POST">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="add">
+
+      <label for="method_type">Payment Type</label>
+      <select name="method_type" id="method_type" required>
+        <option value="">-- Choose --</option>
+        <option value="mpesa_paybill">M-Pesa Paybill</option>
+        <option value="mpesa_till">M-Pesa Till (Buy Goods)</option>
+        <option value="mpesa_send_money">M-Pesa Send Money (Personal)</option>
+        <option value="mpesa_pochi">M-Pesa Pochi La Biashara</option>
+        <option value="bank_transfer">Bank Transfer</option>
+      </select>
+
+      <label for="display_name">Display Name (optional)</label>
+      <input type="text" name="display_name" id="display_name" placeholder="e.g. My Landlord M-Pesa">
+
+      <!-- M-Pesa fields -->
+      <div class="field-group" id="mpesaGroup">
+        <label for="mpesa_number">M-Pesa Number / Paybill / Till</label>
+        <input type="text" name="mpesa_number" id="mpesa_number" placeholder="e.g. 0712345678 or 123456">
+
+        <div id="acctField" style="display:none">
+          <label for="mpesa_account_number">Account Number (Paybill only)</label>
+          <input type="text" name="mpesa_account_number" id="mpesa_account_number" placeholder="e.g. Rent-Unit5">
+        </div>
+      </div>
+
+      <!-- Bank fields -->
+      <div class="field-group" id="bankGroup">
+        <label for="bank_name">Bank Name</label>
+        <input type="text" name="bank_name" id="bank_name" placeholder="e.g. Equity Bank">
+        <label for="bank_account_name">Account Name</label>
+        <input type="text" name="bank_account_name" id="bank_account_name" placeholder="e.g. John Doe">
+        <label for="bank_account_number">Account Number</label>
+        <input type="text" name="bank_account_number" id="bank_account_number" placeholder="e.g. 0123456789">
+        <label for="bank_branch">Branch</label>
+        <input type="text" name="bank_branch" id="bank_branch" placeholder="e.g. Nairobi CBD">
+      </div>
+
+      <button type="submit"><i class="fa-solid fa-plus"></i> Save Payment Method</button>
+    </form>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+  const sel = document.getElementById("method_type");
+  const mpG = document.getElementById("mpesaGroup");
+  const bkG = document.getElementById("bankGroup");
+  const acc = document.getElementById("acctField");
+
+  function toggle(){
+    const v = sel.value;
+    mpG.classList.remove("visible"); bkG.classList.remove("visible"); acc.style.display="none";
+    if(v.startsWith("mpesa")){
+      mpG.classList.add("visible");
+      if(v==="mpesa_paybill") acc.style.display="block";
+    }
+    if(v==="bank_transfer") bkG.classList.add("visible");
+  }
+  sel.addEventListener("change", toggle);
+  toggle();
+});
+</script>
+
+</body>
+</html>
+
+
+

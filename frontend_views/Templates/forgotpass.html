@@ -1,0 +1,77 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forgot Password - RentEasy</title>
+  <link rel="icon" href="{% static 'img/faviclogo.png' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+  <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
+</head>
+<body class="theme-landlord auth-page">
+<script src="{% static 'Js/theme.js' %}?v=22"></script>
+
+<nav class="auth-nav">
+  <a href="{% url 'home' %}"><img src="{% static 'img/renteasylogo.png' %}" alt="RentEasy"></a>
+  <span class="brand">RentEasy</span>
+  <a href="{% url 'user_login' %}" class="back-link"><i class="fa-solid fa-arrow-left"></i> Sign In</a>
+</nav>
+
+<div class="auth-container">
+  <div class="auth-card">
+    {% if status %}
+    <!-- Status result -->
+    <div style="text-align:center;padding:20px 0;">
+      {% if status == 'success' %}
+      <div style="width:60px;height:60px;border-radius:50%;background:#DEF7EC;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;">
+        <i class="fa-solid fa-envelope-circle-check" style="font-size:26px;color:#046C4E;"></i>
+      </div>
+      <h2 style="font-size:1.3rem;font-weight:700;color:var(--re-text);margin:0 0 10px;">Email Sent Successfully</h2>
+      {% else %}
+      <div style="width:60px;height:60px;border-radius:50%;background:#FDE8E8;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;">
+        <i class="fa-solid fa-circle-exclamation" style="font-size:26px;color:#C81E1E;"></i>
+      </div>
+      <h2 style="font-size:1.3rem;font-weight:700;color:var(--re-text);margin:0 0 10px;">Email Not Found</h2>
+      {% endif %}
+      <p style="font-size:0.92rem;color:var(--re-text-secondary);line-height:1.6;margin:0 0 24px;">{{ status_message }}</p>
+      <a href="{% url 'forgotpass' %}" class="re-btn re-btn-primary" style="display:inline-flex;"><i class="fa-solid fa-arrow-rotate-left"></i> Try Again</a>
+    </div>
+
+    {% else %}
+    <div class="auth-header">
+      <h1><i class="fa-solid fa-lock" style="color:var(--re-primary);"></i> Forgot Password?</h1>
+      <p>Enter your email and we'll send you a reset link</p>
+    </div>
+
+    {% if messages %}
+    <div style="margin-bottom:16px;">
+      {% for msg in messages %}
+      <div class="re-alert error">{{ msg }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <form action="" method="POST" class="re-form">
+      {% csrf_token %}
+      <label for="email">Email Address <span class="required">*</span></label>
+      <input type="email" id="email" name="email" placeholder="e.g. john@example.com" required>
+      <button type="submit" name="forgotpass" class="btn-submit"><i class="fa-solid fa-paper-plane"></i> Send Reset Link</button>
+    </form>
+    {% endif %}
+
+    <div class="auth-footer" style="margin-top:20px;">
+      Remember your password? <a href="{% url 'user_login' %}">Sign in</a>
+    </div>
+  </div>
+</div>
+</body>
+</html>
+</body>
+
+</html>
+
+
+

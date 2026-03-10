@@ -1,0 +1,338 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
+  <title>Pay Rent - RentEasy</title>
+  <link href="{% static 'img/faviclogo.png' %}" rel="icon">
+  <style>
+    .pay-method-card{background:var(--re-surface);border:2px solid var(--re-border);border-radius:12px;padding:16px 20px;margin-bottom:12px;cursor:pointer;transition:border-color .2s,box-shadow .2s;display:flex;align-items:center;gap:12px}
+    .pay-method-card:hover,.pay-method-card.selected{border-color:var(--re-primary);box-shadow:0 2px 12px rgba(35,67,136,.12)}
+    .pay-method-card .pm-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+    .pay-method-card .pm-icon.mpesa{background:#e6f9e6;color:#4caf50}
+    .pay-method-card .pm-icon.bank{background:#dbeafe;color:#1E3A8A}
+    body.dark .pay-method-card .pm-icon.mpesa{background:#14532d;color:#86efac}
+    body.dark .pay-method-card .pm-icon.bank{background:#1e3a5f;color:#93c5fd}
+    .pay-method-card .pm-info{flex:1}
+    .pay-method-card .pm-type{font-weight:600;color:var(--re-text);font-size:14px;margin:0}
+    .pay-method-card .pm-detail{color:var(--re-text-secondary);font-size:13px;margin:2px 0 0}
+    .pay-method-card input[type=radio]{accent-color:var(--re-primary);width:18px;height:18px}
+    #bankInfoBox{background:var(--re-surface-alt);border:1px solid var(--re-primary);border-radius:10px;padding:16px 20px;margin-bottom:16px;display:none}
+    #bankInfoBox h4{margin:0 0 8px;color:var(--re-primary);font-size:15px}
+    #bankInfoBox p{margin:3px 0;font-size:14px;color:var(--re-text)}
+    .pay-form-group{margin-bottom:16px}
+    .pay-form-group label{display:block;font-size:13px;font-weight:600;color:var(--re-text-secondary);margin-bottom:4px}
+    .pay-form-group input{width:100%;padding:10px 14px;background:var(--re-input-bg);border:1px solid var(--re-input-border);border-radius:var(--re-input-radius);font-size:14px;font-family:var(--re-font);color:var(--re-text);transition:border-color .2s,box-shadow .2s}
+    .pay-form-group input:focus{outline:none;border-color:var(--re-input-focus);box-shadow:0 0 0 3px rgba(20,184,166,.15)}
+    .pay-form-group small{display:block;margin-top:4px;font-size:12px;color:var(--re-text-muted)}
+    .pay-summary{background:var(--re-surface-alt);border-radius:10px;padding:16px 20px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+    .pay-summary .ps-label{font-size:13px;font-weight:600;color:var(--re-text-secondary);text-transform:uppercase;letter-spacing:.5px}
+    .pay-summary .ps-value{font-size:1.4rem;font-weight:700;color:var(--re-primary)}
+  </style>
+</head>
+<body class="theme-tenant">
+<script src="{% static 'Js/theme.js' %}?v=22"></script>
+
+{% if messages %}
+<div style="max-width:700px;margin:16px auto 0;padding:0 16px;">
+  {% for message in messages %}
+    <div class="re-alert {{ message.tags|default:'info' }}"><i class="fa-solid fa-circle-info"></i> {{ message }}</div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<nav>
+  <div class="navbar" id="navbar">
+    <button id="icon"><i class="fa-solid fa-bars"></i></button>
+    <img src="{% static 'img/renteasylogo.png' %}" alt="Renteasy Logo">
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        document.querySelector("#icon").addEventListener("click", function() {
+          document.querySelector(".sidebar").classList.toggle("active");
+        });
+      });
+    </script>
+    <div class="logoss"><span>RENT</span><span style="color:var(--re-primary);">EASY</span></div>
+    <div class="userbox">
+      <a href="{% url 'profile' %}">
+        <img id="Profile" src="{% static 'img/user.jpg' %}" alt="Profile Picture">
+        <span class="welcuser">Hi, {{ request.user.name|default:'User' }}!</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+{% include "tenant/_sidebar.html" %}
+
+<div class="dashcont">
+  <div style="max-width:640px;margin:0 auto;">
+
+    <!-- Back link -->
+    <a href="{% url 'rentspay' %}" style="display:inline-flex;align-items:center;gap:6px;color:var(--re-text-secondary);font-size:14px;text-decoration:none;margin-bottom:16px;">
+      <i class="fa-solid fa-arrow-left"></i> Back to Payments
+    </a>
+
+    <h2 style="color:var(--re-primary);margin:0 0 20px;font-size:1.4rem;"><i class="fa-solid fa-credit-card"></i> Pay Rent</h2>
+
+    {% if not active_lease %}
+    <div class="re-card" style="text-align:center;padding:40px 20px;">
+      <i class="fa-solid fa-circle-exclamation" style="font-size:40px;color:var(--re-warning);margin-bottom:12px;"></i>
+      <p style="font-size:16px;font-weight:600;margin:0 0 8px;">No Active Lease</p>
+      <p style="color:var(--re-text-secondary);margin:0;">Contact your landlord to get started.</p>
+    </div>
+    {% else %}
+
+    <!-- Rent Summary -->
+    <div class="pay-summary">
+      <div>
+        <div class="ps-label">Property</div>
+        <div style="font-weight:600;color:var(--re-text);">{{ active_lease.property.name }}</div>
+      </div>
+      <div style="text-align:right;">
+        <div class="ps-label">Amount Due</div>
+        <div class="ps-value">KSh {{ active_lease.property.monthly_rent|default:0|intcomma }}</div>
+      </div>
+    </div>
+
+    {% if landlord_methods %}
+    <div class="re-card">
+      <div class="re-card-header"><i class="fa-solid fa-wallet"></i> Choose Payment Method</div>
+      <div class="re-card-body">
+        <form id="payForm" action="{% url 'payrent' %}" method="POST">
+          {% csrf_token %}
+
+          <!-- Payment Method Cards -->
+          {% for lm in landlord_methods %}
+          <label class="pay-method-card" id="card_{{ lm.pk }}" data-pk="{{ lm.pk }}" data-method-type="{{ lm.method_type }}" onclick="selectMethod(this.dataset.pk, this.dataset.methodType)">
+            <input type="radio" name="payment_method_id" value="{{ lm.pk }}" {% if forloop.first %}checked{% endif %}
+              data-method-type="{{ lm.method_type }}"
+              data-summary="{{ lm.summary_for_tenant }}"
+              data-bank-name="{{ lm.bank_name }}"
+              data-bank-acct-name="{{ lm.bank_account_name }}"
+              data-bank-acct-num="{{ lm.bank_account_number }}"
+              data-bank-branch="{{ lm.bank_branch }}">
+            <div class="pm-icon {% if lm.method_type == 'bank_transfer' %}bank{% else %}mpesa{% endif %}">
+              {% if lm.method_type == "mpesa_paybill" %}<i class="fa-solid fa-mobile-screen-button"></i>
+              {% elif lm.method_type == "mpesa_till" %}<i class="fa-solid fa-cash-register"></i>
+              {% elif lm.method_type == "mpesa_send_money" or lm.method_type == "mpesa_pochi" %}<i class="fa-solid fa-paper-plane"></i>
+              {% elif lm.method_type == "bank_transfer" %}<i class="fa-solid fa-building-columns"></i>
+              {% else %}<i class="fa-solid fa-credit-card"></i>{% endif %}
+            </div>
+            <div class="pm-info">
+              <p class="pm-type">{{ lm.get_method_type_display }}{% if lm.display_name %} &ndash; {{ lm.display_name }}{% endif %}</p>
+              <p class="pm-detail">{{ lm.summary_for_tenant }}</p>
+            </div>
+          </label>
+          {% endfor %}
+
+          <!-- Bank info box -->
+          <div id="bankInfoBox">
+            <h4><i class="fa-solid fa-building-columns"></i> Bank Transfer Details</h4>
+            <p><strong>Bank:</strong> <span id="bBank"></span></p>
+            <p><strong>Account Name:</strong> <span id="bName"></span></p>
+            <p><strong>Account Number:</strong> <span id="bAcct"></span></p>
+            <p><strong>Branch:</strong> <span id="bBranch"></span></p>
+            <p style="margin-top:8px;font-size:13px;color:var(--re-text-secondary);">Make the transfer manually, then enter the reference below.</p>
+          </div>
+
+          <div class="pay-form-group">
+            <label for="amount">Amount (KSh)</label>
+            <input type="number" id="amount" name="amount" value="{{ active_lease.property.monthly_rent|default:0 }}" placeholder="Enter amount" step="500" required>
+          </div>
+
+          <!-- M-Pesa phone fields -->
+          <div id="mpesaFields" class="pay-form-group">
+            <label for="phone">Your M-Pesa Phone Number</label>
+            <input type="tel" id="phone" name="phone" value="{{ request.user.phone }}" placeholder="e.g. 0712345678" pattern="^(\+?254|0)[17]\d{8}$">
+            <small>You will receive the STK prompt on this phone.</small>
+          </div>
+
+          <!-- Bank reference field -->
+          <div id="refFields" class="pay-form-group" style="display:none;">
+            <label for="reference">Transaction Reference</label>
+            <input type="text" id="reference" name="reference" placeholder="e.g. bank transfer receipt number">
+          </div>
+
+          <button type="submit" id="submitBtn" class="re-btn re-btn-primary" style="width:100%;justify-content:center;padding:14px;font-size:15px;">
+            <i class="fa-solid fa-paper-plane"></i> <span id="submitText">Pay via M-Pesa</span>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    {% else %}
+    <div class="re-card" style="text-align:center;padding:40px 20px;">
+      <i class="fa-solid fa-circle-exclamation" style="font-size:40px;color:var(--re-warning);margin-bottom:12px;"></i>
+      <p style="font-size:16px;font-weight:600;margin:0 0 8px;">No Payment Methods Available</p>
+      <p style="color:var(--re-text-secondary);margin:0;">Your landlord has not set up any payment methods yet. Please contact them.</p>
+    </div>
+    {% endif %}
+    {% endif %}
+
+  </div>
+</div>
+
+<!-- STK Push status overlay -->
+<div id="stkOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:9999;align-items:center;justify-content:center;">
+  <div style="background:var(--re-surface);border-radius:16px;padding:40px 32px;max-width:400px;width:90%;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,0.18);">
+    <div id="stkSpinner" style="margin-bottom:18px;">
+      <svg width="48" height="48" viewBox="0 0 48 48" style="animation:spin 1s linear infinite;">
+        <circle cx="24" cy="24" r="20" stroke="var(--re-primary)" stroke-width="4" fill="none" stroke-dasharray="90 150" stroke-linecap="round"/>
+      </svg>
+      <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+    </div>
+    <h3 id="stkTitle" style="color:var(--re-primary);margin:0 0 8px;">Waiting for M-Pesa…</h3>
+    <p id="stkMsg" style="color:var(--re-text-secondary);margin:0 0 18px;">Check your phone and enter your M-Pesa PIN to complete the payment.</p>
+    <button id="stkClose" class="re-btn re-btn-primary" style="display:none;" data-url="{% url 'rentspay' %}" onclick="window.location.href=this.dataset.url;">Done</button>
+  </div>
+</div>
+
+<script>
+/* ── Method card selection & field toggling ─────────────────── */
+function selectMethod(pk, mtype) {
+  document.querySelectorAll('.pay-method-card').forEach(c => c.classList.remove('selected'));
+  const card = document.getElementById('card_' + pk);
+  if (card) card.classList.add('selected');
+  toggleFieldsFor(mtype, pk);
+}
+
+function toggleFieldsFor(mtype, pk) {
+  const mpesaFields = document.getElementById("mpesaFields");
+  const refFields   = document.getElementById("refFields");
+  const bankBox     = document.getElementById("bankInfoBox");
+  const submitText  = document.getElementById("submitText");
+  const phoneInput  = document.getElementById("phone");
+
+  if (mtype && mtype.startsWith("mpesa")) {
+    mpesaFields.style.display = "block";
+    refFields.style.display = "none";
+    bankBox.style.display = "none";
+    phoneInput.required = true;
+    submitText.textContent = "Pay via M-Pesa";
+  } else if (mtype === "bank_transfer") {
+    mpesaFields.style.display = "none";
+    refFields.style.display = "block";
+    phoneInput.required = false;
+    submitText.textContent = "Submit Bank Payment";
+    const radio = document.querySelector('input[name=payment_method_id][value="' + pk + '"]');
+    if (radio) {
+      document.getElementById("bBank").textContent   = radio.dataset.bankName || "-";
+      document.getElementById("bName").textContent   = radio.dataset.bankAcctName || "-";
+      document.getElementById("bAcct").textContent   = radio.dataset.bankAcctNum || "-";
+      document.getElementById("bBranch").textContent  = radio.dataset.bankBranch || "-";
+      bankBox.style.display = "block";
+    }
+  } else {
+    mpesaFields.style.display = "none";
+    refFields.style.display = "block";
+    bankBox.style.display = "none";
+    phoneInput.required = false;
+    submitText.textContent = "Submit Payment";
+  }
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+  const firstChecked = document.querySelector('input[name=payment_method_id]:checked');
+  if (firstChecked) selectMethod(firstChecked.value, firstChecked.dataset.methodType);
+
+  const form = document.getElementById("payForm");
+  if (!form) return;
+
+  form.addEventListener("submit", function(e) {
+    const sel = document.querySelector('input[name=payment_method_id]:checked');
+    const isMpesa = sel && sel.dataset.methodType.startsWith("mpesa");
+    if (!isMpesa) return; // normal POST for bank
+
+    e.preventDefault();
+    const submitBtn = document.getElementById("submitBtn");
+    submitBtn.disabled = true;
+    submitBtn.style.opacity = "0.7";
+    document.getElementById("submitText").textContent = "Sending…";
+
+    fetch(form.action, {
+      method: "POST",
+      body: new FormData(form),
+      headers: { "X-Requested-With": "XMLHttpRequest" }
+    })
+    .then(r => {
+      if (!r.ok && r.status >= 500) throw new Error("Server error");
+      return r.json();
+    })
+    .then(data => {
+      if (data.success) {
+        showOverlay(data.message);
+        pollStatus(data.checkout_request_id);
+      } else {
+        if (window.reToast) window.reToast(data.message || "STK Push failed.", "error");
+        else alert(data.message || "STK Push failed.");
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = "1";
+        document.getElementById("submitText").textContent = "Pay via M-Pesa";
+      }
+    })
+    .catch((err) => {
+      const msg = err.message || "Network error — please try again.";
+      if (window.reToast) window.reToast(msg, "error");
+      else alert(msg);
+      submitBtn.disabled = false;
+      submitBtn.style.opacity = "1";
+      document.getElementById("submitText").textContent = "Pay via M-Pesa";
+    });
+  });
+
+  function showOverlay(msg) {
+    document.getElementById("stkOverlay").style.display = "flex";
+    document.getElementById("stkMsg").textContent = msg || "Check your phone for the M-Pesa prompt.";
+  }
+
+  function pollStatus(checkoutId) {
+    let attempts = 0;
+    const maxAttempts = 40;
+    const interval = setInterval(function() {
+      attempts++;
+      fetch("{% url 'mpesa_check_status' %}?checkout_request_id=" + encodeURIComponent(checkoutId))
+      .then(r => r.json())
+      .then(data => {
+        if (data.status === "success") {
+          clearInterval(interval);
+          document.getElementById("stkSpinner").innerHTML = '<i class="fa-solid fa-circle-check" style="font-size:48px;color:#22c55e;"></i>';
+          document.getElementById("stkTitle").textContent = "Payment Successful!";
+          document.getElementById("stkTitle").style.color = "#22c55e";
+          document.getElementById("stkMsg").textContent = "Receipt: " + data.receipt;
+          document.getElementById("stkClose").style.display = "inline-flex";
+        } else if (data.status === "failed" || data.status === "cancelled") {
+          clearInterval(interval);
+          document.getElementById("stkSpinner").innerHTML = '<i class="fa-solid fa-circle-xmark" style="font-size:48px;color:#ef4444;"></i>';
+          document.getElementById("stkTitle").textContent = data.status === "cancelled" ? "Payment Cancelled" : "Payment Failed";
+          document.getElementById("stkTitle").style.color = "#ef4444";
+          document.getElementById("stkMsg").textContent = data.result_desc || "The transaction was not completed.";
+          document.getElementById("stkClose").style.display = "inline-flex";
+          document.getElementById("stkClose").textContent = "Try Again";
+          document.getElementById("stkClose").onclick = function(){ location.reload(); };
+        } else if (attempts >= maxAttempts) {
+          clearInterval(interval);
+          document.getElementById("stkSpinner").innerHTML = '<i class="fa-solid fa-clock" style="font-size:48px;color:#f59e0b;"></i>';
+          document.getElementById("stkTitle").textContent = "Timed Out";
+          document.getElementById("stkTitle").style.color = "#f59e0b";
+          document.getElementById("stkMsg").textContent = "We haven't received a response yet. Your payment may still process — check your M-Pesa messages.";
+          document.getElementById("stkClose").style.display = "inline-flex";
+          document.getElementById("stkClose").textContent = "Close";
+          document.getElementById("stkClose").onclick = function(){ location.reload(); };
+        }
+      })
+      .catch(() => {});
+    }, 3000);
+  }
+});
+</script>
+</body>
+</html>
+
+
+

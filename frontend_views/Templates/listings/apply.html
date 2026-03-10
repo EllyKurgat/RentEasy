@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+    <title>Apply - {{ listing.title }} - RentEasy</title>
+    <link rel="icon" href="{% static 'img/faviclogo.png' %}">
+</head>
+<body class="theme-landlord">
+<script src="{% static 'Js/theme.js' %}?v=22"></script>
+<nav>
+    <div class="topnav" style="display:flex;align-items:center;padding:12px 24px;background:var(--re-surface);box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+        <a href="{% url 'home' %}"><img src="{% static 'img/renteasylogo.png' %}" alt="RentEasy" style="height:36px;"></a>
+        <a href="{% url 'listing_detail' listing.pk %}" style="margin-left:auto;color:var(--re-primary);text-decoration:none;">← Back to listing</a>
+    </div>
+</nav>
+<div class="dashcont" style="max-width: 500px; margin: 0 auto;">
+    <h1 style="color: var(--re-primary);">Apply for {{ listing.title }}</h1>
+    {% if messages %}{% for m in messages %}<div style="padding: 10px; margin: 10px 0; background: #fee; border-radius: 6px;">{{ m }}</div>{% endfor %}{% endif %}
+    <form method="post">
+        {% csrf_token %}
+        <label>Name *</label>
+        <input type="text" name="name" required>
+        <label>Email *</label>
+        <input type="email" name="email" required>
+        <label>Phone *</label>
+        <input type="tel" name="phone" required>
+        <label>Employer</label>
+        <input type="text" name="employer">
+        <label>Monthly income (KSh)</label>
+        <input type="number" name="monthly_income" step="500">
+        <label>Previous address</label>
+        <input type="text" name="previous_address">
+        <label><input type="checkbox" name="screening_consent"> I consent to screening</label>
+        <button type="submit" class="re-btn re-btn-primary" style="width:100%;margin-top:16px;">Submit Application</button>
+    </form>
+</div>
+</body>
+</html>
+
+
+

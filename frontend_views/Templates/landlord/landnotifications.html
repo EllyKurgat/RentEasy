@@ -1,0 +1,102 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
+
+    <title>Notifications - RentEasy</title>
+
+    <link rel="icon" href="{% static 'img/faviclogo.png' %}">
+</head>
+
+<body class="theme-landlord">
+<script src="{% static 'Js/theme.js' %}?v=22"></script>
+
+<!-- Navbar -->
+<nav>
+<div class="navbar" id="navbar">
+  <button id="icon"><i class="fa-solid fa-bars"></i></button>
+
+  <img src="{% static 'img/renteasylogo.png' %}" alt="RentEasy Logo">
+
+  <div class="logoss">
+    <span>RENT</span><span style="color: var(--re-primary);">EASY</span>
+  </div>
+
+  <div class="userbox">
+    <a href="{% url 'profile' %}">
+
+      <img id="Profile" src="{% static 'img/user.jpg' %}" alt="Profile Picture">
+      <span class="welcuser">Hi, User!</span>
+    </a>
+  </div>
+</div>
+</nav>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const sidebar = document.querySelector(".sidebar");
+    const toggleBtn = document.querySelector("#icon");
+
+    toggleBtn.addEventListener("click", function() {
+        sidebar.classList.toggle("active");
+    });
+});
+</script>
+
+{% include "landlord/_sidebar.html" %}
+<script>function toggleDropdown(){event.preventDefault();var d=event.target.closest(".dropdown");var m=d?d.querySelector(".dropdown-menu"):null;if(d&&m){d.classList.toggle("active");m.style.maxHeight=m.style.maxHeight?"":m.scrollHeight+"px";}}</script>
+
+<!-- Main Content -->
+<div class="dashcont">
+
+<div class="contact">
+<h1 class="advant3" style="text-align: center">Send Notification to All Tenants</h1>
+<p style="text-align:center; color:var(--re-text-secondary); margin-top:-8px;">Broadcast a message to all your tenants. They will see it in their Notifications.</p>
+
+<div class="contactform">
+<form action="{% url 'landnotifications' %}" method="POST" class="containercontact">
+    {% csrf_token %}
+    <label for="property_name">To:</label>
+    <input type="text" id="property_name" name="property_name" placeholder="All Tenants" disabled>
+    <label for="subject">Message</label>
+    <textarea id="subject" name="body" style="height:120px" required placeholder="Type your notification message..."></textarea>
+    <input type="submit" value="Send to All Tenants">
+</form>
+</div>
+</div>
+
+{% if messages %}
+<div style="max-width: 900px; margin: 16px auto 0; padding: 0 16px;">
+  {% for message in messages %}
+  <div style="background:var(--re-surface); border-left: 4px solid var(--re-primary); padding: 12px 16px; border-radius: 8px; margin-bottom: 10px;">{{ message }}</div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<h2 class="advant3" style="margin-top: 32px; margin-bottom: 16px;">System Notifications</h2>
+<p style="color:var(--re-text-secondary); margin-top:-8px; margin-bottom:16px;">Activity from tenants: profile updates, messages, maintenance requests, payments, applications, invite links.</p>
+<div class="notifications-list" style="max-width: 900px;">
+  {% for notification in notifications %}
+  <div class="notification {% if notification.is_read %}read{% endif %}" style="margin-bottom: 16px; padding: 16px; background:var(--re-surface); border: 1px solid var(--re-border); border-radius: 8px; border-left: 4px solid var(--re-primary);">
+    <p style="margin: 0 0 8px; white-space: pre-wrap;">{{ notification.message|urlize }}</p>
+    <small style="color:var(--re-text-secondary);">{{ notification.created_at|date:"M d, Y H:i" }}</small>
+  </div>
+  {% empty %}
+  <p style="color:var(--re-text-secondary);">No notifications yet. You'll see tenant activity, invite links, and system alerts here.</p>
+  {% endfor %}
+</div>
+
+</div>
+
+</body>
+</html>
+
+
+

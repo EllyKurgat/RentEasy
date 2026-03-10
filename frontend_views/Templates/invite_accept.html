@@ -1,0 +1,58 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
+    <title>Accept Invite — RentEasy</title>
+    <link rel="icon" href="{% static 'img/faviclogo.png' %}">
+</head>
+<body class="auth-page">
+<script src="{% static 'Js/theme.js' %}?v=22"></script>
+
+<nav class="auth-nav">
+    <a href="{% url 'index' %}"><img src="{% static 'img/faviclogo.png' %}" alt="RentEasy" style="height:32px"> RentEasy</a>
+</nav>
+
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <i class="fas fa-envelope-open-text" style="font-size:2rem;color:var(--re-primary);margin-bottom:.5rem"></i>
+            <h1>Tenant Invite</h1>
+            <p>You've been invited to join <strong>{{ invite.property.name }}</strong> as a tenant.</p>
+        </div>
+
+        {% if messages %}
+        {% for m in messages %}
+        <div class="re-alert {% if m.tags == 'success' %}success{% elif m.tags == 'error' %}error{% else %}info{% endif %}">
+            <i class="fas {% if m.tags == 'success' %}fa-check-circle{% elif m.tags == 'error' %}fa-exclamation-circle{% else %}fa-info-circle{% endif %}"></i>
+            {{ m }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <form method="post" class="re-form">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="password">Set Your Password <span class="required">*</span></label>
+                <input type="password" id="password" name="password" required minlength="8" placeholder="Minimum 8 characters">
+                <span class="form-hint">Choose a strong password to secure your account</span>
+            </div>
+            <button type="submit" class="btn-submit accent"><i class="fas fa-check-circle"></i> Accept &amp; Create Account</button>
+        </form>
+
+        <div class="auth-footer">
+            <p>RentEasy &copy; <script>document.write(new Date().getFullYear());</script> All rights reserved</p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+
+
+

@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
+    <title>Invite Tenant - RentEasy</title>
+    <link rel="icon" href="{% static 'img/faviclogo.png' %}">
+</head>
+<body class="theme-landlord">
+<script src="{% static 'Js/theme.js' %}?v=22"></script>
+<nav>
+    <div class="navbar">
+        <button id="icon"><i class="fa-solid fa-bars"></i></button>
+        <img src="{% static 'img/renteasylogo.png' %}" alt="Logo">
+        <div class="logoss"><span>RENT</span><span style="color: var(--re-primary);">EASY</span></div>
+        <div class="userbox">
+            <a href="{% url 'profile' %}">
+                <img src="{% static 'img/user.jpg' %}" alt="Profile">
+                <span class="welcuser">Hi, {{ request.user.name }}!</span>
+            </a>
+        </div>
+    </div>
+</nav>
+{% include "landlord/_sidebar.html" %}
+<script>document.addEventListener("DOMContentLoaded", function(){var i=document.querySelector("#icon");var s=document.querySelector(".sidebar");if(i&&s)i.addEventListener("click",function(){s.classList.toggle("active");});});function toggleDropdown(){event.preventDefault();var d=event.target.closest(".dropdown");var m=d?d.querySelector(".dropdown-menu"):null;if(d&&m){d.classList.toggle("active");m.style.maxHeight=m.style.maxHeight?"":m.scrollHeight+"px";}}</script>
+
+<div class="dashcont">
+    <h1 class="advant3" style="color: var(--re-primary);">Invite Tenant</h1>
+    {% if messages %}{% for m in messages %}<div class="message {{ m.tags }}">{{ m }}</div>{% endfor %}{% endif %}
+    <form method="post" class="contactform" style="max-width: 500px;">
+        {% csrf_token %}
+        <label>Tenant name *</label>
+        <input type="text" name="tenant_name" required placeholder="John Doe">
+        <label>Tenant email *</label>
+        <input type="email" name="tenant_email" required placeholder="tenant@example.com">
+        <label>Tenant phone</label>
+        <input type="text" name="tenant_phone" placeholder="+1234567890">
+        <label>Property *</label>
+        <select name="property_id" required>
+            <option value="">Select property</option>
+            {% for p in properties %}
+            <option value="{{ p.id }}">{{ p.name }} - {{ p.address }}</option>
+            {% endfor %}
+        </select>
+        <label>Unit (optional)</label>
+        <select name="unit_id">
+            <option value="">No unit / room-based</option>
+            {% for u in units %}
+            <option value="{{ u.id }}" data-property="{{ u.property_id }}">{{ u.property.name }} - {{ u.unit_number }}</option>
+            {% endfor %}
+        </select>
+        <label>Monthly rent</label>
+        <input type="number" name="monthly_rent" placeholder="Auto from unit/property" step="500">
+        <label>Lease start date</label>
+        <input type="date" name="start_date">
+        <label>Lease end date</label>
+        <input type="date" name="end_date">
+        <button type="submit" class="re-btn re-btn-primary" style="width:100%;margin-top:8px;">Send Invite</button>
+    </form>
+</div>
+</body>
+</html>
+
+
+

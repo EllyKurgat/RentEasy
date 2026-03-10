@@ -1,0 +1,149 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
+  <title>Lease Management - RentEasy</title>
+  <link rel="icon" href="{% static 'img/faviclogo.png' %}">
+</head>
+<body class="theme-landlord">
+<script src="{% static 'Js/theme.js' %}?v=22"></script>
+
+<nav>
+  <div class="navbar" id="navbar">
+    <button id="icon"><i class="fa-solid fa-bars"></i></button>
+    <img src="{% static 'img/renteasylogo.png' %}" alt="Logo">
+    <div class="logoss"><span>RENT</span><span style="color:var(--re-primary);">EASY</span></div>
+    <div class="userbox">
+      <a href="{% url 'profile' %}">
+        <img id="Profile" src="{% static 'img/user.jpg' %}" alt="Profile Picture">
+        <span class="welcuser">Hi, {{ request.user.name|default:"User" }}!</span>
+      </a>
+    </div>
+  </div>
+</nav>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelector("#icon").addEventListener("click", function() {
+    document.querySelector(".sidebar").classList.toggle("active");
+  });
+});
+</script>
+
+{% include "landlord/_sidebar.html" %}
+<script>function toggleDropdown(){event.preventDefault();var d=event.target.closest(".dropdown");var m=d?d.querySelector(".dropdown-menu"):null;if(d&&m){d.classList.toggle("active");m.style.maxHeight=m.style.maxHeight?"":m.scrollHeight+"px";}}</script>
+
+{% if messages %}
+<div style="max-width:1100px;margin:16px auto 0;padding:0 16px;">
+  {% for message in messages %}
+    <div class="re-alert {{ message.tags|default:'info' }}"><i class="fa-solid fa-circle-info"></i> {{ message }}</div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<div class="dashcont">
+
+  <!-- Header -->
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px;">
+    <h2 style="color:var(--re-primary);margin:0;font-size:1.3rem;"><i class="fa-solid fa-file-contract"></i> Lease Management</h2>
+    <a href="{% url 'landlord_lease_create' %}" class="re-btn re-btn-primary re-btn-sm"><i class="fa-solid fa-plus"></i> New Lease</a>
+  </div>
+
+  <!-- Status Filter Tabs -->
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px;">
+    <a href="?status=all" class="re-btn re-btn-sm {% if status_filter == 'all' %}re-btn-primary{% else %}re-btn-secondary{% endif %}" style="font-size:12px;">
+      All <span style="opacity:.7">({{ counts.all }})</span>
+    </a>
+    <a href="?status=draft" class="re-btn re-btn-sm {% if status_filter == 'draft' %}re-btn-primary{% else %}re-btn-secondary{% endif %}" style="font-size:12px;">
+      Draft <span style="opacity:.7">({{ counts.draft }})</span>
+    </a>
+    <a href="?status=pending_signature" class="re-btn re-btn-sm {% if status_filter == 'pending_signature' %}re-btn-primary{% else %}re-btn-secondary{% endif %}" style="font-size:12px;">
+      Pending <span style="opacity:.7">({{ counts.pending_signature }})</span>
+    </a>
+    <a href="?status=active" class="re-btn re-btn-sm {% if status_filter == 'active' %}re-btn-primary{% else %}re-btn-secondary{% endif %}" style="font-size:12px;">
+      Active <span style="opacity:.7">({{ counts.active }})</span>
+    </a>
+    <a href="?status=expiring" class="re-btn re-btn-sm {% if status_filter == 'expiring' %}re-btn-primary{% else %}re-btn-secondary{% endif %}" style="font-size:12px;">
+      Expiring <span style="opacity:.7">({{ counts.expiring }})</span>
+    </a>
+    <a href="?status=expired" class="re-btn re-btn-sm {% if status_filter == 'expired' %}re-btn-primary{% else %}re-btn-secondary{% endif %}" style="font-size:12px;">
+      Expired <span style="opacity:.7">({{ counts.expired }})</span>
+    </a>
+    <a href="?status=terminated" class="re-btn re-btn-sm {% if status_filter == 'terminated' %}re-btn-primary{% else %}re-btn-secondary{% endif %}" style="font-size:12px;">
+      Terminated <span style="opacity:.7">({{ counts.terminated }})</span>
+    </a>
+  </div>
+
+  <!-- Leases Table -->
+  <div class="re-card">
+    <div class="re-card-header">
+      <span>Leases</span>
+      <input type="text" id="searchInput" placeholder="Search…" style="padding:6px 12px;border-radius:8px;border:1px solid var(--re-border);font-size:13px;background:var(--re-input-bg);color:var(--re-text);width:180px;">
+    </div>
+    <div class="re-card-body" style="padding:0;">
+      <div class="re-table-wrap">
+        <table class="re-table" id="leasesTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Tenant</th>
+              <th>Property</th>
+              <th>Unit</th>
+              <th>Rent</th>
+              <th>Start</th>
+              <th>End</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for lease in leases %}
+            <tr>
+              <td>{{ lease.id }}</td>
+              <td>{{ lease.tenant.name|default:"Not assigned" }}</td>
+              <td>{{ lease.property.name }}</td>
+              <td>{% if lease.unit %}{{ lease.unit.unit_number }}{% else %}{{ lease.room_label|default:"-" }}{% endif %}</td>
+              <td>KSh {{ lease.monthly_rent|default:0 }}</td>
+              <td>{{ lease.start_date|date:"d M Y" }}</td>
+              <td>{{ lease.end_date|date:"d M Y"|default:"Open-ended" }}</td>
+              <td>
+                <span class="re-badge {% if lease.status == 'active' %}green{% elif lease.status == 'draft' %}yellow{% elif lease.status == 'pending_signature' %}blue{% elif lease.status == 'expiring' %}orange{% elif lease.status == 'expired' or lease.status == 'terminated' %}red{% endif %}">
+                  {{ lease.get_status_display }}
+                </span>
+              </td>
+              <td>
+                <a href="{% url 'landlord_lease_detail' pk=lease.pk %}" class="re-btn re-btn-accent re-btn-sm"><i class="fa-solid fa-eye"></i> View</a>
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="9" style="text-align:center;color:var(--re-text-muted);padding:32px;">
+              No leases found. <a href="{% url 'landlord_lease_create' %}">Create your first lease</a>
+            </td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const searchInput = document.getElementById("searchInput");
+  if (searchInput) {
+    searchInput.addEventListener("keyup", function() {
+      const filter = this.value.toLowerCase();
+      document.querySelectorAll("#leasesTable tbody tr").forEach(function(row) {
+        row.style.display = row.textContent.toLowerCase().includes(filter) ? "" : "none";
+      });
+    });
+  }
+});
+</script>
+</body>
+</html>

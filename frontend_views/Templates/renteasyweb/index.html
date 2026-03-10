@@ -1,0 +1,598 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
+    <title>RentEasy - Rental Management for Tenants & Landlords</title>
+    <link href="{% static 'img/faviclogo.png' %}" rel="icon">
+</head>
+<body class="theme-landlord landing-body">
+<script src="{% static 'Js/theme.js' %}?v=22"></script>
+
+<!-- ============================================================
+     NAVBAR
+     ============================================================ -->
+<nav>
+  <div class="topnav" id="topnav">
+    <a href="{% url 'home' %}"><img src="{% static 'img/renteasylogo10.png' %}" alt="RentEasy"></a>
+    <a href="javascript:void(0);" class="icon" onclick="document.getElementById('topnav').classList.toggle('responsive');">
+      <i class="fa-solid fa-bars"></i>
+    </a>
+    <div class="top2">
+      <a href="#hero" class="nav-link active10">HOME</a>
+      <a href="{% url 'listing_list' %}" class="nav-link">BROWSE RENTALS</a>
+      <a href="#about" class="nav-link">ABOUT</a>
+      <a href="#features" class="nav-link">FEATURES</a>
+      <a href="#rentals" class="nav-link">RENTALS</a>
+      <a href="#faq" class="nav-link">FAQ</a>
+      <a href="#contact" class="nav-link">CONTACT</a>
+    </div>
+    <div class="userbox2">
+      <a class="login2" href="{% url 'user_login' %}">Login</a>
+      <a class="login2 primary" href="{% url 'register' %}">Sign Up</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ============================================================
+     1. HERO with animated background shapes
+     ============================================================ -->
+<section class="hero-landing" id="hero">
+  <div class="hero-shapes">
+    <div class="hero-shape shape-1"></div>
+    <div class="hero-shape shape-2"></div>
+    <div class="hero-shape shape-3"></div>
+  </div>
+  <div class="hero-content">
+    <span class="hero-badge"><i class="fa-solid fa-bolt"></i> Trusted by {{ stat_landlords|default:0 }}+ Landlords in Kenya</span>
+    <h1><span>RentEasy</span> — Rental Management Made Simple</h1>
+    <p class="tagline">One platform for tenants and landlords. Find rentals, manage properties, pay rent via M-Pesa, and stay connected — all in one place.</p>
+    <div class="hero-buttons">
+      <a href="{% url 'listing_list' %}" class="btn-primary"><i class="fa-solid fa-search"></i> Browse Rentals</a>
+      <a href="{% url 'register' %}" class="btn-secondary"><i class="fa-solid fa-user-plus"></i> Create Account</a>
+      <a href="{% url 'user_login' %}" class="btn-secondary" style="background:#fff;color:var(--re-primary);border:2px solid var(--re-primary);"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     2. ANIMATED STATS / COUNTERS
+     ============================================================ -->
+<section class="stats-section" id="stats">
+  <div class="stats-grid">
+    <div class="stat-item">
+      <div class="stat-icon-wrap"><i class="fa-solid fa-building"></i></div>
+      <h3 class="stat-number" data-target="{{ stat_properties|default:0 }}">0</h3>
+      <p>Properties Managed</p>
+    </div>
+    <div class="stat-item">
+      <div class="stat-icon-wrap"><i class="fa-solid fa-users"></i></div>
+      <h3 class="stat-number" data-target="{{ stat_tenants|default:0 }}">0</h3>
+      <p>Happy Tenants</p>
+    </div>
+    <div class="stat-item">
+      <div class="stat-icon-wrap"><i class="fa-solid fa-user-tie"></i></div>
+      <h3 class="stat-number" data-target="{{ stat_landlords|default:0 }}">0</h3>
+      <p>Verified Landlords</p>
+    </div>
+    <div class="stat-item">
+      <div class="stat-icon-wrap"><i class="fa-solid fa-list-check"></i></div>
+      <h3 class="stat-number" data-target="{{ stat_listings|default:0 }}">0</h3>
+      <p>Active Listings</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     3. ABOUT + ROLES
+     ============================================================ -->
+<section class="roles-section" id="about">
+  <h2 class="section-title">Why Choose <span style="color:var(--re-primary);">RentEasy</span>?</h2>
+  <p style="max-width:700px;margin:0 auto 32px;color:var(--re-text-secondary);line-height:1.7;text-align:center;">
+    RentEasy is an innovative platform that streamlines rental management for both landlords and tenants.
+    Find properties, pay rent online, request maintenance, and stay in touch — all in one place.
+  </p>
+  <div class="roles-cards">
+    <div class="role-card">
+      <i class="fa-solid fa-key"></i>
+      <h3>For Tenants</h3>
+      <p>Search properties, pay rent online via M-Pesa, request maintenance, and message your landlord easily.</p>
+    </div>
+    <div class="role-card">
+      <i class="fa-solid fa-building"></i>
+      <h3>For Landlords</h3>
+      <p>List properties, manage tenants, track payments and earnings, and handle requests from one dashboard.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     4. HOW IT WORKS — 3 Steps
+     ============================================================ -->
+<section class="how-section">
+  <h2 class="section-title">How It Works</h2>
+  <p class="section-subtitle">Get started in three simple steps</p>
+  <div class="how-steps">
+    <div class="how-step">
+      <div class="how-step-num">1</div>
+      <div class="how-step-icon"><i class="fa-solid fa-user-plus"></i></div>
+      <h3>Sign Up</h3>
+      <p>Create a free account as a Tenant or Landlord in under a minute.</p>
+    </div>
+    <div class="how-connector"><i class="fa-solid fa-arrow-right"></i></div>
+    <div class="how-step">
+      <div class="how-step-num">2</div>
+      <div class="how-step-icon"><i class="fa-solid fa-magnifying-glass-location"></i></div>
+      <h3>Find or List</h3>
+      <p>Browse available rentals or list your property to attract tenants.</p>
+    </div>
+    <div class="how-connector"><i class="fa-solid fa-arrow-right"></i></div>
+    <div class="how-step">
+      <div class="how-step-num">3</div>
+      <div class="how-step-icon"><i class="fa-solid fa-mobile-screen-button"></i></div>
+      <h3>Manage & Pay</h3>
+      <p>Pay rent via M-Pesa, request maintenance, and track everything online.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     5. FEATURE HIGHLIGHTS GRID
+     ============================================================ -->
+<section class="features-section" id="features">
+  <h2 class="section-title">Powerful Features</h2>
+  <p class="section-subtitle">Everything you need to manage rentals efficiently</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon green"><i class="fa-solid fa-mobile-screen-button"></i></div>
+      <h3>M-Pesa Payments</h3>
+      <p>Pay rent instantly through Safaricom M-Pesa STK Push — no manual entry, real-time confirmation.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon blue"><i class="fa-solid fa-comments"></i></div>
+      <h3>Real-time Messaging</h3>
+      <p>Direct chat between tenants and landlords. Never miss an important conversation.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon orange"><i class="fa-solid fa-wrench"></i></div>
+      <h3>Maintenance Requests</h3>
+      <p>Submit and track maintenance requests with status updates and priority levels.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon purple"><i class="fa-solid fa-house-chimney"></i></div>
+      <h3>Property Listings</h3>
+      <p>Browse a curated list of verified rentals with location filters and detailed info.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon teal"><i class="fa-solid fa-chart-line"></i></div>
+      <h3>Earnings Dashboard</h3>
+      <p>Landlords get full visibility into payments, pending rent, and monthly income trends.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon red"><i class="fa-solid fa-envelope"></i></div>
+      <h3>Email Notifications</h3>
+      <p>Automated alerts for payments, lease expiry, maintenance updates and more.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     6. CTA BANNER (midway)
+     ============================================================ -->
+<section class="cta-banner">
+  <div class="cta-content">
+    <h2>Ready to Simplify Your Rental Experience?</h2>
+    <p>Join hundreds of landlords and tenants already using RentEasy to manage their rentals effortlessly.</p>
+    <div class="cta-buttons">
+      <a href="{% url 'register' %}" class="cta-btn-primary"><i class="fa-solid fa-rocket"></i> Get Started Free</a>
+      <a href="{% url 'listing_list' %}" class="cta-btn-secondary"><i class="fa-solid fa-search"></i> Browse Rentals</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     7. SEARCH SECTION
+     ============================================================ -->
+<div class="container2" id="search-section">
+  <h2 class="section-title">Search Rentals</h2>
+  <p class="section-subtitle">Filter by category and location to find your ideal rental</p>
+  <form method="get" action="{% url 'listing_list' %}" class="filter-container">
+    <div class="filter-item">
+      <select name="category">
+        <option value="">All categories</option>
+        <option value="1bedroom">1 Bedroom</option>
+        <option value="2bedroom">2 Bedroom</option>
+        <option value="bedsitter">Bedsitter</option>
+        <option value="officeroom">Office room</option>
+        <option value="residential">Residential</option>
+      </select>
+    </div>
+    <div class="filter-item">
+      <input type="text" name="q" placeholder="Location or keyword">
+    </div>
+    <div class="filter-item">
+      <input type="number" name="rent_min" placeholder="Min rent" step="500">
+    </div>
+    <div class="filter-item">
+      <input type="number" name="rent_max" placeholder="Max rent" step="500">
+    </div>
+    <div class="filter-item">
+      <input type="submit" value="Search">
+    </div>
+  </form>
+</div>
+
+<!-- ============================================================
+     8. FEATURED PROPERTY CARDS
+     ============================================================ -->
+<div class="containercont2" id="rentals">
+  <h2 class="section-title">Available Rentals</h2>
+  <p class="section-subtitle">Recently posted by landlords</p>
+  <div class="rentals-grid">
+  {% for l in featured_listings %}
+  <div class="container2cont" data-url="{% url 'listing_detail' l.pk %}" onclick="window.location=this.dataset.url">
+    <div class="property-slideshow">
+      {% if l.photos and l.photos.0 %}
+      <img src="{{ MEDIA_URL }}{{ l.photos.0 }}" alt="{{ l.title }}" loading="lazy">
+      {% else %}
+      <img src="{% static 'Img/housessrent.jpg' %}" alt="{{ l.title }}" loading="lazy">
+      {% endif %}
+      <div class="property-overlay">
+        <span class="property-badge">{{ l.get_category_display|default:"Rental" }}</span>
+      </div>
+    </div>
+    <div class="container2text">
+      <p class="newsd"><i class="fa-solid fa-location-dot"></i> {{ l.property_location }}</p>
+      <h2 class="newsh">{{ l.title }}</h2>
+      <p class="newsp">{{ l.description|truncatewords:15|default:"Available for rent" }}</p>
+    </div>
+    <div class="containerprice">
+      <h2 class="newsh">KSh {{ l.rent_amount|intcomma }}<span style="font-size:0.7em;font-weight:400;color:var(--re-text-secondary);">/mo</span></h2>
+      <a class="contactnow" href="{% url 'listing_detail' l.pk %}">View Details</a>
+    </div>
+  </div>
+  {% empty %}
+  <div class="rentals-empty" style="grid-column:1/-1;text-align:center;padding:60px 20px;">
+    <i class="fa-solid fa-house-circle-xmark" style="font-size:48px;color:var(--re-text-muted);margin-bottom:16px;display:block;"></i>
+    <p style="color:var(--re-text-secondary);font-size:1.05rem;">No rentals posted yet. Landlords, <a href="{% url 'register' %}" style="color:var(--re-primary);font-weight:600;">sign up</a> to list your properties.</p>
+  </div>
+  {% endfor %}
+  </div>
+  {% if featured_listings %}
+  <div class="browse" style="margin-top:28px;">
+    <a class="more" href="{% url 'listing_list' %}">Browse All Rentals <i class="fa-solid fa-arrow-right" style="margin-left:6px;"></i></a>
+  </div>
+  {% endif %}
+</div>
+
+<!-- ============================================================
+     9. TESTIMONIALS / REVIEWS CAROUSEL
+     ============================================================ -->
+<section class="testimonials-section" id="testimonials">
+  <h2 class="section-title">What Our Users Say</h2>
+  <p class="section-subtitle">Real reviews from tenants and landlords</p>
+  <div class="testimonials-carousel">
+    {% for review in reviews %}
+    <div class="testimonial-card {% if forloop.first %}active{% endif %}">
+      <div class="testimonial-stars">
+        {% for i in "12345" %}
+          {% if forloop.counter <= review.rating %}
+            <i class="fa-solid fa-star"></i>
+          {% else %}
+            <i class="fa-regular fa-star"></i>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <p class="testimonial-quote">"{{ review.comment|truncatewords:40 }}"</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">
+          {{ review.reviewer.name|make_list|first|upper }}
+        </div>
+        <div>
+          <h4>{{ review.reviewer.name }}</h4>
+          <span>{{ review.reviewer.role|title }}</span>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <!-- Placeholder testimonials when no reviews exist yet -->
+    <div class="testimonial-card active">
+      <div class="testimonial-stars">
+        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+      </div>
+      <p class="testimonial-quote">"RentEasy made finding a rental so easy! I signed up, browsed listings, and moved in within a week. Paying rent via M-Pesa is incredibly convenient."</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">K</div>
+        <div><h4>Kevin M.</h4><span>Tenant</span></div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-stars">
+        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+      </div>
+      <p class="testimonial-quote">"As a landlord with multiple properties, RentEasy has saved me hours every month. The earnings dashboard and automatic reminders are game-changers."</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">S</div>
+        <div><h4>Sarah W.</h4><span>Landlord</span></div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="testimonial-stars">
+        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-regular fa-star"></i>
+      </div>
+      <p class="testimonial-quote">"Maintenance requests used to be a headache. Now my tenants submit them online and I can track progress. Communication has never been easier."</p>
+      <div class="testimonial-author">
+        <div class="testimonial-avatar">J</div>
+        <div><h4>James O.</h4><span>Landlord</span></div>
+      </div>
+    </div>
+    {% endfor %}
+    <div class="testimonial-nav">
+      <button class="testimonial-prev" onclick="changeTestimonial(-1)"><i class="fa-solid fa-chevron-left"></i></button>
+      <div class="testimonial-dots"></div>
+      <button class="testimonial-next" onclick="changeTestimonial(1)"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     10. FAQ ACCORDION
+     ============================================================ -->
+<section class="faq-section" id="faq">
+  <h2 class="section-title">Frequently Asked Questions</h2>
+  <p class="section-subtitle">Got questions? We've got answers</p>
+  <div class="faq-list">
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        <span>How do I pay rent on RentEasy?</span>
+        <i class="fa-solid fa-chevron-down"></i>
+      </button>
+      <div class="faq-answer">
+        <p>Navigate to <strong>Pay Rent</strong> in your tenant dashboard. Enter the amount, and we'll send an M-Pesa STK Push prompt directly to your phone. Confirm with your M-Pesa PIN, and the payment is recorded instantly.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        <span>Is M-Pesa supported for payments?</span>
+        <i class="fa-solid fa-chevron-down"></i>
+      </button>
+      <div class="faq-answer">
+        <p>Yes! RentEasy is fully integrated with Safaricom's M-Pesa Daraja API. You'll receive an STK Push notification to complete the payment — no manual USSD codes required.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        <span>How do I list my property as a landlord?</span>
+        <i class="fa-solid fa-chevron-down"></i>
+      </button>
+      <div class="faq-answer">
+        <p>Sign up as a Landlord, then go to <strong>My Properties</strong> to add your property details (name, location, rooms, rent). RentEasy will automatically create public listings for your vacant rooms.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        <span>Can I message my landlord or tenant directly?</span>
+        <i class="fa-solid fa-chevron-down"></i>
+      </button>
+      <div class="faq-answer">
+        <p>Absolutely. RentEasy has a built-in messaging system. Tenants can message landlords and vice versa — all conversations are saved and accessible from your dashboard.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        <span>How do maintenance requests work?</span>
+        <i class="fa-solid fa-chevron-down"></i>
+      </button>
+      <div class="faq-answer">
+        <p>Tenants can submit maintenance requests from the dashboard, describing the issue and setting a priority. Landlords receive a notification and can update the request status as it progresses.</p>
+      </div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-question" onclick="toggleFaq(this)">
+        <span>Is RentEasy free to use?</span>
+        <i class="fa-solid fa-chevron-down"></i>
+      </button>
+      <div class="faq-answer">
+        <p>Yes! RentEasy is completely free to sign up and use for both tenants and landlords. We aim to make rental management accessible to everyone.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     11. TRUST BADGES
+     ============================================================ -->
+<section class="trust-section">
+  <div class="trust-grid">
+    <div class="trust-badge">
+      <i class="fa-solid fa-shield-halved"></i>
+      <span>Secure Payments</span>
+    </div>
+    <div class="trust-badge">
+      <i class="fa-solid fa-mobile-screen-button"></i>
+      <span>Powered by M-Pesa</span>
+    </div>
+    <div class="trust-badge">
+      <i class="fa-solid fa-lock"></i>
+      <span>SSL Encrypted</span>
+    </div>
+    <div class="trust-badge">
+      <i class="fa-solid fa-headset"></i>
+      <span>24/7 Support</span>
+    </div>
+    <div class="trust-badge">
+      <i class="fa-solid fa-bolt"></i>
+      <span>Instant Confirmations</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer class="footer" id="contact">
+  <div class="col-contfoot">
+    <div class="colfoot">
+      <img src="{% static 'img/renteasylogo10.png' %}" alt="RentEasy">
+      <p class="address4">RentEasy streamlines rental management for landlords and tenants. Find properties, pay rent online, request maintenance, and stay in touch — all in one place.</p>
+      <div style="display:flex;gap:12px;margin-top:12px;">
+        <a href="#" style="color:#93C5FD;font-size:1.2rem;"><i class="fa-brands fa-facebook"></i></a>
+        <a href="#" style="color:#93C5FD;font-size:1.2rem;"><i class="fa-brands fa-twitter"></i></a>
+        <a href="#" style="color:#93C5FD;font-size:1.2rem;"><i class="fa-brands fa-instagram"></i></a>
+      </div>
+    </div>
+    <div class="colfoot">
+      <h2 class="address3">Quick Links</h2>
+      <div class="quicklinks">
+        <a href="{% url 'listing_list' %}">Browse Rentals</a>
+        <a href="#about">About Us</a>
+        <a href="#features">Features</a>
+        <a href="#faq">FAQ</a>
+      </div>
+    </div>
+    <div class="colfoot">
+      <h2 class="address3">Account</h2>
+      <div class="quicklinks">
+        <a href="{% url 'user_login' %}">Log In</a>
+        <a href="{% url 'register' %}">Sign Up</a>
+        <a href="{% url 'forgotpass' %}">Reset Password</a>
+      </div>
+    </div>
+    <div class="colfoot">
+      <h2 class="address3">Contact</h2>
+      <p class="address4"><i class="fa-solid fa-location-dot" style="margin-right:6px;color:#93C5FD;"></i>Eldoret, Uasin Gishu County, Kenya</p>
+      <p class="address4"><i class="fa-solid fa-envelope" style="margin-right:6px;color:#93C5FD;"></i><a href="mailto:renteasyk@gmail.com" style="color:inherit;text-decoration:none;">renteasyk@gmail.com</a></p>
+      <p class="address4"><i class="fa-solid fa-phone" style="margin-right:6px;color:#93C5FD;"></i><a href="tel:+254799892427" style="color:inherit;text-decoration:none;">+254 799 892 427</a></p>
+    </div>
+  </div>
+  <div class="developer">
+    RentEasy &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved
+  </div>
+</footer>
+
+<!-- ============================================================
+     SCRIPTS
+     ============================================================ -->
+<style>html{scroll-behavior:smooth;}</style>
+<script>
+/* ── Animated counters on scroll ── */
+(function(){
+  var counted = false;
+  function animateCounters() {
+    if (counted) return;
+    var section = document.getElementById('stats');
+    if (!section) return;
+    var rect = section.getBoundingClientRect();
+    if (rect.top < window.innerHeight * 0.85) {
+      counted = true;
+      document.querySelectorAll('.stat-number').forEach(function(el) {
+        var target = parseInt(el.getAttribute('data-target')) || 0;
+        // show minimum of target or a nice round number
+        var display = Math.max(target, 0);
+        var duration = 2000;
+        var start = 0;
+        var startTime = null;
+        function step(timestamp) {
+          if (!startTime) startTime = timestamp;
+          var progress = Math.min((timestamp - startTime) / duration, 1);
+          // ease out quad
+          var eased = 1 - Math.pow(1 - progress, 3);
+          var current = Math.floor(eased * display);
+          el.textContent = current.toLocaleString() + '+';
+          if (progress < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      });
+    }
+  }
+  window.addEventListener('scroll', animateCounters);
+  window.addEventListener('load', animateCounters);
+})();
+
+/* ── Testimonials carousel ── */
+var currentTestimonial = 0;
+function initTestimonials() {
+  var cards = document.querySelectorAll('.testimonial-card');
+  var dotsContainer = document.querySelector('.testimonial-dots');
+  if (!dotsContainer || cards.length === 0) return;
+  dotsContainer.innerHTML = '';
+  for (var i = 0; i < cards.length; i++) {
+    var dot = document.createElement('button');
+    dot.className = 'testimonial-dot' + (i === 0 ? ' active' : '');
+    dot.setAttribute('data-idx', i);
+    dot.onclick = function() { goToTestimonial(parseInt(this.getAttribute('data-idx'))); };
+    dotsContainer.appendChild(dot);
+  }
+}
+function goToTestimonial(idx) {
+  var cards = document.querySelectorAll('.testimonial-card');
+  var dots = document.querySelectorAll('.testimonial-dot');
+  if (cards.length === 0) return;
+  currentTestimonial = ((idx % cards.length) + cards.length) % cards.length;
+  cards.forEach(function(c) { c.classList.remove('active'); });
+  dots.forEach(function(d) { d.classList.remove('active'); });
+  cards[currentTestimonial].classList.add('active');
+  if (dots[currentTestimonial]) dots[currentTestimonial].classList.add('active');
+}
+function changeTestimonial(dir) { goToTestimonial(currentTestimonial + dir); }
+// Auto-rotate every 6s
+setInterval(function() { changeTestimonial(1); }, 6000);
+
+/* ── FAQ accordion ── */
+function toggleFaq(btn) {
+  var item = btn.parentElement;
+  var isOpen = item.classList.contains('open');
+  // close all
+  document.querySelectorAll('.faq-item').forEach(function(el) { el.classList.remove('open'); });
+  if (!isOpen) item.classList.add('open');
+}
+
+/* ── Navbar scroll spy ── */
+document.addEventListener('DOMContentLoaded', function() {
+  initTestimonials();
+
+  // Smooth scroll for anchor links
+  document.querySelectorAll('.nav-link[href^="#"]').forEach(function(a){
+    a.addEventListener('click',function(e){
+      if(this.getAttribute('href')!=='#'){
+        e.preventDefault();
+        var t=document.querySelector(this.getAttribute('href'));
+        if(t) t.scrollIntoView({behavior:'smooth'});
+        // Close mobile menu
+        document.getElementById('topnav').classList.remove('responsive');
+      }
+    });
+  });
+
+  window.addEventListener('scroll',function(){
+    var scrollY=window.pageYOffset;
+    document.querySelectorAll('.nav-link').forEach(function(link){
+      link.classList.remove('active10');
+      var href=link.getAttribute('href');
+      if(href&&href.startsWith('#')){
+        var el=document.getElementById(href.substring(1));
+        if(el){
+          var top=el.offsetTop-100;
+          var bottom=top+el.offsetHeight;
+          if(scrollY>=top&&scrollY<bottom) link.classList.add('active10');
+        }
+      }
+    });
+    var hero=document.getElementById('hero');
+    var heroLink=document.querySelector('.nav-link[href="#hero"]');
+    if(hero&&heroLink&&scrollY<hero.offsetHeight-100) heroLink.classList.add('active10');
+  });
+  window.dispatchEvent(new Event('scroll'));
+});
+</script>
+</body>
+</html>
+
+
+

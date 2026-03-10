@@ -1,0 +1,247 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
+    <title>{{ listing.title }} - RentEasy</title>
+    <link rel="icon" href="{% static 'img/faviclogo.png' %}">
+    <style>
+        .detail-wrap { max-width:900px; margin:0 auto; padding:32px 24px; }
+        .detail-header { margin-bottom:24px; }
+        .detail-header h1 { color:var(--re-primary); margin:0 0 6px; font-size:1.8rem; }
+        .detail-header .location { color:var(--re-text-secondary); font-size:1rem; margin:0 0 12px; }
+        .detail-header .location i { margin-right:6px; }
+        .detail-price { display:flex; gap:24px; flex-wrap:wrap; align-items:center; margin-bottom:16px; }
+        .detail-price .price { font-size:1.5rem; font-weight:700; color:var(--re-text); }
+        .detail-price .deposit { font-size:1rem; color:var(--re-text-secondary); background:var(--re-surface-alt); padding:6px 14px; border-radius:20px; }
+        .detail-rating-summary { display:flex; align-items:center; gap:8px; margin-bottom:24px; }
+        .detail-rating-summary .stars { color:#f59e0b; font-size:1.1rem; }
+        .detail-rating-summary .stars .empty { color:var(--re-input-border); }
+        .detail-rating-summary .count { color:var(--re-text-secondary); font-size:0.9rem; }
+        .detail-grid { display:grid; grid-template-columns:1fr 360px; gap:32px; }
+        @media(max-width:900px) { .detail-grid { grid-template-columns:1fr; } }
+        .detail-main .desc { color:var(--re-text); line-height:1.8; margin-bottom:24px; }
+        .detail-avail { display:inline-flex; align-items:center; gap:8px; padding:8px 16px; background:var(--re-surface-alt); border-radius:8px; color:var(--re-text-secondary); font-size:0.95rem; margin-bottom:24px; }
+        .amenities-list { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:24px; }
+        .amenity-tag { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; background:var(--re-surface); border:1px solid var(--re-border); border-radius:20px; font-size:0.85rem; color:var(--re-text); }
+        .amenity-tag i { color:var(--re-primary); }
+        .photos-gallery { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:12px; margin-bottom:24px; }
+        .photos-gallery img { width:100%; height:160px; object-fit:cover; border-radius:10px; cursor:pointer; transition:transform 0.2s; }
+        .photos-gallery img:hover { transform:scale(1.03); }
+        .sidebar-card { background:var(--re-surface); border-radius:12px; padding:24px; box-shadow:0 4px 16px rgba(0,0,0,0.08); margin-bottom:24px; }
+        .sidebar-card h3 { margin:0 0 16px; color:var(--re-text); font-size:1.1rem; }
+        .sidebar-card label { display:block; font-size:0.9rem; color:var(--re-text-secondary); margin-bottom:4px; font-weight:500; }
+        .sidebar-card input, .sidebar-card textarea { width:100%; padding:10px 12px; border:1px solid var(--re-input-border); border-radius:8px; font-size:0.95rem; background:var(--re-input-bg); color:var(--re-text); margin-bottom:12px; box-sizing:border-box; }
+        .sidebar-card textarea { resize:vertical; min-height:80px; }
+        .sidebar-card button { width:100%; padding:12px; background:var(--re-primary); color:#fff; border:none; border-radius:8px; font-weight:600; font-size:1rem; cursor:pointer; transition:background 0.2s; }
+        .sidebar-card button:hover { background:var(--re-primary-hover); }
+        .apply-link { display:block; text-align:center; padding:12px; background:var(--re-surface-alt); color:var(--re-primary); font-weight:600; text-decoration:none; border-radius:8px; border:2px solid var(--re-primary); transition:all 0.2s; }
+        .apply-link:hover { background:var(--re-primary); color:#fff; }
+        .reviews-section { margin-top:32px; }
+        .reviews-section h2 { color:var(--re-text); font-size:1.3rem; margin:0 0 16px; }
+        .review-card { background:var(--re-surface); border-radius:10px; padding:16px 20px; margin-bottom:12px; border:1px solid var(--re-border); }
+        .review-card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+        .review-card-header .reviewer { font-weight:600; color:var(--re-text); }
+        .review-card-header .date { font-size:0.8rem; color:var(--re-text-secondary); }
+        .review-stars { color:#f59e0b; font-size:0.95rem; margin-bottom:6px; }
+        .review-stars .empty { color:var(--re-input-border); }
+        .review-comment { color:var(--re-text-secondary); font-size:0.95rem; line-height:1.6; }
+        .review-form { background:var(--re-surface); border-radius:10px; padding:20px; border:1px solid var(--re-border); margin-bottom:16px; }
+        .review-form h3 { margin:0 0 12px; color:var(--re-text); }
+        .star-input { display:flex; gap:4px; margin-bottom:12px; direction:rtl; justify-content:flex-end; }
+        .star-input input { display:none; }
+        .star-input label { font-size:1.6rem; color:var(--re-input-border); cursor:pointer; transition:color 0.15s; }
+        .star-input label:hover, .star-input label:hover ~ label,
+        .star-input input:checked ~ label { color:#f59e0b; }
+        .msg-flash { padding:12px 16px; margin:0 0 16px; border-radius:8px; font-size:0.95rem; }
+        .msg-flash.success { background:#ecfdf5; border-left:4px solid #10b981; color:#065f46; }
+        .msg-flash.error { background:#fef2f2; border-left:4px solid #ef4444; color:#991b1b; }
+        body.dark .sidebar-card { background:var(--re-surface); box-shadow:0 4px 16px rgba(0,0,0,0.2); }
+        body.dark .review-card, body.dark .review-form { background:var(--re-surface); border-color:var(--re-border); }
+    </style>
+</head>
+<body class="theme-landlord landing-body">
+<script src="{% static 'Js/theme.js' %}?v=22"></script>
+
+<!-- ── Top Nav ── -->
+<nav>
+    <div class="topnav" id="topnav">
+        <a href="{% url 'home' %}"><img src="{% static 'img/renteasylogo10.png' %}" alt="RentEasy"></a>
+        <div class="top2">
+            <a href="{% url 'home' %}">HOME</a>
+            <a href="{% url 'listing_list' %}" class="active10">BROWSE RENTALS</a>
+            <a href="{% url 'about' %}">ABOUT</a>
+            <a href="{% url 'contact' %}">CONTACT</a>
+        </div>
+        <div class="userbox2">
+            <a class="login2" href="{% url 'listing_list' %}"><i class="fa-solid fa-arrow-left"></i> Back</a>
+            {% if user.is_authenticated %}
+            <a class="login2 primary" href="{% url 'userdash' %}">Dashboard</a>
+            {% else %}
+            <a class="login2 primary" href="{% url 'user_login' %}">Login</a>
+            {% endif %}
+        </div>
+    </div>
+    <a href="javascript:void(0);" class="icon" onclick="document.getElementById('topnav').classList.toggle('responsive');">
+        <div class="bars1">
+            <span class="line20 line21"></span>
+            <span class="line20 line22"></span>
+            <span class="line20 line23"></span>
+        </div>
+    </a>
+</nav>
+
+<div class="detail-wrap">
+    <!-- ── Messages ── -->
+    {% if messages %}{% for m in messages %}
+    <div class="msg-flash {% if m.tags %}{{ m.tags }}{% endif %}">{{ m }}</div>
+    {% endfor %}{% endif %}
+
+    <!-- ── Header ── -->
+    <div class="detail-header">
+        <h1>{{ listing.title }}</h1>
+        <p class="location"><i class="fa-solid fa-location-dot"></i> {{ listing.property_location }}</p>
+        <div class="detail-price">
+            <span class="price">KSh {{ listing.rent_amount|intcomma }}/mo</span>
+            {% if listing.deposit_amount %}<span class="deposit">Deposit: KSh {{ listing.deposit_amount|intcomma }}</span>{% endif %}
+        </div>
+        <!-- Average rating summary -->
+        {% if review_count %}
+        <div class="detail-rating-summary">
+            <span class="stars">
+                {% for i in "12345" %}
+                    {% if avg_rating >= forloop.counter %}<i class="fa-solid fa-star"></i>{% elif avg_rating >= forloop.counter|add:"-0.5" %}<i class="fa-solid fa-star-half-stroke"></i>{% else %}<i class="fa-regular fa-star empty"></i>{% endif %}
+                {% endfor %}
+            </span>
+            <strong>{{ avg_rating|floatformat:1 }}</strong>
+            <span class="count">({{ review_count }} review{{ review_count|pluralize }})</span>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- ── Photos ── -->
+    {% if listing.photos %}
+    <div class="photos-gallery">
+        {% for photo_url in listing.photos %}
+        <img src="{{ photo_url }}" alt="{{ listing.title }} photo {{ forloop.counter }}">
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="detail-grid">
+        <!-- ── Main Column ── -->
+        <div class="detail-main">
+            <div class="desc">{{ listing.description|linebreaks }}</div>
+
+            {% if listing.available_from %}
+            <div class="detail-avail">
+                <i class="fa-regular fa-calendar"></i> Available from {{ listing.available_from|date:"M d, Y" }}
+            </div>
+            {% endif %}
+
+            <!-- Amenities -->
+            {% if listing.amenities %}
+            <h3 style="color:var(--re-text);margin:0 0 12px;">Amenities</h3>
+            <div class="amenities-list">
+                {% for amenity in listing.amenities %}
+                <span class="amenity-tag"><i class="fa-solid fa-check"></i> {{ amenity }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <!-- ── Reviews Section ── -->
+            <div class="reviews-section">
+                <h2><i class="fa-solid fa-star" style="color:#f59e0b;"></i> Reviews {% if review_count %}({{ review_count }}){% endif %}</h2>
+
+                <!-- Review Form (logged-in users who haven't reviewed) -->
+                {% if can_review %}
+                <div class="review-form">
+                    <h3>Write a review</h3>
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="form_action" value="review">
+                        <div class="star-input">
+                            {% for i in "54321" %}
+                            <input type="radio" name="rating" value="{{ i }}" id="star{{ i }}">
+                            <label for="star{{ i }}"><i class="fa-solid fa-star"></i></label>
+                            {% endfor %}
+                        </div>
+                        <textarea name="comment" placeholder="Share your experience (optional)" rows="3" style="width:100%;padding:10px 12px;border:1px solid var(--re-input-border);border-radius:8px;font-size:0.95rem;background:var(--re-input-bg);color:var(--re-text);box-sizing:border-box;resize:vertical;"></textarea>
+                        <button type="submit" style="margin-top:10px;padding:10px 24px;background:var(--re-primary);color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;">Submit Review</button>
+                    </form>
+                </div>
+                {% elif user_review %}
+                <div class="review-form" style="background:var(--re-surface-alt);">
+                    <p style="margin:0;color:var(--re-text-secondary);"><i class="fa-solid fa-check-circle" style="color:#10b981;"></i> You rated this {{ user_review.rating }}★</p>
+                </div>
+                {% elif not request.user.is_authenticated %}
+                <div class="review-form" style="background:var(--re-surface-alt);">
+                    <p style="margin:0;color:var(--re-text-secondary);"><a href="{% url 'user_login' %}" style="color:var(--re-primary);font-weight:600;">Log in</a> to leave a review.</p>
+                </div>
+                {% elif not is_tenant_of_property %}
+                <div class="review-form" style="background:var(--re-surface-alt);">
+                    <p style="margin:0;color:var(--re-text-secondary);"><i class="fa-solid fa-lock" style="color:#ef4444;margin-right:6px;"></i> Only current or past tenants of this property can leave a review.</p>
+                </div>
+                {% endif %}
+
+                <!-- Review List -->
+                {% for r in reviews %}
+                <div class="review-card">
+                    <div class="review-card-header">
+                        <span class="reviewer"><i class="fa-solid fa-user-circle" style="color:var(--re-primary);margin-right:6px;"></i>{{ r.reviewer.name }}</span>
+                        <span class="date">{{ r.created_at|date:"M d, Y" }}</span>
+                    </div>
+                    <div class="review-stars">
+                        {% for i in "12345" %}
+                            {% if r.rating >= forloop.counter %}<i class="fa-solid fa-star"></i>{% else %}<i class="fa-regular fa-star empty"></i>{% endif %}
+                        {% endfor %}
+                    </div>
+                    {% if r.comment %}<p class="review-comment">{{ r.comment }}</p>{% endif %}
+                </div>
+                {% empty %}
+                <p style="color:var(--re-text-secondary);font-style:italic;">No reviews yet. Be the first to review!</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- ── Sidebar ── -->
+        <div class="detail-sidebar">
+            <!-- Enquiry Form -->
+            <div class="sidebar-card">
+                <h3><i class="fa-solid fa-envelope" style="color:var(--re-primary);margin-right:6px;"></i> Enquire about this property</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="form_action" value="enquiry">
+                    <label>Name *</label>
+                    <input type="text" name="name" required{% if request.user.is_authenticated %} value="{{ request.user.name }}"{% endif %}>
+                    <label>Email *</label>
+                    <input type="email" name="email" required{% if request.user.is_authenticated %} value="{{ request.user.email }}"{% endif %}>
+                    <label>Phone</label>
+                    <input type="tel" name="phone"{% if request.user.is_authenticated %} value="{{ request.user.phone }}"{% endif %}>
+                    <label>Message *</label>
+                    <textarea name="message" required placeholder="I'm interested in this property..."></textarea>
+                    <button type="submit">Send Enquiry</button>
+                </form>
+            </div>
+            <!-- Apply Link -->
+            <a class="apply-link" href="{% url 'application_create' listing.pk %}">
+                <i class="fa-solid fa-paper-plane"></i> Apply for this Rental
+            </a>
+            <!-- Contact Landlord -->
+            <a class="apply-link" href="{% url 'contactlandlord' listing.pk %}" style="margin-top:12px;background:#1F2937;color:#fff;border-color:#1F2937;">
+                <i class="fa-solid fa-user"></i> Contact Landlord
+            </a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+
+
+

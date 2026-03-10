@@ -1,0 +1,86 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
+    <title>Maintenance Detail - RentEasy</title>
+    <link rel="icon" href="{% static 'img/faviclogo.png' %}">
+</head>
+<body class="theme-landlord">
+<script src="{% static 'Js/theme.js' %}?v=22"></script>
+<nav><div class="navbar" id="navbar">
+    <button id="icon"><i class="fa-solid fa-bars"></i></button>
+    <a href="{% url 'home' %}"><img src="{% static 'img/renteasylogo.png' %}" alt="RentEasy"></a>
+    <div class="logoss"><span>RENT</span><span style="color: var(--re-primary);">EASY</span></div>
+    <div class="userbox"><a href="{% url 'profile' %}"><img src="{% static 'img/user.jpg' %}" alt=""><span class="welcuser">Hi, {{ request.user.name }}!</span></a></div>
+</div></nav>
+{% include "landlord/_sidebar.html" %}
+<script>document.addEventListener("DOMContentLoaded",function(){var s=document.querySelector(".sidebar"),i=document.querySelector("#icon");i&&s&&i.addEventListener("click",function(){s.classList.toggle("active")})});function toggleDropdown(){event.preventDefault();var d=event.target.closest(".dropdown"),m=d?d.querySelector(".dropdown-menu"):null;if(d&&m){d.classList.toggle("active");m.style.maxHeight=m.style.maxHeight?"":m.scrollHeight+"px";}}</script>
+
+<div class="dashcont">
+    <p><a href="{% url 'landlord_maintenance' %}" style="color:var(--re-primary);">← Back to maintenance list</a></p>
+    <h1 class="advant3" style="color:var(--re-primary);">Maintenance Request #{{ request_obj.id }}</h1>
+
+    {% if messages %}{% for m in messages %}<div class="alert alert-{{ m.tags|default:'info' }}">{{ m }}</div>{% endfor %}{% endif %}
+
+    <div class="card" style="max-width:900px;">
+        <p><strong>Tenant:</strong> {{ request_obj.lease.tenant.name|default:"—" }} ({{ request_obj.lease.tenant.email|default:"" }})</p>
+        <p><strong>Property:</strong> {{ request_obj.lease.property.name }} — {{ request_obj.lease.property.address }}</p>
+        <p><strong>Issue:</strong> {% if request_obj.title %}{{ request_obj.title }}{% else %}{{ request_obj.get_issue_category_display }}{% endif %}</p>
+        <p><strong>Submitted:</strong> {{ request_obj.created_at|date:"M d, Y H:i" }}</p>
+        <p><strong>Urgency:</strong> {{ request_obj.get_urgency_display }}</p>
+        <p><strong>Status:</strong> {{ request_obj.get_status_display }}</p>
+        <p><strong>Description:</strong><br>{{ request_obj.body|linebreaksbr }}</p>
+        {% if request_obj.issue_image %}
+        <p><strong>Uploaded image:</strong><br>
+            <img src="{{ request_obj.issue_image.url }}" alt="Issue image" style="max-width:100%; border-radius:8px; margin-top:8px;">
+        </p>
+        {% endif %}
+        {% if request_obj.assigned_to %}
+        <p><strong>Assigned to:</strong> {{ request_obj.assigned_to }}</p>
+        {% endif %}
+    </div>
+
+    <div class="card" style="max-width:900px; margin-top:16px;">
+        <h2 style="margin-top:0;">Status & Actions</h2>
+        <p>Current status: <strong>{{ request_obj.get_status_display }}</strong></p>
+        {% if request_obj.status != "resolved" %}
+        <div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap;">
+            {% if request_obj.status == "open" or request_obj.status == "pending" %}
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="in_progress">
+                <button type="submit" class="re-btn" style="background:var(--re-primary);color:#fff;">
+                    🔧 Mark In Progress
+                </button>
+            </form>
+            {% endif %}
+            <form method="post">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="complete">
+                <button type="submit" class="re-btn re-btn-accent">
+                    ✅ Mark as Completed
+                </button>
+            </form>
+        </div>
+        {% else %}
+        <p style="color:#16a34a;">This request is completed and can no longer be edited.</p>
+        {% endif %}
+    </div>
+
+    <div class="card" style="max-width:900px; margin-top:16px;">
+        <h2 style="margin-top:0;">Message Thread</h2>
+        <p style="color:var(--re-text-secondary); font-size:14px;">Use the general <a href="{% url 'landmessages' %}?with={{ request_obj.lease.tenant.id }}" style="color:var(--re-primary);">Messages</a> page to chat with this tenant about the issue.</p>
+    </div>
+</div>
+</body>
+</html>
+
+
+
+

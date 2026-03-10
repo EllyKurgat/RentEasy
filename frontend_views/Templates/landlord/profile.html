@@ -1,0 +1,170 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
+    <title>Profile - RentEasy</title>
+    <link rel="icon" href="{% static 'img/faviclogo.png' %}">
+    <style>
+      .profile-page { max-width:700px; margin:0 auto; }
+      .profile-card { background:var(--re-surface); border-radius:14px; padding:28px 32px; margin-bottom:24px; box-shadow:0 2px 12px rgba(0,0,0,0.06); }
+      .profile-card h2 { margin:0 0 20px; font-size:1.2rem; color:var(--re-text); display:flex; align-items:center; gap:10px; }
+      .profile-card h2 i { color:var(--re-primary); }
+      .profile-card label { display:block; font-size:0.9rem; font-weight:500; color:var(--re-text-secondary); margin-bottom:4px; }
+      .profile-card input[type="text"],
+      .profile-card input[type="email"],
+      .profile-card input[type="password"] {
+        width:100%; padding:10px 14px; border:1px solid var(--re-input-border); border-radius:8px;
+        font-size:0.95rem; background:var(--re-input-bg); color:var(--re-text); margin-bottom:14px; box-sizing:border-box;
+      }
+      .profile-card input:focus { outline:none; border-color:var(--re-primary); box-shadow:0 0 0 3px rgba(59,130,246,0.15); }
+      .profile-avatar { display:flex; align-items:center; gap:20px; margin-bottom:20px; }
+      .profile-avatar img { width:90px; height:90px; border-radius:50%; object-fit:cover; border:3px solid var(--re-border); cursor:pointer; }
+      .profile-avatar-actions { display:flex; flex-direction:column; gap:8px; }
+      .profile-avatar-actions .btn-sm {
+        padding:6px 16px; border-radius:8px; font-size:0.85rem; font-weight:500; cursor:pointer; border:none; transition:all 0.2s;
+      }
+      .btn-upload { background:var(--re-primary); color:#fff; }
+      .btn-upload:hover { background:var(--re-primary-hover); }
+      .btn-remove { background:var(--re-surface-alt); color:var(--re-text-secondary); }
+      .btn-remove:hover { background:#fecaca; color:#dc2626; }
+      .btn-save {
+        width:100%; padding:12px; background:var(--re-primary); color:#fff; border:none; border-radius:8px;
+        font-weight:600; font-size:1rem; cursor:pointer; transition:background 0.2s;
+      }
+      .btn-save:hover { background:var(--re-primary-hover); }
+      .msg-flash { padding:10px 16px; margin-bottom:16px; border-radius:8px; font-size:0.95rem; }
+      .msg-flash.success { background:#ecfdf5; border-left:4px solid #10b981; color:#065f46; }
+      .msg-flash.error { background:#fef2f2; border-left:4px solid #ef4444; color:#991b1b; }
+      .pw-hint { font-size:0.8rem; color:var(--re-text-secondary); margin:-8px 0 14px; }
+    </style>
+</head>
+
+<body class="theme-landlord">
+<script src="{% static 'Js/theme.js' %}?v=22"></script>
+
+<nav>
+  <div class="navbar" id="navbar">
+    <button id="icon"><i class="fa-solid fa-bars"></i></button>
+    <img src="{% static 'img/renteasylogo.png' %}" alt="Renteasy Logo">
+    <div class="logoss">
+      <span>RENT</span><span style="color: var(--re-primary);">EASY</span>
+    </div>
+    <div class="userbox">
+      <a href="{% url 'profile' %}">
+        <img id="Profile" src="{% if request.user.avatar %}{{ request.user.avatar.url }}{% else %}{% static 'img/user.jpg' %}{% endif %}" alt="Profile">
+        <span class="welcuser">Hi, {{ request.user.name|default:"User" }}</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+{% include "landlord/_sidebar.html" %}
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const sidebar = document.querySelector(".sidebar");
+    const toggleBtn = document.querySelector("#icon");
+    if (toggleBtn && sidebar) toggleBtn.addEventListener("click", function () { sidebar.classList.toggle("active"); });
+});
+function toggleDropdown() {
+    event.preventDefault();
+    let dropdown = event.target.closest(".dropdown");
+    let menu = dropdown ? dropdown.querySelector(".dropdown-menu") : null;
+    if (dropdown && menu) { dropdown.classList.toggle("active"); menu.style.maxHeight = menu.style.maxHeight ? "" : menu.scrollHeight + "px"; }
+}
+</script>
+
+<div class="dashcont">
+  <div class="profile-page">
+    <h1 style="font-size:1.5rem;font-weight:700;color:var(--re-text);margin:0 0 20px;"><i class="fa-solid fa-user-gear" style="color:var(--re-primary);margin-right:8px;"></i>Profile Settings</h1>
+
+    {% if messages %}{% for m in messages %}
+    <div class="msg-flash {% if m.tags %}{{ m.tags }}{% endif %}">{{ m }}</div>
+    {% endfor %}{% endif %}
+
+    <!-- ── Profile Info Card ── -->
+    <div class="profile-card">
+      <h2><i class="fa-solid fa-id-card"></i> Personal Information</h2>
+      <form action="{% url 'profile' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="hidden" name="form_action" value="profile">
+        <input type="hidden" name="remove_avatar" id="removeAvatarFlag" value="0">
+
+        <div class="profile-avatar">
+          <img id="profilePicturePreview"
+               src="{% if request.user.avatar %}{{ request.user.avatar.url }}{% else %}{% static 'img/user.jpg' %}{% endif %}"
+               alt="Profile Photo" onclick="document.getElementById('avatarInput').click();"
+               title="Click to change photo">
+          <input type="file" id="avatarInput" name="avatar" accept="image/jpeg,image/png,image/gif,image/webp" hidden>
+          <div class="profile-avatar-actions">
+            <button type="button" class="btn-sm btn-upload" onclick="document.getElementById('avatarInput').click();">
+              <i class="fa-solid fa-camera"></i> Change Photo
+            </button>
+            {% if request.user.avatar %}
+            <button type="button" class="btn-sm btn-remove" id="removePicture" onclick="removeAvatar()">
+              <i class="fa-solid fa-trash"></i> Remove
+            </button>
+            {% endif %}
+          </div>
+        </div>
+
+        <label for="namef">Full Name</label>
+        <input type="text" id="namef" name="name" value="{{ request.user.name|default:'' }}" required>
+        <label for="emaill">Email Address</label>
+        <input type="email" id="emaill" name="email" value="{{ request.user.email|default:'' }}" required>
+        <label for="phone">Phone Number</label>
+        <input type="text" id="phone" name="phone" value="{{ request.user.phone|default:'' }}">
+        <button type="submit" class="btn-save"><i class="fa-solid fa-check"></i> Save Changes</button>
+      </form>
+    </div>
+
+    <!-- ── Change Password Card ── -->
+    <div class="profile-card">
+      <h2><i class="fa-solid fa-lock"></i> Change Password</h2>
+      <form action="{% url 'profile' %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="form_action" value="change_password">
+        <label for="current_password">Current Password</label>
+        <input type="password" id="current_password" name="current_password" required>
+        <label for="new_password">New Password</label>
+        <input type="password" id="new_password" name="new_password" required>
+        <p class="pw-hint">At least 8 characters — mix letters, numbers &amp; symbols.</p>
+        <label for="confirm_password">Confirm New Password</label>
+        <input type="password" id="confirm_password" name="confirm_password" required>
+        <button type="submit" class="btn-save" style="background:var(--re-text);"><i class="fa-solid fa-key"></i> Update Password</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.getElementById("avatarInput").addEventListener("change", function(event) {
+    const file = event.target.files[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) { alert("Image must be under 2 MB."); this.value = ""; return; }
+      const reader = new FileReader();
+      reader.onload = function(e) { document.getElementById("profilePicturePreview").src = e.target.result; };
+      reader.readAsDataURL(file);
+      document.getElementById("removeAvatarFlag").value = "0";
+    }
+  });
+
+  function removeAvatar() {
+    document.getElementById("profilePicturePreview").src = "{% static 'img/user.jpg' %}";
+    document.getElementById("avatarInput").value = "";
+    document.getElementById("removeAvatarFlag").value = "1";
+    const rmBtn = document.getElementById("removePicture");
+    if (rmBtn) rmBtn.style.display = "none";
+  }
+</script>
+</body>
+</html>
+
+
+

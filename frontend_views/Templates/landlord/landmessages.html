@@ -1,0 +1,342 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
+    <title>Messages - RentEasy</title>
+    <link rel="icon" href="{% static 'img/faviclogo.png' %}">
+    <style>
+      .msg-container { display:flex; gap:0; max-width:1100px; margin:20px auto 0; height:calc(100vh - 140px); border-radius:12px; overflow:hidden; box-shadow:0 4px 24px rgba(0,0,0,.10); background:#fff; }
+      .msg-sidebar { width:320px; min-width:260px; background:#f8f9fc; border-right:1px solid #e4e7ec; display:flex; flex-direction:column; }
+      .msg-sidebar-header { padding:18px 20px; background:var(--re-primary); color:#fff; font-size:18px; font-weight:600; display:flex; align-items:center; gap:10px; }
+      .msg-sidebar-header i { font-size:20px; }
+      .conv-list { flex:1; overflow-y:auto; }
+      .conv-item { display:flex; align-items:center; gap:14px; padding:14px 18px; cursor:pointer; border-bottom:1px solid #eef0f4; transition:background .15s; text-decoration:none; color:#333; }
+      .conv-item:hover { background:#eef1f8; }
+      .conv-item.active { background:#dce3f5; }
+      .conv-item.broadcast { border-left:3px solid #f59e0b; }
+      .conv-avatar { width:46px; height:46px; border-radius:50%; background:var(--re-primary); color:#fff; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+      .conv-avatar.group { background:#1a7a5a; }
+      .conv-avatar.broadcast { background:#f59e0b; }
+      .conv-info { flex:1; min-width:0; }
+      .conv-name { font-weight:600; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .conv-preview { font-size:12px; color:#888; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin-top:2px; }
+      .conv-meta { display:flex; flex-direction:column; align-items:flex-end; gap:4px; flex-shrink:0; }
+      .conv-time { font-size:11px; color:#aaa; }
+      .conv-badge { background:var(--re-primary); color:#fff; font-size:11px; font-weight:700; min-width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; padding:0 5px; }
+
+      .msg-chat { flex:1; display:flex; flex-direction:column; background:#fff; }
+      .msg-chat-header { padding:14px 20px; border-bottom:1px solid #e4e7ec; background:#f8f9fc; display:flex; align-items:center; gap:12px; }
+      .msg-chat-header .chat-back { display:none; font-size:20px; cursor:pointer; color:var(--re-primary); }
+      .msg-chat-header h3 { margin:0; font-size:16px; color:var(--re-primary); }
+      .msg-thread { flex:1; overflow-y:auto; padding:20px; display:flex; flex-direction:column; gap:10px; background:#f1f3f8; }
+      .msg-bubble { max-width:75%; padding:10px 16px; border-radius:16px; font-size:14px; line-height:1.5; position:relative; word-wrap:break-word; }
+      .msg-bubble.sent { align-self:flex-end; background:var(--re-primary); color:#fff; border-bottom-right-radius:4px; }
+      .msg-bubble.recv { align-self:flex-start; background:#fff; color:#333; border-bottom-left-radius:4px; box-shadow:0 1px 4px rgba(0,0,0,.06); }
+      .msg-bubble .bubble-sender { font-size:11px; font-weight:600; margin-bottom:2px; opacity:.85; }
+      .msg-bubble.sent .bubble-sender { color:#c3d1f7; }
+      .msg-bubble .bubble-time { font-size:10px; opacity:.6; text-align:right; margin-top:4px; }
+      .msg-input-bar { display:flex; align-items:flex-end; gap:10px; padding:14px 20px; border-top:1px solid #e4e7ec; background:#fff; }
+      .msg-input-bar textarea { flex:1; border:1px solid #d0d5dd; border-radius:20px; padding:10px 16px; font-size:14px; font-family:inherit; resize:none; min-height:44px; max-height:120px; outline:none; transition:border-color .2s; }
+      .msg-input-bar textarea:focus { border-color:var(--re-primary); }
+      .msg-input-bar button { width:44px; height:44px; border-radius:50%; background:var(--re-primary); color:#fff; border:none; cursor:pointer; font-size:18px; display:flex; align-items:center; justify-content:center; transition:background .15s; flex-shrink:0; }
+      .msg-input-bar button:hover { background:var(--re-primary-hover); }
+      .msg-empty { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#aaa; gap:12px; }
+      .msg-empty i { font-size:56px; opacity:.4; }
+      .broadcast-panel { flex:1; display:flex; flex-direction:column; padding:20px; }
+      .broadcast-panel h3 { margin:0 0 8px; color:var(--re-primary); }
+      .broadcast-panel p { margin:0 0 16px; color:#666; font-size:14px; }
+      .broadcast-panel textarea { flex:1; min-height:120px; padding:12px; border:1px solid #ddd; border-radius:8px; resize:vertical; font-family:inherit; font-size:14px; }
+      .broadcast-panel button { margin-top:12px; padding:12px 24px; background:var(--re-primary); color:#fff; border:none; border-radius:8px; cursor:pointer; font-size:14px; }
+      .broadcast-panel button:hover { background:var(--re-primary-hover); }
+
+      /* ── Dark Mode ── */
+      body.dark .msg-container { background:var(--re-surface); box-shadow:0 4px 24px rgba(0,0,0,.25); }
+      body.dark .msg-sidebar { background:var(--re-surface-alt); border-color:var(--re-border); }
+      body.dark .msg-chat { background:var(--re-surface); }
+      body.dark .msg-chat-header { background:var(--re-surface-alt); border-color:var(--re-border); }
+      body.dark .msg-thread { background:var(--re-bg); }
+      body.dark .conv-item { color:var(--re-text); border-color:var(--re-border); }
+      body.dark .conv-item:hover { background:var(--re-surface); }
+      body.dark .conv-item.active { background:var(--re-surface); }
+      body.dark .conv-preview { color:var(--re-text-muted); }
+      body.dark .conv-time { color:var(--re-text-muted); }
+      body.dark .conv-name { color:var(--re-text); }
+      body.dark .msg-bubble.recv { background:var(--re-surface-alt); color:var(--re-text); box-shadow:none; }
+      body.dark .msg-input-bar { background:var(--re-surface); border-color:var(--re-border); }
+      body.dark .msg-input-bar textarea { background:var(--re-input-bg); color:var(--re-text); border-color:var(--re-input-border); }
+      body.dark .msg-empty { color:var(--re-text-muted); }
+      body.dark .broadcast-panel { color:var(--re-text); }
+      body.dark .broadcast-panel p { color:var(--re-text-secondary); }
+      body.dark .broadcast-panel textarea { background:var(--re-input-bg); color:var(--re-text); border-color:var(--re-input-border); }
+
+      @media (max-width: 768px) {
+        .msg-container { flex-direction:column; height:calc(100vh - 120px); border-radius:0; }
+        .msg-sidebar { width:100%; max-height:100%; border-right:none; border-bottom:1px solid #e4e7ec; }
+        .msg-sidebar.hidden { display:none; }
+        .msg-chat.hidden { display:none; }
+        .msg-chat-header .chat-back { display:block; }
+      }
+    </style>
+</head>
+<body class="theme-landlord">
+<script src="{% static 'Js/theme.js' %}?v=22"></script>
+
+<nav>
+<div class="navbar" id="navbar">
+  <button id="icon"><i class="fa-solid fa-bars"></i></button>
+  <img src="{% static 'img/renteasylogo.png' %}" alt="Logo">
+  <div class="logoss"><span>RENT</span><span style="color: var(--re-primary);">EASY</span></div>
+  <div class="userbox">
+    <a href="{% url 'profile' %}">
+      <img id="Profile" src="{% static 'img/user.jpg' %}" alt="Profile Picture">
+      <span class="welcuser">Hi, {{ request.user.name|default:"User" }}!</span>
+    </a>
+  </div>
+</div>
+</nav>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const sidebar = document.querySelector(".sidebar");
+    const toggleBtn = document.querySelector("#icon");
+    if (sidebar && toggleBtn) toggleBtn.addEventListener("click", function() { sidebar.classList.toggle("active"); });
+});
+</script>
+
+{% include "landlord/_sidebar.html" %}
+<script>function toggleDropdown(){event.preventDefault();var d=event.target.closest(".dropdown");var m=d?d.querySelector(".dropdown-menu"):null;if(d&&m){d.classList.toggle("active");m.style.maxHeight=m.style.maxHeight?"":m.scrollHeight+"px";}}</script>
+
+<div class="dashcont">
+{% if messages %}<ul class="messages" style="max-width:800px;margin:0 auto 16px;">{% for m in messages %}<li class="{{ m.tags }}">{{ m }}</li>{% endfor %}</ul>{% endif %}
+
+<div class="msg-container">
+  <!-- LEFT: Conversation List -->
+  <div class="msg-sidebar {% if active_conv or message_all %}hidden{% endif %}" id="msgSidebar">
+    <div class="msg-sidebar-header"><i class="fa-solid fa-comments"></i> Messages</div>
+    <div class="conv-list">
+      <!-- Broadcast option -->
+      <a class="conv-item broadcast {% if message_all %}active{% endif %}" href="?mode=all">
+        <div class="conv-avatar broadcast"><i class="fa-solid fa-bullhorn"></i></div>
+        <div class="conv-info">
+          <div class="conv-name">Message All Tenants</div>
+          <div class="conv-preview">Send to {{ tenant_count }} tenant(s)</div>
+        </div>
+      </a>
+      {% for c in conversation_list %}
+      <a class="conv-item {% if active_conv.id == c.id %}active{% endif %}" href="?conv={{ c.id }}" data-conv-id="{{ c.id }}">
+        <div class="conv-avatar {% if c.conv_type == 'group' %}group{% endif %}">
+          <i class="fa-solid {{ c.avatar_icon }}"></i>
+        </div>
+        <div class="conv-info">
+          <div class="conv-name">{{ c.display_name }}</div>
+          <div class="conv-preview">{{ c.last_message|default:"No messages yet" }}</div>
+        </div>
+        <div class="conv-meta">
+          <span class="conv-time">{{ c.last_time|date:"H:i" }}</span>
+          {% if c.unread > 0 %}
+          <span class="conv-badge" data-badge-conv="{{ c.id }}">{{ c.unread }}</span>
+          {% endif %}
+        </div>
+      </a>
+      {% empty %}
+      <div style="padding:30px; text-align:center; color:#999;">
+        <p>No tenants yet. Invite tenants to start chatting.</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- RIGHT: Chat or Broadcast -->
+  <div class="msg-chat {% if not active_conv and not message_all %}hidden{% endif %}" id="msgChat">
+    {% if message_all %}
+    <!-- Broadcast Panel -->
+    <div class="msg-chat-header">
+      <span class="chat-back" id="chatBack" data-url="{% url 'landmessages' %}"><i class="fa-solid fa-arrow-left"></i></span>
+      <div class="conv-avatar broadcast" style="width:36px;height:36px;font-size:14px;"><i class="fa-solid fa-bullhorn"></i></div>
+      <h3>Message All Tenants ({{ tenant_count }})</h3>
+    </div>
+    <form class="broadcast-panel" method="POST">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="message_all">
+      <p>Your message will be sent as a private message to each tenant individually.</p>
+      {% if tenant_count == 0 %}
+      <p style="color:#dc2626;">No tenants yet. Invite tenants first.</p>
+      {% else %}
+      <textarea name="body" placeholder="Type your message to all tenants..." required></textarea>
+      <button type="submit"><i class="fa-solid fa-paper-plane"></i> Send to All</button>
+      {% endif %}
+    </form>
+
+    {% elif active_conv %}
+    <!-- Active Conversation -->
+    <div class="msg-chat-header">
+      <span class="chat-back" id="chatBack" data-url="{% url 'landmessages' %}"><i class="fa-solid fa-arrow-left"></i></span>
+      <div class="conv-avatar {% if active_conv.conv_type == 'group' %}group{% endif %}" style="width:36px;height:36px;font-size:14px;">
+        <i class="fa-solid {% if active_conv.conv_type == 'group' %}fa-users{% else %}fa-user{% endif %}"></i>
+      </div>
+      <h3>{{ conv_display_name }}</h3>
+    </div>
+    <div class="msg-thread" id="msgThread">
+      {% for m in thread %}
+      <div class="msg-bubble {% if m.sender_id == request.user.id %}sent{% else %}recv{% endif %}" data-msg-id="{{ m.id }}">
+        {% if active_conv.conv_type == 'group' and m.sender_id != request.user.id %}
+        <div class="bubble-sender">{{ m.sender.name }}</div>
+        {% endif %}
+        <div class="bubble-body">{{ m.body }}</div>
+        <div class="bubble-time">{{ m.created_at|date:"M d, H:i" }}</div>
+      </div>
+      {% empty %}
+      <div class="msg-empty">
+        <i class="fa-regular fa-comment-dots"></i>
+        <p>No messages yet. Start the conversation!</p>
+      </div>
+      {% endfor %}
+    </div>
+    <form class="msg-input-bar" id="msgForm" onsubmit="return sendMessage(event);">
+      {% csrf_token %}
+      <textarea id="msgInput" placeholder="Type a message..." rows="1"></textarea>
+      <button type="submit"><i class="fa-solid fa-paper-plane"></i></button>
+    </form>
+
+    {% else %}
+    <div class="msg-empty">
+      <i class="fa-solid fa-comments"></i>
+      <p>Select a conversation or broadcast to all tenants</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+</div>
+
+<div id="msgConfig" style="display:none;"
+  data-conv-id="{{ active_conv.id|default:'' }}"
+  data-user-id="{{ request.user.id|default:'' }}"
+  data-send-url="{% url 'message_send' %}"
+  data-poll-url="{% url 'message_poll' %}"
+></div>
+<script>
+(function() {
+  var _cfg = document.getElementById('msgConfig');
+  const CONV_ID = _cfg.dataset.convId ? parseInt(_cfg.dataset.convId) : null;
+  const USER_ID = _cfg.dataset.userId ? parseInt(_cfg.dataset.userId) : null;
+  const SEND_URL = _cfg.dataset.sendUrl;
+  const POLL_URL = _cfg.dataset.pollUrl;
+  const CSRF = document.querySelector('[name=csrfmiddlewaretoken]')?.value || '';
+  let lastMsgId = 0;
+
+  document.querySelectorAll('.msg-bubble[data-msg-id]').forEach(function(el) {
+    const id = parseInt(el.dataset.msgId);
+    if (id > lastMsgId) lastMsgId = id;
+  });
+
+  function scrollToBottom() {
+    const thread = document.getElementById('msgThread');
+    if (thread) thread.scrollTop = thread.scrollHeight;
+  }
+  scrollToBottom();
+
+  const input = document.getElementById('msgInput');
+  if (input) {
+    input.addEventListener('input', function() {
+      this.style.height = 'auto';
+      this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+    });
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        document.getElementById('msgForm').dispatchEvent(new Event('submit'));
+      }
+    });
+  }
+
+  window.sendMessage = function(e) {
+    e.preventDefault();
+    if (!input) return false;
+    const body = input.value.trim();
+    if (!body || !CONV_ID) return false;
+    const fd = new FormData();
+    fd.append('conv_id', CONV_ID);
+    fd.append('body', body);
+    fd.append('csrfmiddlewaretoken', CSRF);
+    input.value = '';
+    input.style.height = 'auto';
+    fetch(SEND_URL, { method: 'POST', body: fd })
+      .then(r => r.json())
+      .then(data => {
+        if (data.id) {
+          appendBubble(data);
+          lastMsgId = data.id;
+        }
+      })
+      .catch(err => console.error('Send error:', err));
+    return false;
+  };
+
+  function appendBubble(m) {
+    const emptyEl = document.querySelector('#msgThread .msg-empty');
+    if (emptyEl) emptyEl.remove();
+    const thread = document.getElementById('msgThread');
+    const div = document.createElement('div');
+    div.className = 'msg-bubble ' + (m.sender_id === USER_ID ? 'sent' : 'recv');
+    div.dataset.msgId = m.id;
+    let html = '';
+    if (m.sender_id !== USER_ID) {
+      html += '<div class="bubble-sender">' + escapeHtml(m.sender_name) + '</div>';
+    }
+    html += '<div class="bubble-body">' + escapeHtml(m.body) + '</div>';
+    html += '<div class="bubble-time">' + escapeHtml(m.created_at) + '</div>';
+    div.innerHTML = html;
+    thread.appendChild(div);
+    scrollToBottom();
+  }
+
+  function escapeHtml(s) {
+    const d = document.createElement('div');
+    d.textContent = s;
+    return d.innerHTML;
+  }
+
+  function poll() {
+    if (!CONV_ID) return;
+    fetch(POLL_URL + '?conv_id=' + CONV_ID + '&after=' + lastMsgId)
+      .then(r => r.json())
+      .then(data => {
+        (data.messages || []).forEach(function(m) {
+          if (m.id > lastMsgId) {
+            appendBubble(m);
+            lastMsgId = m.id;
+          }
+        });
+        if (data.unread_map) {
+          for (const [cid, count] of Object.entries(data.unread_map)) {
+            const badge = document.querySelector('[data-badge-conv="' + cid + '"]');
+            if (badge) {
+              if (count > 0) { badge.textContent = count; badge.style.display = ''; }
+              else { badge.style.display = 'none'; }
+            }
+          }
+        }
+      })
+      .catch(() => {});
+  }
+  if (CONV_ID) setInterval(poll, 4000);
+
+  const backBtn = document.getElementById('chatBack');
+  if (backBtn) {
+    backBtn.addEventListener('click', function() {
+      window.location.href = backBtn.dataset.url;
+    });
+  }
+})();
+</script>
+</body>
+</html>
+
+
+

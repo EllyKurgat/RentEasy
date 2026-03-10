@@ -1,0 +1,308 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
+  <title>Lease #{{ lease.id }} - RentEasy</title>
+  <link rel="icon" href="{% static 'img/faviclogo.png' %}">
+  <style>
+    .lease-status-flow { display:flex; gap:0; align-items:center; flex-wrap:wrap; margin-bottom:24px; }
+    .lease-step { display:flex; align-items:center; gap:8px; padding:8px 16px; border-radius:8px; font-size:13px; font-weight:500; background:var(--re-card-bg); border:1px solid var(--re-border); color:var(--re-text-muted); position:relative; }
+    .lease-step.completed { background:#d1fae5; border-color:#10b981; color:#065f46; }
+    .lease-step.current { background:#dbeafe; border-color:#3b82f6; color:#1e40af; font-weight:600; }
+    .lease-step-arrow { color:var(--re-text-muted); font-size:18px; margin:0 4px; }
+    .lease-detail-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:16px; margin-bottom:20px; }
+    .lease-field { display:flex; flex-direction:column; gap:4px; }
+    .lease-field label { font-size:12px; font-weight:600; color:var(--re-text-muted); text-transform:uppercase; letter-spacing:.5px; }
+    .lease-field input, .lease-field select, .lease-field textarea { padding:8px 12px; border:1px solid var(--re-border); border-radius:8px; font-size:14px; background:var(--re-input-bg); color:var(--re-text); font-family:inherit; }
+    .lease-field textarea { min-height:80px; resize:vertical; }
+    .lease-actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:16px; padding-top:16px; border-top:1px solid var(--re-border); }
+    .lease-info-row { display:flex; align-items:center; gap:8px; padding:6px 0; font-size:13px; }
+    .lease-info-row i { width:20px; text-align:center; color:var(--re-primary); }
+    .lease-info-row .label { color:var(--re-text-muted); min-width:140px; }
+    .lease-info-row .value { font-weight:500; color:var(--re-text); }
+    .sig-badge { display:inline-flex; align-items:center; gap:4px; padding:3px 10px; border-radius:12px; font-size:11px; font-weight:600; }
+    .sig-badge.signed { background:#d1fae5; color:#065f46; }
+    .sig-badge.unsigned { background:#fef3c7; color:#92400e; }
+    .sig-badge.declined { background:#fee2e2; color:#991b1b; }
+  </style>
+</head>
+<body class="theme-landlord">
+<script src="{% static 'Js/theme.js' %}?v=22"></script>
+
+<nav>
+  <div class="navbar" id="navbar">
+    <button id="icon"><i class="fa-solid fa-bars"></i></button>
+    <img src="{% static 'img/renteasylogo.png' %}" alt="Logo">
+    <div class="logoss"><span>RENT</span><span style="color:var(--re-primary);">EASY</span></div>
+    <div class="userbox">
+      <a href="{% url 'profile' %}">
+        <img id="Profile" src="{% static 'img/user.jpg' %}" alt="Profile Picture">
+        <span class="welcuser">Hi, {{ request.user.name|default:"User" }}!</span>
+      </a>
+    </div>
+  </div>
+</nav>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelector("#icon").addEventListener("click", function() {
+    document.querySelector(".sidebar").classList.toggle("active");
+  });
+});
+</script>
+
+{% include "landlord/_sidebar.html" %}
+<script>function toggleDropdown(){event.preventDefault();var d=event.target.closest(".dropdown");var m=d?d.querySelector(".dropdown-menu"):null;if(d&&m){d.classList.toggle("active");m.style.maxHeight=m.style.maxHeight?"":m.scrollHeight+"px";}}</script>
+
+{% if messages %}
+<div style="max-width:1100px;margin:16px auto 0;padding:0 16px;">
+  {% for message in messages %}
+    <div class="re-alert {{ message.tags|default:'info' }}"><i class="fa-solid fa-circle-info"></i> {{ message }}</div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<div class="dashcont">
+
+  <!-- Back + Title -->
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+    <a href="{% url 'landlord_leases' %}" class="re-btn re-btn-secondary re-btn-sm"><i class="fa-solid fa-arrow-left"></i> Back</a>
+    <h2 style="color:var(--re-primary);margin:0;font-size:1.2rem;">
+      <i class="fa-solid fa-file-contract"></i> Lease #{{ lease.id }}
+      <span class="re-badge {% if lease.status == 'active' %}green{% elif lease.status == 'draft' %}yellow{% elif lease.status == 'pending_signature' %}blue{% elif lease.status == 'expiring' %}orange{% elif lease.status == 'expired' or lease.status == 'terminated' %}red{% endif %}" style="font-size:11px;margin-left:8px;">
+        {{ lease.get_status_display }}
+      </span>
+    </h2>
+  </div>
+
+  <!-- Workflow Progress -->
+  <div class="lease-status-flow">
+    <div class="lease-step {% if lease.status == 'draft' %}current{% elif lease.status != 'draft' %}completed{% endif %}">
+      <i class="fa-solid fa-pencil"></i> Draft
+    </div>
+    <span class="lease-step-arrow">→</span>
+    <div class="lease-step {% if lease.status == 'pending_signature' %}current{% elif lease.status in 'active,expiring,expired,terminated' %}completed{% endif %}">
+      <i class="fa-solid fa-paper-plane"></i> Sent for Signature
+    </div>
+    <span class="lease-step-arrow">→</span>
+    <div class="lease-step {% if lease.status == 'active' or lease.status == 'expiring' %}current{% elif lease.status == 'expired' or lease.status == 'terminated' %}completed{% endif %}">
+      <i class="fa-solid fa-check-circle"></i> Active
+    </div>
+    <span class="lease-step-arrow">→</span>
+    <div class="lease-step {% if lease.status == 'expired' or lease.status == 'terminated' %}current{% endif %}">
+      <i class="fa-solid fa-flag-checkered"></i> Completed
+    </div>
+  </div>
+
+  <!-- Signature Status -->
+  <div class="re-card" style="margin-bottom:16px;">
+    <h3 style="margin:0 0 12px;font-size:1rem;color:var(--re-text);"><i class="fa-solid fa-signature" style="color:var(--re-primary);margin-right:6px;"></i> Signature Status</h3>
+    <div style="display:flex;gap:20px;flex-wrap:wrap;">
+      <div>
+        <span style="font-size:12px;color:var(--re-text-muted);display:block;margin-bottom:4px;">Landlord</span>
+        {% if lease.landlord_signed_at %}
+          <span class="sig-badge signed"><i class="fa-solid fa-check"></i> Signed {{ lease.landlord_signed_at|date:"d M Y H:i" }}</span>
+        {% else %}
+          <span class="sig-badge unsigned"><i class="fa-solid fa-clock"></i> Not signed</span>
+        {% endif %}
+      </div>
+      <div>
+        <span style="font-size:12px;color:var(--re-text-muted);display:block;margin-bottom:4px;">Tenant</span>
+        {% if lease.tenant_signed_at %}
+          <span class="sig-badge signed"><i class="fa-solid fa-check"></i> Signed {{ lease.tenant_signed_at|date:"d M Y H:i" }}</span>
+        {% elif lease.declined_at %}
+          <span class="sig-badge declined"><i class="fa-solid fa-xmark"></i> Declined {{ lease.declined_at|date:"d M Y" }}{% if lease.decline_reason %} – {{ lease.decline_reason }}{% endif %}</span>
+        {% else %}
+          <span class="sig-badge unsigned"><i class="fa-solid fa-clock"></i> Not signed</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Editable Form (only in draft/pending) -->
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="hidden" name="action" value="save">
+
+    <div class="re-card" style="margin-bottom:16px;">
+      <h3 style="margin:0 0 16px;font-size:1rem;color:var(--re-text);"><i class="fa-solid fa-building" style="color:var(--re-primary);margin-right:6px;"></i> Lease Details</h3>
+      <div class="lease-detail-grid">
+        <div class="lease-field">
+          <label>Property</label>
+          <select name="property_id" {% if lease.status != 'draft' %}disabled{% endif %}>
+            {% for p in properties %}
+              <option value="{{ p.id }}" {% if p.id == lease.property_id %}selected{% endif %}>{{ p.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="lease-field">
+          <label>Unit</label>
+          <select name="unit_id" {% if lease.status != 'draft' %}disabled{% endif %}>
+            <option value="">-- Select Unit --</option>
+            {% for u in units %}
+              <option value="{{ u.id }}" data-property="{{ u.property_id }}" {% if lease.unit_id == u.id %}selected{% endif %}>{{ u.property.name }} – {{ u.unit_number }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="lease-field">
+          <label>Tenant</label>
+          {% if lease.status == 'draft' %}
+            <select name="tenant_id">
+              <option value="">-- Not assigned --</option>
+              {% for t in tenants %}
+                <option value="{{ t.id }}" {% if lease.tenant_id == t.id %}selected{% endif %}>{{ t.name }} ({{ t.email }})</option>
+              {% endfor %}
+            </select>
+          {% else %}
+            <input type="text" value="{{ lease.tenant.name|default:'Not assigned' }} {% if lease.tenant %}({{ lease.tenant.email }}){% endif %}" disabled>
+          {% endif %}
+        </div>
+        <div class="lease-field">
+          <label>Monthly Rent (KSh)</label>
+          <input type="number" name="monthly_rent" value="{{ lease.monthly_rent|default:0 }}" {% if lease.status != 'draft' %}disabled{% endif %}>
+        </div>
+        <div class="lease-field">
+          <label>Security Deposit (KSh)</label>
+          <input type="number" name="security_deposit" value="{{ lease.security_deposit|default:0 }}" {% if lease.status != 'draft' %}disabled{% endif %}>
+        </div>
+        <div class="lease-field">
+          <label>Start Date</label>
+          <input type="date" name="start_date" value="{{ lease.start_date|date:'Y-m-d' }}" {% if lease.status != 'draft' %}disabled{% endif %}>
+        </div>
+        <div class="lease-field">
+          <label>End Date</label>
+          <input type="date" name="end_date" value="{% if lease.end_date %}{{ lease.end_date|date:'Y-m-d' }}{% endif %}" {% if lease.status != 'draft' %}disabled{% endif %}>
+        </div>
+        <div class="lease-field">
+          <label>Rent Due Day (of month)</label>
+          <input type="number" name="rent_due_day" value="{{ lease.rent_due_day }}" min="1" max="28" {% if lease.status != 'draft' %}disabled{% endif %}>
+        </div>
+        <div class="lease-field">
+          <label>Grace Period (days)</label>
+          <input type="number" name="grace_period_days" value="{{ lease.grace_period_days }}" {% if lease.status != 'draft' %}disabled{% endif %}>
+        </div>
+        <div class="lease-field">
+          <label>Late Fee (KSh)</label>
+          <input type="number" name="late_fee_amount" value="{{ lease.late_fee_amount }}" {% if lease.status != 'draft' %}disabled{% endif %}>
+        </div>
+      </div>
+
+      <div class="lease-field" style="margin-top:12px;">
+        <label>Notes / Additional Terms</label>
+        <textarea name="notes" {% if lease.status != 'draft' %}disabled{% endif %}>{{ lease.notes }}</textarea>
+      </div>
+    </div>
+
+    <!-- Agreement File -->
+    <div class="re-card" style="margin-bottom:16px;">
+      <h3 style="margin:0 0 12px;font-size:1rem;color:var(--re-text);"><i class="fa-solid fa-file-pdf" style="color:var(--re-primary);margin-right:6px;"></i> Lease Agreement Document</h3>
+      {% if lease.agreement_file %}
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+          <i class="fa-solid fa-file-circle-check" style="font-size:24px;color:#10b981;"></i>
+          <div>
+            <div style="font-weight:500;color:var(--re-text);">{{ lease.agreement_file.name|truncatechars:40 }}</div>
+            <a href="{{ lease.agreement_file.url }}" download style="font-size:13px;color:var(--re-primary);"><i class="fa-solid fa-download"></i> Download</a>
+          </div>
+        </div>
+      {% else %}
+        <p style="color:var(--re-text-muted);font-size:13px;margin-bottom:12px;">No agreement file uploaded yet. Upload a signed paper lease (PDF, DOC, or image).</p>
+      {% endif %}
+      {% if lease.status == 'draft' or lease.status == 'pending_signature' %}
+        <div class="lease-field">
+          <label>Upload Agreement (PDF, DOC, JPG, PNG – max 10MB)</label>
+          <input type="file" name="agreement_file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="lease-actions">
+      {% if lease.status == 'draft' %}
+        <button type="submit" class="re-btn re-btn-primary re-btn-sm"><i class="fa-solid fa-save"></i> Save Draft</button>
+        <button type="submit" name="action" value="send_for_signature" class="re-btn re-btn-accent re-btn-sm" {% if not lease.tenant %}disabled title="Assign a tenant first"{% endif %}>
+          <i class="fa-solid fa-paper-plane"></i> Send for Tenant Signature
+        </button>
+        <button type="submit" name="action" value="activate" class="re-btn re-btn-sm" style="background:#10b981;color:#fff;" onclick="return confirm('Activate this lease immediately (skip tenant signature)?');">
+          <i class="fa-solid fa-bolt"></i> Activate Now
+        </button>
+      {% elif lease.status == 'pending_signature' %}
+        <button type="submit" class="re-btn re-btn-primary re-btn-sm"><i class="fa-solid fa-save"></i> Save Changes</button>
+        <button type="submit" name="action" value="activate" class="re-btn re-btn-sm" style="background:#10b981;color:#fff;" onclick="return confirm('Manually activate this lease?');">
+          <i class="fa-solid fa-check"></i> Activate Manually
+        </button>
+      {% elif lease.status == 'active' or lease.status == 'expiring' %}
+        <form method="post" style="display:inline;">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="renew">
+          <button type="submit" class="re-btn re-btn-accent re-btn-sm"><i class="fa-solid fa-rotate"></i> Renew (+1 Year)</button>
+        </form>
+        <form method="post" style="display:inline;">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="terminate">
+          <button type="submit" class="re-btn re-btn-danger re-btn-sm" onclick="return confirm('Terminate this lease? The unit will be marked vacant.');"><i class="fa-solid fa-xmark"></i> Terminate</button>
+        </form>
+      {% elif lease.status == 'expired' %}
+        <form method="post" style="display:inline;">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="renew">
+          <button type="submit" class="re-btn re-btn-accent re-btn-sm"><i class="fa-solid fa-rotate"></i> Renew Lease</button>
+        </form>
+      {% endif %}
+    </div>
+  </form>
+
+  <!-- Timeline -->
+  <div class="re-card" style="margin-top:20px;">
+    <h3 style="margin:0 0 12px;font-size:1rem;color:var(--re-text);"><i class="fa-solid fa-clock-rotate-left" style="color:var(--re-primary);margin-right:6px;"></i> Lease Timeline</h3>
+    <div style="border-left:2px solid var(--re-border);padding-left:16px;margin-left:8px;">
+      <div class="lease-info-row">
+        <i class="fa-solid fa-plus-circle" style="color:#10b981;"></i>
+        <span class="value">Created {{ lease.created_at|date:"d M Y H:i" }}</span>
+      </div>
+      {% if lease.landlord_signed_at %}
+      <div class="lease-info-row">
+        <i class="fa-solid fa-pen-nib" style="color:#3b82f6;"></i>
+        <span class="value">Landlord signed {{ lease.landlord_signed_at|date:"d M Y H:i" }}</span>
+      </div>
+      {% endif %}
+      {% if lease.tenant_signed_at %}
+      <div class="lease-info-row">
+        <i class="fa-solid fa-pen-nib" style="color:#3b82f6;"></i>
+        <span class="value">Tenant signed {{ lease.tenant_signed_at|date:"d M Y H:i" }}</span>
+      </div>
+      {% endif %}
+      {% if lease.declined_at %}
+      <div class="lease-info-row">
+        <i class="fa-solid fa-ban" style="color:#ef4444;"></i>
+        <span class="value">Tenant declined {{ lease.declined_at|date:"d M Y H:i" }}{% if lease.decline_reason %} — "{{ lease.decline_reason }}"{% endif %}</span>
+      </div>
+      {% endif %}
+      {% if lease.signed_at %}
+      <div class="lease-info-row">
+        <i class="fa-solid fa-check-double" style="color:#10b981;"></i>
+        <span class="value">Lease activated {{ lease.signed_at|date:"d M Y H:i" }}</span>
+      </div>
+      {% endif %}
+      {% if lease.status == 'expired' %}
+      <div class="lease-info-row">
+        <i class="fa-solid fa-hourglass-end" style="color:#f59e0b;"></i>
+        <span class="value">Lease expired (end date: {{ lease.end_date|date:"d M Y" }})</span>
+      </div>
+      {% endif %}
+      {% if lease.status == 'terminated' %}
+      <div class="lease-info-row">
+        <i class="fa-solid fa-xmark-circle" style="color:#ef4444;"></i>
+        <span class="value">Lease terminated</span>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,154 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
+    <title>Notifications - RentEasy</title>
+    <link href="{% static 'img/faviclogo.png' %}" rel="icon">
+</head>
+
+<body class="theme-tenant">
+  <script src="{% static 'Js/theme.js' %}?v=22"></script>
+  <nav>
+    <div class="navbar" id="navbar">
+      <button id="icon"><i class="fa-solid fa-bars"></i></button>
+      <img src="{% static 'img/renteasylogo.png' %}" alt="Renteasy Logo">
+      <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const sidebar = document.querySelector(".sidebar");
+            const toggleBtn = document.querySelector("#icon");
+
+            toggleBtn.addEventListener("click", function() {
+                sidebar.classList.toggle("active");
+            });
+        });
+      </script>
+      <div class="logoss">
+        <span>RENT</span><span style="color: var(--re-primary);">EASY</span>
+      </div>
+      <div class="userbox">
+        <a href="{% url 'profile' %}">
+          <img id="Profile" src="{% static 'img/user.jpg' %}" alt="Profile Picture">
+          <span class="welcuser">Hi, {{ request.user.name|default:"User" }}!</span>
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  {% include "tenant/_sidebar.html" %}
+
+  <div class="dashcont">
+    <!-- Page header -->
+    <div class="page-header">
+      <h1><i class="fas fa-bell"></i> Notifications</h1>
+      <p>Stay updated on your rental activity</p>
+    </div>
+
+    <div class="re-card">
+      <div id="notificationsList" class="notif-list">
+        {% for notification in notifications %}
+          <div class="notif-item {% if notification.is_read %}read{% else %}unread{% endif %}" id="notification-{{ notification.id }}" data-id="{{ notification.id }}" style="cursor:pointer">
+            <div class="notif-icon">
+              <i class="fas fa-{% if notification.is_read %}envelope-open{% else %}envelope{% endif %}"></i>
+            </div>
+            <div class="notif-content">
+              <p>{{ notification.message }}</p>
+            </div>
+            <button onclick="event.stopPropagation();deleteNotification({{ notification.id }})" title="Dismiss" style="background:none;border:none;color:var(--re-text-light);cursor:pointer;padding:4px 8px;font-size:.9rem;border-radius:6px" onmouseover="this.style.color='var(--re-danger)'" onmouseout="this.style.color='var(--re-text-light)'">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        {% empty %}
+          <div class="empty-state">
+            <i class="fas fa-bell-slash"></i>
+            <h3>No Notifications</h3>
+            <p>You're all caught up! New notifications will appear here.</p>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const parts = document.cookie.split(';');
+        for (let i = 0; i < parts.length; i++) {
+          const part = parts[i].trim();
+          if (part.startsWith(name + '=')) {
+            cookieValue = decodeURIComponent(part.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+
+    function markAsRead(notificationId) {
+      fetch(`/notifications/mark_read/${notificationId}/`, {
+        method: "POST",
+        headers: { "X-CSRFToken": csrftoken, "Content-Type": "application/json" }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === "success") {
+          const notificationDiv = document.querySelector(`#notification-${notificationId}`);
+          notificationDiv.classList.add("read");
+        }
+      });
+    }
+
+    // Automatically delete the oldest notification if there are more than 7
+    function deleteOldestNotification() {
+      const notificationsList = document.getElementById("notificationsList");
+      const firstNotification = notificationsList.querySelector(".notification");
+
+      if (firstNotification) {
+        const notificationId = firstNotification.dataset.id;
+        deleteNotification(notificationId);
+      }
+    }
+
+    // Delete notification
+    function deleteNotification(notificationId) {
+      fetch(`/notifications/delete/${notificationId}/`, {
+        method: "POST",
+        headers: { "X-CSRFToken": csrftoken, "Content-Type": "application/json" }
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === "success") {
+          const notificationDiv = document.querySelector(`#notification-${notificationId}`);
+          notificationDiv.remove();
+        }
+      });
+    }
+
+    // Automatically delete the oldest notification if there are more than 7
+    if ({{ notifications|length|default:0 }} > 7) {
+      deleteOldestNotification();
+    }
+
+    // Mark notifications as read when clicked
+    document.querySelectorAll(".notification").forEach(notificationDiv => {
+      notificationDiv.addEventListener("click", function () {
+        const notificationId = notificationDiv.dataset.id;
+        markAsRead(notificationId);
+      });
+    });
+  </script>
+</body>
+
+</html>
+
+
+

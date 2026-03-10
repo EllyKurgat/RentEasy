@@ -1,0 +1,197 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
+  <title>Rent &amp; Payments - RentEasy</title>
+  <link href="{% static 'img/faviclogo.png' %}" rel="icon">
+</head>
+<body class="theme-tenant">
+<script src="{% static 'Js/theme.js' %}?v=22"></script>
+
+{% if messages %}
+<div style="max-width:1000px;margin:16px auto 0;padding:0 16px;">
+  {% for message in messages %}
+    <div class="re-alert {{ message.tags|default:'info' }}"><i class="fa-solid fa-circle-info"></i> {{ message }}</div>
+  {% endfor %}
+</div>
+{% endif %}
+
+<nav>
+  <div class="navbar" id="navbar">
+    <button id="icon"><i class="fa-solid fa-bars"></i></button>
+    <img src="{% static 'img/renteasylogo.png' %}" alt="Renteasy Logo">
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        const sidebar = document.querySelector(".sidebar");
+        document.querySelector("#icon").addEventListener("click", function() { sidebar.classList.toggle("active"); });
+      });
+    </script>
+    <div class="logoss"><span>RENT</span><span style="color:var(--re-primary);">EASY</span></div>
+    <div class="userbox">
+      <a href="{% url 'profile' %}">
+        <img id="Profile" src="{% static 'img/user.jpg' %}" alt="Profile Picture">
+        <span class="welcuser">Hi, {{ request.user.name|default:'User' }}!</span>
+      </a>
+    </div>
+  </div>
+</nav>
+
+{% include "tenant/_sidebar.html" %}
+
+<div class="dashcont">
+  <!-- ── Stat Cards ──────────────────────────────────────── -->
+  <div class="re-stat-grid">
+    <div class="re-stat-card">
+      <div class="re-stat-icon teal"><i class="fa-solid fa-calendar-day"></i></div>
+      <div class="re-stat-info">
+        <p class="re-stat-label">Rent Due Date</p>
+        <p class="re-stat-value">{{ rent_due_day|default:"5" }}<span style="font-size:14px;font-weight:400;color:var(--re-text-secondary);"> of every month</span></p>
+      </div>
+    </div>
+    <div class="re-stat-card">
+      <div class="re-stat-icon blue"><i class="fa-solid fa-money-bill-wave"></i></div>
+      <div class="re-stat-info">
+        <p class="re-stat-label">Amount Due</p>
+        <p class="re-stat-value">KSh {{ active_lease.property.monthly_rent|default:"0" }}</p>
+      </div>
+    </div>
+    <div class="re-stat-card">
+      <div class="re-stat-icon {% if payment_status == 'Paid' %}green{% elif payment_status == 'Overdue' %}red{% else %}orange{% endif %}">
+        <i class="fa-solid {% if payment_status == 'Paid' %}fa-circle-check{% elif payment_status == 'Overdue' %}fa-triangle-exclamation{% else %}fa-clock{% endif %}"></i>
+      </div>
+      <div class="re-stat-info">
+        <p class="re-stat-label">This Month</p>
+        <p class="re-stat-value">{{ payment_status }}</p>
+      </div>
+    </div>
+    <div class="re-stat-card">
+      <div class="re-stat-icon green"><i class="fa-solid fa-piggy-bank"></i></div>
+      <div class="re-stat-info">
+        <p class="re-stat-label">Total Paid</p>
+        <p class="re-stat-value">KSh {{ total_paid|default:"0" }}</p>
+      </div>
+    </div>
+  </div>
+
+  {% if active_lease %}
+  <div style="text-align:center;margin-bottom:24px;">
+    <a href="{% url 'payrent' %}" class="re-btn re-btn-primary"><i class="fa-solid fa-credit-card"></i> Pay Rent Now</a>
+  </div>
+  {% else %}
+  <div class="re-card" style="text-align:center;padding:40px 20px;margin-bottom:24px;">
+    <i class="fa-solid fa-circle-exclamation" style="font-size:40px;color:var(--re-warning);margin-bottom:12px;"></i>
+    <p style="font-size:16px;font-weight:600;margin:0 0 8px;">No Active Lease</p>
+    <p style="color:var(--re-text-secondary);margin:0;">Contact your landlord or <a href="{% url 'listing_list' %}">browse listings</a> to get started.</p>
+  </div>
+  {% endif %}
+
+  <!-- ── Payment Records ──────────────────────────────────── -->
+  <div class="re-card">
+    <div class="re-card-header">
+      <span><i class="fa-solid fa-receipt"></i> Payment Records</span>
+      <input type="text" id="searchInput" placeholder="Search…" style="padding:6px 12px;border-radius:8px;border:1px solid var(--re-border);font-size:13px;background:var(--re-input-bg);color:var(--re-text);width:180px;">
+    </div>
+    <div class="re-card-body" style="padding:0;">
+      <div class="re-table-wrap">
+        <table class="re-table" id="recordsTable">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Method</th>
+              <th>Amount</th>
+              <th>Reference</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in payments %}
+            <tr>
+              <td>{{ p.paid_at|date:"d/m/Y" }}</td>
+              <td>{{ p.get_method_display }}</td>
+              <td><strong>KSh {{ p.amount }}</strong></td>
+              <td>{{ p.reference|default:"-" }}</td>
+              <td>
+                <span class="re-badge {% if p.status == 'confirmed' %}green{% elif p.status == 'pending' %}yellow{% elif p.status == 'overdue' %}red{% else %}blue{% endif %}">
+                  {{ p.get_status_display }}
+                </span>
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" style="text-align:center;color:var(--re-text-muted);padding:32px;">No payments recorded yet.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="pagination" id="paginationControls"></div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  // Search filter
+  const searchInput = document.getElementById("searchInput");
+  if (searchInput) {
+    searchInput.addEventListener("keyup", function() {
+      const filter = this.value.toLowerCase();
+      document.querySelectorAll("#recordsTable tbody tr").forEach(function(row) {
+        row.style.display = row.textContent.toLowerCase().includes(filter) ? "" : "none";
+      });
+    });
+  }
+
+  // Pagination
+  const table = document.getElementById("recordsTable");
+  const tbody = table.querySelector("tbody");
+  const rows = Array.from(tbody.querySelectorAll("tr"));
+  const rowsPerPage = 8;
+  let currentPage = 1;
+  const maxVisiblePages = 4;
+
+  function displayTable() {
+    tbody.innerHTML = "";
+    let start = (currentPage - 1) * rowsPerPage;
+    let paginatedRows = rows.slice(start, start + rowsPerPage);
+    paginatedRows.forEach(row => tbody.appendChild(row));
+    updatePagination();
+  }
+
+  function updatePagination() {
+    const pc = document.getElementById("paginationControls");
+    pc.innerHTML = "";
+    let totalPages = Math.ceil(rows.length / rowsPerPage);
+    if (totalPages <= 1) return;
+    let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+    if (endPage - startPage + 1 < maxVisiblePages) startPage = Math.max(1, endPage - maxVisiblePages + 1);
+
+    if (startPage > 1) { pc.appendChild(createPageButton(1)); if (startPage > 2) pc.appendChild(createDots()); }
+    for (let i = startPage; i <= endPage; i++) pc.appendChild(createPageButton(i));
+    if (endPage < totalPages) { if (endPage < totalPages - 1) pc.appendChild(createDots()); pc.appendChild(createPageButton(totalPages)); }
+  }
+
+  function createPageButton(page) {
+    let btn = document.createElement("button");
+    btn.textContent = page;
+    btn.classList.add("page-btn");
+    if (page === currentPage) btn.classList.add("active");
+    btn.addEventListener("click", function () { currentPage = page; displayTable(); });
+    return btn;
+  }
+
+  function createDots() { let d = document.createElement("span"); d.textContent = "..."; d.classList.add("dots"); return d; }
+
+  displayTable();
+});
+</script>
+</body>
+</html>
+
+
+

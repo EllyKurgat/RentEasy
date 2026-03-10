@@ -1,0 +1,74 @@
+<div class="sidebar">
+<ul>
+  <li><a class="{% if request.resolver_match.url_name == 'landdash' %}active{% endif %}" href="{% url 'landdash' %}"><i class="fa-solid fa-briefcase"></i> Dashboard</a></li>
+  <li><a class="{% if request.resolver_match.url_name == 'mytenants' or request.resolver_match.url_name == 'invite_tenant' %}active{% endif %}" href="{% url 'mytenants' %}"><i class="fa-solid fa-users"></i> My Tenants</a></li>
+  <li><a class="{% if request.resolver_match.url_name == 'landlord_leases' or request.resolver_match.url_name == 'landlord_lease_detail' or request.resolver_match.url_name == 'landlord_lease_create' %}active{% endif %}" href="{% url 'landlord_leases' %}"><i class="fa-solid fa-file-contract"></i> Leases</a></li>
+  <li class="dropdown">
+    <a href="#" class="{% if request.resolver_match.url_name == 'myproperties' or request.resolver_match.url_name == 'viewproperties' %}active{% endif %}" onclick="toggleDropdown(); return false;"><i class="fa-solid fa-house"></i> My Properties <span class="arrow">▼</span></a>
+    <ul class="dropdown-menu">
+      <li><a href="{% url 'myproperties' %}">Add Property</a></li>
+      <li><a href="{% url 'viewproperties' %}">View Properties</a></li>
+    </ul>
+  </li>
+  <li><a class="{% if request.resolver_match.url_name == 'myearnings' %}active{% endif %}" href="{% url 'myearnings' %}"><i class="fa-solid fa-coins"></i> My Earnings</a></li>
+  <li><a class="{% if request.resolver_match.url_name == 'landlord_payment_methods' %}active{% endif %}" href="{% url 'landlord_payment_methods' %}"><i class="fa-solid fa-credit-card"></i> Payment Methods</a></li>
+  <li><a class="{% if request.resolver_match.url_name == 'landmessages' %}active{% endif %}" href="{% url 'landmessages' %}"><i class="fa-solid fa-envelope"></i> Messages</a></li>
+  <li><a class="{% if request.resolver_match.url_name == 'landlord_listings' or request.resolver_match.url_name == 'create_listing' %}active{% endif %}" href="{% url 'landlord_listings' %}"><i class="fa-solid fa-list"></i> Listings</a></li>
+  <li><a class="{% if request.resolver_match.url_name == 'landlord_maintenance' %}active{% endif %}" href="{% url 'landlord_maintenance' %}"><i class="fa-solid fa-wrench"></i> Maintenance</a></li>
+  <li><a class="{% if request.resolver_match.url_name == 'landlord_applications' %}active{% endif %}" href="{% url 'landlord_applications' %}"><i class="fa-solid fa-file"></i> Applications</a></li>
+  <li><a class="{% if request.resolver_match.url_name == 'landlord_reports' %}active{% endif %}" href="{% url 'landlord_reports' %}"><i class="fa-solid fa-chart-line"></i> Reports</a></li>
+  <li><a class="{% if request.resolver_match.url_name == 'landnotifications' %}active{% endif %}" href="{% url 'landnotifications' %}"><i class="fa-solid fa-bell"></i> Notifications <span id="notif-badge" style="background:var(--re-primary);color:#fff;border-radius:50%;padding:2px 7px;font-size:0.7rem;margin-left:4px;display:none;"></span></a></li>
+  <li>
+    <form method="POST" action="{% url 'logout' %}">
+      {% csrf_token %}
+      <button type="submit" class="logoutb"><i class="fa-solid fa-door-open"></i> Logout</button>
+    </form>
+  </li>
+</ul>
+</div>
+<div class="sidebar-overlay" onclick="document.querySelector('.sidebar').classList.remove('active');this.classList.remove('active');document.body.classList.remove('sidebar-open');"></div>
+
+<script>
+(function(){
+  var sb=document.querySelector('.sidebar');
+  if(!sb)return;
+  new MutationObserver(function(){document.body.classList.toggle('sidebar-open',sb.classList.contains('active'));}).observe(sb,{attributes:true,attributeFilter:['class']});
+})();
+// Notification badge polling
+(function(){
+  function updateBadge(){
+    fetch('{% url "notification_unread_count" %}')
+      .then(r=>r.json())
+      .then(d=>{
+        var b=document.getElementById('notif-badge');
+        if(b){b.textContent=d.unread_count;b.style.display=d.unread_count>0?'inline':'none';}
+      }).catch(()=>{});
+  }
+  updateBadge();
+  setInterval(updateBadge,30000);
+})();
+</script>
+
+<!-- Mobile Bottom Nav -->
+<nav class="mobile-bottom-nav">
+  <a href="{% url 'landdash' %}" class="mobile-nav-item {% if request.resolver_match.url_name == 'landdash' %}active{% endif %}">
+    <i class="fa-solid fa-briefcase"></i>
+    <span>Dashboard</span>
+  </a>
+  <a href="{% url 'mytenants' %}" class="mobile-nav-item {% if request.resolver_match.url_name == 'mytenants' or request.resolver_match.url_name == 'invite_tenant' %}active{% endif %}">
+    <i class="fa-solid fa-users"></i>
+    <span>Tenants</span>
+  </a>
+  <a href="{% url 'viewproperties' %}" class="mobile-nav-item {% if request.resolver_match.url_name == 'myproperties' or request.resolver_match.url_name == 'viewproperties' %}active{% endif %}">
+    <i class="fa-solid fa-house"></i>
+    <span>Properties</span>
+  </a>
+  <a href="{% url 'landmessages' %}" class="mobile-nav-item {% if request.resolver_match.url_name == 'landmessages' %}active{% endif %}">
+    <i class="fa-solid fa-envelope"></i>
+    <span>Messages</span>
+  </a>
+  <a href="#" class="mobile-nav-item mobile-nav-more" onclick="document.querySelector('.sidebar').classList.toggle('active');document.querySelector('.sidebar-overlay').classList.toggle('active');return false;">
+    <i class="fa-solid fa-ellipsis"></i>
+    <span>More</span>
+  </a>
+</nav>

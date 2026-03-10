@@ -1,0 +1,171 @@
+{% load static %}
+{% load humanize %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
+    <title>Contact Landlord - RentEasy</title>
+    <link href="{% static 'img/faviclogo.png' %}" rel="icon">
+</head>
+
+<body class="theme-landlord landing-body">
+<script src="{% static 'Js/theme.js' %}?v=22"></script>
+  <nav>
+    <div class="topnav" id="topnav">
+        <img src="{% static 'img/renteasylogo10.png' %}">
+        <a href="javascript:void(0);" class="icon" onclick="document.getElementById('topnav').classList.toggle('responsive');">
+            <i class="fa-solid fa-bars"></i>
+        </a>
+        <div class="top2">
+            <a href="{% url 'index' %}">HOME</a>
+            <a href="{% url 'about' %}">ABOUT</a>
+            <a href="{% url 'properties' %}">PROPERTY</a>
+            <a href="{% url 'contact' %}" class="active10">CONTACT</a>
+            <a class="loginsmall" href="{% url 'user_login' %}">Login/Sign Up</a>
+        </div>
+        <div class="userbox2">
+            <a class="login2" href="{% url 'user_login' %}">Login/Sign Up</a>
+        </div>
+    </div>
+  </nav>
+
+  <div class="about">
+    <h1 class="abouth">Contact Landlord</h1>
+  </div>
+
+  <div class="contact" style="max-width:900px;margin:0 auto;padding:32px 24px;">
+    {% if messages %}{% for m in messages %}
+    <div style="padding:12px 16px;margin:0 0 16px;border-radius:8px;font-size:0.95rem;{% if m.tags == 'success' %}background:#ecfdf5;border-left:4px solid #10b981;color:#065f46;{% else %}background:#fef2f2;border-left:4px solid #ef4444;color:#991b1b;{% endif %}">{{ m }}</div>
+    {% endfor %}{% endif %}
+
+    <!-- Listing & Landlord Info Card -->
+    <div style="background:var(--re-surface,#fff);border-radius:14px;padding:28px;box-shadow:0 4px 16px rgba(0,0,0,0.08);border:1px solid var(--re-border,#E2E8F0);margin-bottom:28px;">
+      <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;">
+        <!-- Landlord Avatar -->
+        <div style="width:64px;height:64px;border-radius:50%;background:#1F2937;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          {% if landlord.avatar %}
+          <img src="{{ landlord.avatar.url }}" style="width:64px;height:64px;border-radius:50%;object-fit:cover;" alt="{{ landlord.name }}">
+          {% else %}
+          <i class="fa-solid fa-user" style="font-size:1.6rem;color:#fff;"></i>
+          {% endif %}
+        </div>
+        <div style="flex:1;min-width:200px;">
+          <h2 style="margin:0 0 4px;font-size:1.3rem;color:var(--re-text,#111827);">{{ landlord.name }}</h2>
+          <p style="margin:0 0 12px;color:var(--re-text-secondary,#6B7280);font-size:0.9rem;">Property Owner</p>
+          <div style="display:flex;flex-wrap:wrap;gap:16px;">
+            {% if landlord.email %}
+            <a href="mailto:{{ landlord.email }}" style="display:inline-flex;align-items:center;gap:6px;color:#1F2937;text-decoration:none;font-size:0.92rem;font-weight:500;">
+              <i class="fa-solid fa-envelope" style="color:var(--re-primary,#3B82F6);"></i> {{ landlord.email }}
+            </a>
+            {% endif %}
+            {% if landlord.phone %}
+            <a href="tel:{{ landlord.phone }}" style="display:inline-flex;align-items:center;gap:6px;color:#1F2937;text-decoration:none;font-size:0.92rem;font-weight:500;">
+              <i class="fa-solid fa-phone" style="color:var(--re-primary,#3B82F6);"></i> {{ landlord.phone }}
+            </a>
+            {% endif %}
+            {% if landlord.phone %}
+            <a href="https://wa.me/{{ landlord.phone|cut:' '|cut:'+' }}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;color:#25D366;text-decoration:none;font-size:0.92rem;font-weight:500;">
+              <i class="fa-brands fa-whatsapp"></i> WhatsApp
+            </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Listing being inquired about -->
+      <div style="margin-top:20px;padding-top:18px;border-top:1px solid var(--re-border,#E2E8F0);">
+        <p style="margin:0 0 4px;font-size:0.82rem;color:var(--re-text-secondary,#6B7280);text-transform:uppercase;font-weight:600;letter-spacing:0.3px;">Enquiring about</p>
+        <h3 style="margin:0 0 4px;font-size:1.1rem;color:var(--re-text,#111827);">{{ listing.title }}</h3>
+        <p style="margin:0 0 4px;color:var(--re-text-secondary,#6B7280);font-size:0.9rem;"><i class="fa-solid fa-location-dot" style="color:#EF4444;margin-right:4px;"></i> {{ listing.property_location }}</p>
+        <p style="margin:0;font-size:1.1rem;font-weight:700;color:var(--re-text,#111827);">KSh {{ listing.rent_amount|intcomma }}<span style="font-size:0.75em;font-weight:400;color:var(--re-text-secondary);">/mo</span></p>
+      </div>
+    </div>
+
+    <!-- Contact Form -->
+    <div style="background:var(--re-surface,#fff);border-radius:14px;padding:28px;box-shadow:0 4px 16px rgba(0,0,0,0.08);border:1px solid var(--re-border,#E2E8F0);">
+      <h3 style="margin:0 0 20px;font-size:1.15rem;color:var(--re-text,#111827);"><i class="fa-solid fa-paper-plane" style="color:var(--re-primary,#3B82F6);margin-right:8px;"></i>Send a Message</h3>
+      <form action="{% url 'contactlandlord' listing.pk %}" method="POST">
+        {% csrf_token %}
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+          <div>
+            <label style="display:block;font-size:0.88rem;color:var(--re-text-secondary,#6B7280);margin-bottom:4px;font-weight:500;">Name *</label>
+            <input type="text" name="name" placeholder="Your full name" required{% if request.user.is_authenticated %} value="{{ request.user.name }}"{% endif %}
+              style="width:100%;padding:11px 14px;border:1px solid var(--re-input-border,#D1D5DB);border-radius:8px;font-size:0.95rem;background:var(--re-input-bg,#fff);color:var(--re-text,#111827);box-sizing:border-box;">
+          </div>
+          <div>
+            <label style="display:block;font-size:0.88rem;color:var(--re-text-secondary,#6B7280);margin-bottom:4px;font-weight:500;">Email *</label>
+            <input type="email" name="email" placeholder="Your email" required{% if request.user.is_authenticated %} value="{{ request.user.email }}"{% endif %}
+              style="width:100%;padding:11px 14px;border:1px solid var(--re-input-border,#D1D5DB);border-radius:8px;font-size:0.95rem;background:var(--re-input-bg,#fff);color:var(--re-text,#111827);box-sizing:border-box;">
+          </div>
+        </div>
+        <div style="margin-bottom:16px;">
+          <label style="display:block;font-size:0.88rem;color:var(--re-text-secondary,#6B7280);margin-bottom:4px;font-weight:500;">Phone (optional)</label>
+          <input type="tel" name="phone" placeholder="e.g. 0712345678"{% if request.user.is_authenticated %} value="{{ request.user.phone }}"{% endif %}
+            style="width:100%;padding:11px 14px;border:1px solid var(--re-input-border,#D1D5DB);border-radius:8px;font-size:0.95rem;background:var(--re-input-bg,#fff);color:var(--re-text,#111827);box-sizing:border-box;">
+        </div>
+        <div style="margin-bottom:20px;">
+          <label style="display:block;font-size:0.88rem;color:var(--re-text-secondary,#6B7280);margin-bottom:4px;font-weight:500;">Message *</label>
+          <textarea name="body" required placeholder="Hi, I'm interested in this property..." style="width:100%;padding:11px 14px;border:1px solid var(--re-input-border,#D1D5DB);border-radius:8px;font-size:0.95rem;background:var(--re-input-bg,#fff);color:var(--re-text,#111827);box-sizing:border-box;resize:vertical;min-height:120px;"></textarea>
+        </div>
+        <button type="submit" style="width:100%;padding:13px;background:#1F2937;color:#fff;border:none;border-radius:8px;font-weight:600;font-size:1rem;cursor:pointer;transition:background 0.2s;">
+          <i class="fa-solid fa-paper-plane" style="margin-right:6px;"></i> Send Message
+        </button>
+      </form>
+    </div>
+
+    <div style="text-align:center;margin-top:20px;">
+      <a href="{% url 'listing_detail' listing.pk %}" style="color:var(--re-primary,#3B82F6);font-weight:600;text-decoration:none;font-size:0.95rem;">
+        <i class="fa-solid fa-arrow-left" style="margin-right:4px;"></i> Back to listing
+      </a>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="col-contfoot">
+      <div class="colfoot" style="vertical-align:top">
+        <img src="{% static 'img/renteasylogo10.png' %}">
+        <p class="address4">Renteasy is an innovative platform designed to streamline the management of rental properties for both landlords and tenants.</p>
+      </div>
+      <div class="colfoot" style="vertical-align:top">
+        <h2 class="address3">OUR LOCATION</h2>
+        <p class="address4">Eldoret, Uasin Gishu County, Kenya</p>
+        <h2 class="address3">EMAIL</h2>
+        <p class="address4">{% if landlord.email %}<a href="mailto:{{ landlord.email }}" style="color:inherit;text-decoration:none;">{{ landlord.email }}</a>{% else %}Not provided{% endif %}</p>
+        <h2 class="address3">CALL</h2>
+        <p class="address4">{% if landlord.phone %}<a href="tel:{{ landlord.phone }}" style="color:inherit;text-decoration:none;">{{ landlord.phone }}</a>{% else %}Not provided{% endif %}</p>
+        <h2 class="address3">WHATSAPP</h2>
+        <p class="address4">{% if landlord.phone %}<a href="https://wa.me/{{ landlord.phone|cut:' '|cut:'+' }}" style="color:inherit;text-decoration:none;">{{ landlord.phone }}</a>{% else %}Not provided{% endif %}</p>
+      </div>
+      <div class="colfoot" style="vertical-align:top;">
+        <h3 class="textd">Quick Links</h3>
+        <div class="quicklinks">
+          <a href="{% url 'index' %}" class="active10">Home</a>
+          <a href="{% url 'about' %}">About</a>
+          <a href="{% url 'properties' %}">Property</a>
+          <a href="{% url 'contact' %}">Contact</a>
+          <a href="{% url 'user_login' %}">Login/Sign Up</a>
+        </div>
+      </div>
+      <div class="colfoot">
+        <h3 class="textd">Socials</h3>
+        <a href="#" class="fa-brands fa-facebook"></a>
+        <a href="#" class="fa-brands fa-x-twitter"></a>
+        <a href="#" class="fa-brands fa-instagram"></a>
+        <a href="#" class="fa-brands fa-youtube"></a>
+      </div>
+    </div>
+    <div class="developer">
+      RentEasy &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved
+    </div>
+  </footer>
+</body>
+</html>
+
+
+
