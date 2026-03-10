@@ -131,8 +131,8 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-# Uploaded files (stored under frontend_views/static/media/)
-MEDIA_URL = "static/media/"
+# Uploaded files (avatars, property images, etc.)
+MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "frontend_views" / "static" / "media"
 
 # Default primary key field type
