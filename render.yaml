@@ -1,9 +1,10 @@
+
 services:
-  - type: postgres
+  - type: database
     name: rms-db
     plan: free
-    postgresMajorVersion: "16"
-    postgresVersion: "16"
+    engine: postgres
+    version: "16"
     disk:
       enabled: false
 
