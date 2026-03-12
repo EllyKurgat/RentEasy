@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
             field=models.CharField(choices=[('draft', 'Draft'), ('pending_signature', 'Pending Signature'), ('active', 'Active'), ('expiring', 'Expiring'), ('expired', 'Expired'), ('terminated', 'Terminated')], default='active', max_length=24),
         ),
         migrations.RunSQL(
-            sql="UPDATE frontend_views_lease SET status = 'expired' WHERE is_active = 0",
+            sql="UPDATE frontend_views_lease SET status = 'expired' WHERE is_active = false",
             reverse_sql=migrations.RunSQL.noop,
         ),
         migrations.RemoveField(
