@@ -1,21 +1,13 @@
-
 services:
-  - type: database
-    name: rms-db
-    plan: free
-    engine: postgres
-    version: "16"
-    disk:
-      enabled: false
-
   - type: web
     name: rms
     plan: free
+    runtime: python
     buildCommand: |
       pip install -r requirements.txt
       python manage.py collectstatic --noinput
     startCommand: |
-      python manage.py migrate
+      python manage.py migrate --noinput
       gunicorn RMS.wsgi:application --bind 0.0.0.0:$PORT --timeout 60
     envVars:
       - key: DJANGO_SECRET_KEY
@@ -38,3 +30,8 @@ services:
         value: "174379"
       - key: MPESA_CALLBACK_URL
         value: "https://yourdomain.com/mpesa/callback/"
+
+databases:
+  - name: rms-db
+    plan: free
+    postgresMajorVersion: "16"
