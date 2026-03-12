@@ -157,6 +157,56 @@ RMS/
 
 ---
 
+## ☁️ Deploying to Render (Blueprint)
+
+This project includes a `render.yaml` blueprint file for one-click deployment to Render.
+
+### Prerequisites
+- A [Render](https://render.com) account
+- A GitHub/GitLab repository with this code
+
+### Quick Deploy
+
+1. Go to the [Render Dashboard](https://dashboard.render.com)
+2. Click **New +** → **Blueprint**
+3. Connect your repository
+4. Render will detect `render.yaml` and show the services to create:
+   - **rms-db**: PostgreSQL database (free tier)
+   - **rms**: Django web service (free tier)
+5. Review and configure the environment variables:
+   - `MPESA_CONSUMER_KEY`: Your M-Pesa consumer key
+   - `MPESA_CONSUMER_SECRET`: Your M-Pesa consumer secret
+   - `MPESA_CALLBACK_URL`: Your Render service URL + `/mpesa/callback/`
+6. Click **Apply Blueprint**
+
+### Environment Variables
+
+After deployment, configure these in the Render dashboard:
+
+| Variable | Description |
+|----------|-------------|
+| `DJANGO_SECRET_KEY` | Auto-generated (secure) |
+| `DJANGO_DEBUG` | Set to `False` for production |
+| `DJANGO_ALLOWED_HOSTS` | Your Render service URL |
+| `MPESA_ENVIRONMENT` | `sandbox` or `production` |
+| `MPESA_CONSUMER_KEY` | From Safaricom Developer Portal |
+| `MPESA_CONSUMER_SECRET` | From Safaricom Developer Portal |
+| `MPESA_SHORTCODE` | Your business shortcode |
+| `MPESA_PASSKEY` | From Safaricom Developer Portal |
+| `MPESA_CALLBACK_URL` | `https://your-service.onrender.com/mpesa/callback/` |
+
+See `.env.production` for a complete reference template.
+
+### First-Time Setup
+
+After deployment, you may need to:
+1. Create a superuser: Use Render's **Shell** to run:
+   ```bash
+   python manage.py createsuperuser
+   ```
+
+---
+
 ## 📋 Data Models
 
 | Model | Description |

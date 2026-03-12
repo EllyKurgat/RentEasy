@@ -1,0 +1,39 @@
+services:
+  - type: postgres
+    name: rms-db
+    plan: free
+    postgresMajorVersion: "16"
+    postgresVersion: "16"
+    disk:
+      enabled: false
+
+  - type: web
+    name: rms
+    plan: free
+    buildCommand: |
+      pip install -r requirements.txt
+      python manage.py collectstatic --noinput
+    startCommand: |
+      python manage.py migrate
+      gunicorn RMS.wsgi:application --bind 0.0.0.0:$PORT --timeout 60
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: "False"
+      - key: DJANGO_ALLOWED_HOSTS
+        value: "{{ .Service.WebURL }}"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: rms-db
+          property: connectionString
+      - key: MPESA_ENVIRONMENT
+        value: "sandbox"
+      - key: MPESA_CONSUMER_KEY
+        sync: false
+      - key: MPESA_CONSUMER_SECRET
+        sync: false
+      - key: MPESA_SHORTCODE
+        value: "174379"
+      - key: MPESA_CALLBACK_URL
+        value: "https://yourdomain.com/mpesa/callback/"
