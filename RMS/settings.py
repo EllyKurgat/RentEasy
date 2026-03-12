@@ -30,20 +30,26 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "django-insecure-CHANGE-ME-IN-E
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DJANGO_DEBUG", "False").lower() in ("true", "1", "yes")
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1")
-if ALLOWED_HOSTS:
+# ALLOWED_HOSTS configuration
+_raw_hosts = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1")
+
+if _raw_hosts:
     ALLOWED_HOSTS = [
         h.strip().replace("https://", "").replace("http://", "")
-        for h in ALLOWED_HOSTS.split(",")
+        for h in _raw_hosts.split(",")
         if h.strip()
     ]
-    # Allow all onrender.com subdomains
+    # Allow all onrender.com subdomains when using Render
     if any("onrender.com" in h for h in ALLOWED_HOSTS):
         ALLOWED_HOSTS.append(".onrender.com")
 else:
     ALLOWED_HOSTS = []
 
-# Fallback for production if ALLOWED_HOSTS is not properly set
+# Always allow localhost for health checks
+if "127.0.0.1" not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append("127.0.0.1")
+
+# Fallback for production
 if not ALLOWED_HOSTS and not DEBUG:
     ALLOWED_HOSTS = ['*']
 
