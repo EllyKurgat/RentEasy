@@ -37,6 +37,9 @@ if ALLOWED_HOSTS:
         for h in ALLOWED_HOSTS.split(",")
         if h.strip()
     ]
+    # Allow all onrender.com subdomains
+    if any("onrender.com" in h for h in ALLOWED_HOSTS):
+        ALLOWED_HOSTS.append(".onrender.com")
 else:
     ALLOWED_HOSTS = []
 
