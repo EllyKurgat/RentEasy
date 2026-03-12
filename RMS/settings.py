@@ -30,14 +30,8 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "django-insecure-CHANGE-ME-IN-E
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DJANGO_DEBUG", "False").lower() in ("true", "1", "yes")
 
-# ALLOWED_HOSTS - use env var if set, otherwise allow all in production
-_custom_hosts = os.environ.get("DJANGO_ALLOWED_HOSTS")
-if _custom_hosts:
-    ALLOWED_HOSTS = [h.strip() for h in _custom_hosts.split(",") if h.strip()]
-elif DEBUG:
-    ALLOWED_HOSTS = ["localhost", "127.0.0.1", "*.onrender.com"]
-else:
-    ALLOWED_HOSTS = ["*"]
+# ALLOWED_HOSTS - allow all for simplicity
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
