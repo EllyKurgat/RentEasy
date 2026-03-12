@@ -196,11 +196,8 @@ LOGIN_URL = 'user_login'
 # Set these via .env file or environment variables.
 # Register at https://developer.safaricom.co.ke to obtain sandbox credentials.
 MPESA_ENVIRONMENT = os.environ.get("MPESA_ENVIRONMENT", "sandbox")
-MPESA_CONSUMER_KEY = "d9cfPrIEr6cIoarEML4QtRzCtZgWH9r3TDwFAAIAI5bdkc70"
-MPESA_CONSUMER_SECRET = "4T73kO1aUCZ5rEPZoj9mChLx2kMK4MfeeNi2XsJGpVryPGrDMGjZmHM4ut9MAJHy"
+MPESA_CONSUMER_KEY = os.environ.get("MPESA_CONSUMER_KEY", "")
+MPESA_CONSUMER_SECRET = os.environ.get("MPESA_CONSUMER_SECRET", "")
 MPESA_SHORTCODE = os.environ.get("MPESA_SHORTCODE", "174379")
-MPESA_PASSKEY = os.environ.get(
-    "MPESA_PASSKEY",
-    "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919",
-)
+MPESA_PASSKEY = os.environ.get("MPESA_PASSKEY", "")
 MPESA_CALLBACK_URL = os.environ.get("MPESA_CALLBACK_URL", "https://yourdomain.com/mpesa/callback/")
