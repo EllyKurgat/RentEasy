@@ -1018,7 +1018,7 @@ input[type=submit]:hover {
     display: flex !important; order: 2; align-items: center; justify-content: center; 
     min-width: 36px; min-height: 36px; 
     color: #fff !important; font-size: 22px; cursor: pointer; flex-shrink: 0;
-    background: #3B82F6 !important; border-radius: 6px !important;
+    background: #1e3a5f !important; border-radius: 6px !important;
     padding: 6px !important;
   }
   .userbox2 { 
@@ -1042,6 +1042,20 @@ input[type=submit]:hover {
     color: #fff !important;
     flex-shrink: 0;
   }
+  
+  /* Dashboard navbar hamburger */
+  .navbar { padding: 6px 12px !important; height: auto !important; }
+  #icon {
+    display: flex !important;
+    background: #1e3a5f !important;
+    color: #fff !important;
+    border-radius: 6px !important;
+    padding: 6px !important;
+    min-width: 36px; min-height: 36px;
+  }
+  .navbar img { height: 20px !important; }
+  .logoss { font-size: 1rem !important; }
+  .welcuser { display: none !important; }
 }
 
 @media (max-width: 480px) {
