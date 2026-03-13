@@ -37,27 +37,31 @@
         padding: 40px 24px;
       }
       .login-card {
-        width: 100%; max-width: 440px;
+        width: 100%; max-width: 400px;
         background: #fff;
-        padding: 40px 36px;
-        border-radius: 16px;
+        padding: 24px 20px;
+        border-radius: 12px;
         border-top: 4px solid #1F2937;
         box-shadow: 0 4px 24px rgba(31,41,55,0.08);
       }
       .login-card h2 {
-        font-size: 1.5rem; font-weight: 700; color: #1F2937; margin: 0 0 4px;
+        font-size: 1.3rem; font-weight: 700; color: #1F2937; margin: 0 0 4px;
       }
       .login-card .login-subtitle {
-        font-size: 0.92rem; color: var(--re-text-secondary); margin: 0 0 28px;
+        font-size: 0.85rem; color: var(--re-text-secondary); margin: 0 0 16px;
       }
 
       @media (max-width: 768px) {
         .login-page { flex-direction: column; }
         .login-left { display: none; }
-        .login-right { flex: 1; padding: 20px 16px; }
-        .login-card { padding: 24px 20px; border-radius: 12px; }
-        .login-card h2 { font-size: 1.3rem; margin-bottom: 8px; }
-        .login-card .login-subtitle { font-size: 0.85rem; margin-bottom: 20px; }
+        .login-right { flex: 1; padding: 12px 12px; }
+        .login-card { padding: 16px 14px; border-radius: 12px; }
+        .login-card h2 { font-size: 1.3rem; margin-bottom: 6px; }
+        .login-card .login-subtitle { font-size: 0.85rem; margin-bottom: 12px; }
+        .field-group { margin-bottom: 12px; }
+        .field-group label { font-size: 0.8rem; margin-bottom: 4px; }
+        .field-group input { padding: 10px 12px; font-size: 0.85rem; }
+        .login-btn { padding: 10px 16px; font-size: 0.85rem; }
       }
 
       /* Field groups */
@@ -124,8 +128,8 @@
 
       /* Submit */
       .login-btn {
-        width: 100%; padding: 14px 20px; font-size: 1rem; font-weight: 600;
-        border: none; border-radius: 10px; cursor: pointer;
+        width: 100%; padding: 12px 16px; font-size: 0.9rem; font-weight: 600;
+        border: none; border-radius: 8px; cursor: pointer;
         color: #fff; background: #1F2937;
         font-family: 'Poppins', sans-serif;
         transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
@@ -147,7 +151,7 @@
 
       /* Divider */
       .login-divider {
-        display: flex; align-items: center; gap: 14px; margin: 24px 0;
+        display: flex; align-items: center; gap: 14px; margin: 16px 0;
         color: var(--re-text-muted); font-size: 0.82rem;
       }
       .login-divider::before, .login-divider::after {
@@ -254,18 +258,15 @@
 
       <div class="login-divider">or</div>
 
-      <a href="{% url 'register' %}" class="login-btn-outline">
-        <i class="fa-solid fa-user-plus" style="margin-right:6px;"></i> Create Account
-      </a>
+      <p class="login-footer" style="margin-top: 16px; text-align: center;">
+        Don't have an account? <a href="{% url 'register' %}" style="color: var(--re-primary); font-weight: 600;">Create one here</a>
+      </p>
 
-      <div class="login-footer" style="margin-top: 20px;">
-        Already have an account? You're in the right place.
-      </div>
-      <div class="login-footer" style="margin-top: 8px;">
+      <div class="login-footer" style="margin-top: 12px;">
         <a href="{% url 'home' %}" style="font-weight:400; color: var(--re-text-secondary);"><i class="fa-solid fa-arrow-left" style="margin-right: 4px;"></i>Back to home</a>
       </div>
 
-      <div class="login-copyright">
+      <div class="login-copyright" style="margin-top: 16px;">
         RentEasy &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved
       </div>
     </div>
