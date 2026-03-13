@@ -5,8 +5,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=32">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=32">
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=33">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=33">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
     <title>RentEasy - Rental Management for Tenants & Landlords</title>
@@ -24,15 +24,6 @@
     <a href="javascript:void(0);" class="icon" onclick="document.getElementById('topnav').classList.toggle('responsive');">
       <i class="fa-solid fa-bars"></i>
     </a>
-    <div class="top2">
-      <a href="#hero" class="nav-link active10">HOME</a>
-      <a href="{% url 'listing_list' %}" class="nav-link">BROWSE RENTALS</a>
-      <a href="#about" class="nav-link">ABOUT</a>
-      <a href="#features" class="nav-link">FEATURES</a>
-      <a href="#rentals" class="nav-link">RENTALS</a>
-      <a href="#faq" class="nav-link">FAQ</a>
-      <a href="#contact" class="nav-link">CONTACT</a>
-    </div>
     <div class="userbox2">
       <a class="login2 primary" href="{% url 'register' %}">Sign Up</a>
       <a class="login2" href="{% url 'user_login' %}">Sign In</a>

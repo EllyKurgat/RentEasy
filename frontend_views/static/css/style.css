@@ -1014,7 +1014,7 @@ input[type=submit]:hover {
 @media (max-width: 1000px) {
   .topnav { flex-wrap: wrap !important; height: auto !important; padding: 6px 12px !important; justify-content: flex-start !important; background: #1F2937 !important; }
   .topnav > a:first-child { order: 1; flex-shrink: 0; }
-  .icon { display: flex !important; order: 2; align-items: center; justify-content: center; min-width: 32px; min-height: 32px; color: #fff !important; font-size: 20px; cursor: pointer; margin-left: auto !important; flex-shrink: 0; }
+  .icon { display: flex !important; order: 2; align-items: center; justify-content: center; min-width: 32px; min-height: 32px; color: #3B82F6 !important; font-size: 20px; cursor: pointer; flex-shrink: 0; }
   .userbox2 { 
     order: 3; margin-left: auto !important; margin-right: 8px !important;
     flex-wrap: nowrap !important; gap: 8px !important; 
@@ -1023,15 +1023,10 @@ input[type=submit]:hover {
     flex-direction: row !important;
     width: auto !important;
   }
-  .top2 { display: none !important; order: 4; width: 100%; flex-direction: column; gap: 0; }
-  .top2 a { 
-    padding: 10px 12px; width: 100%; border-radius: 0; 
-    border-bottom: 1px solid rgba(255,255,255,0.06); 
-    box-sizing: border-box; font-size: 13px; color: #fff !important;
-  }
+  .top2 { display: none !important; }
   .loginsmall { display: block !important; }
   .bars1 { display: flex; }
-  .topnav.responsive .top2 { display: flex !important; }
+  .topnav.responsive .top2 { display: none !important; }
   .topnav img { height: 22px !important; }
   .login2 { 
     padding: 6px 12px !important; font-size: 11px !important; 
@@ -1041,7 +1036,6 @@ input[type=submit]:hover {
     color: #fff !important;
     flex-shrink: 0;
   }
-  .top2 a { font-size: 12px; padding: 8px 12px; }
 }
 
 @media (max-width: 480px) {
