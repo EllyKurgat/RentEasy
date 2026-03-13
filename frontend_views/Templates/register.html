@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
-  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+  <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=30">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}?v=30">
   <link rel="icon" href="{% static 'img/faviclogo.png' %}" type="image/png">
   <title>Sign Up - RentEasy</title>
   <style>
@@ -117,9 +117,11 @@
 
     @media (max-width: 900px) {
       .reg-left { display: none; }
-      .reg-right { flex: 1 1 100%; background: linear-gradient(180deg, #F0F5FF 0%, #fff 40%); }
-      .reg-card { border-top: 4px solid #3B82F6; }
+      .reg-right { flex: 1 1 100%; background: linear-gradient(180deg, #F0F5FF 0%, #fff 40%); padding: 16px; }
+      .reg-card { border-top: 4px solid #3B82F6; padding: 20px 16px; }
       .reg-grid { grid-template-columns: 1fr; }
+      .reg-card h2 { font-size: 1.25rem; }
+      .reg-card .reg-subtitle { font-size: 0.82rem; margin-bottom: 16px; }
     }
   </style>
 </head>

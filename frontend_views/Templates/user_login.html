@@ -6,8 +6,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=22">
-    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=22">
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=30">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=30">
     <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
     <title>RentEasy - Sign In</title>
     <link rel="icon" href="{% static 'img/faviclogo.png' %}">
@@ -49,6 +49,15 @@
       }
       .login-card .login-subtitle {
         font-size: 0.92rem; color: var(--re-text-secondary); margin: 0 0 28px;
+      }
+
+      @media (max-width: 768px) {
+        .login-page { flex-direction: column; }
+        .login-left { display: none; }
+        .login-right { flex: 1; padding: 20px 16px; }
+        .login-card { padding: 24px 20px; border-radius: 12px; }
+        .login-card h2 { font-size: 1.3rem; margin-bottom: 8px; }
+        .login-card .login-subtitle { font-size: 0.85rem; margin-bottom: 20px; }
       }
 
       /* Field groups */
