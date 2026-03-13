@@ -522,7 +522,8 @@ function initTestimonials() {
   var dotsContainer = document.querySelector('.testimonial-dots');
   if (!dotsContainer || cards.length === 0) return;
   dotsContainer.innerHTML = '';
-  for (var i = 0; i < cards.length; i++) {
+  var maxDots = Math.min(cards.length, 3);
+  for (var i = 0; i < maxDots; i++) {
     var dot = document.createElement('button');
     dot.className = 'testimonial-dot' + (i === 0 ? ' active' : '');
     dot.setAttribute('data-idx', i);
