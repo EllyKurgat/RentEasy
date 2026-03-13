@@ -1007,30 +1007,30 @@ input[type=submit]:hover {
 .line20 { display: block; width: 22px; height: 2px; background: #fff; border-radius: 2px; transition: 0.3s; }
 
 @media (max-width: 1000px) {
-  .topnav { flex-wrap: wrap; height: auto; padding: 8px 12px !important; }
+  .topnav { flex-wrap: wrap; height: auto; padding: 6px 10px !important; }
   .top2 { display: none; order: 3; width: 100%; flex-direction: column; gap: 0; }
   .top2 a { 
-    padding: 12px 14px; width: 100%; border-radius: 0; 
+    padding: 10px 12px; width: 100%; border-radius: 0; 
     border-bottom: 1px solid rgba(255,255,255,0.06); 
-    box-sizing: border-box; font-size: 14px;
+    box-sizing: border-box; font-size: 13px;
   }
   .userbox2 { 
-    order: 2; margin-left: auto; margin-right: 8px; 
-    flex-wrap: nowrap !important; gap: 8px !important; 
+    order: 2; margin-left: auto; margin-right: 6px; 
+    flex-wrap: nowrap !important; gap: 6px !important; 
     display: flex !important;
   }
   .loginsmall { display: block !important; }
-  .icon { display: flex !important; order: 3; margin-left: 0; align-items: center; justify-content: center; min-width: 36px; min-height: 36px; }
+  .icon { display: flex !important; order: 3; margin-left: 0; align-items: center; justify-content: center; min-width: 32px; min-height: 32px; }
   .bars1 { display: flex; }
   .topnav.responsive .top2 { display: flex; }
-  .topnav img { height: 28px; }
+  .topnav img { height: 24px; }
   .login2 { 
-    padding: 8px 10px !important; font-size: 11px !important; 
-    border-radius: 6px !important; min-width: 50px !important;
+    padding: 6px 8px !important; font-size: 10px !important; 
+    border-radius: 4px !important; min-width: 42px !important;
     display: inline-block !important;
     white-space: nowrap;
   }
-  .top2 a { font-size: 13px; padding: 10px 14px; }
+  .top2 a { font-size: 12px; padding: 8px 12px; }
 }
 
 @media (max-width: 480px) {
