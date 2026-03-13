@@ -1012,9 +1012,8 @@ input[type=submit]:hover {
 .line20 { display: block; width: 22px; height: 2px; background: #fff; border-radius: 2px; transition: 0.3s; }
 
 @media (max-width: 1000px) {
-  .topnav { flex-wrap: nowrap !important; height: auto !important; padding: 8px 16px !important; justify-content: space-between !important; background: #1F2937 !important; align-items: center; }
+  .topnav { flex-wrap: nowrap !important; height: auto !important; padding: 6px 12px !important; justify-content: space-between !important; background: #1F2937 !important; align-items: center; }
   .topnav > a:first-child { order: 1; flex-shrink: 0; }
-  .topnav > a:first-child img { height: 32px !important; }
   .icon { display: none !important; }
   .userbox2 { 
     order: 3; margin-left: auto !important;
@@ -1025,6 +1024,44 @@ input[type=submit]:hover {
     width: 100% !important;
     justify-content: flex-end;
   }
+  .top2 { display: none !important; }
+  .loginsmall { display: block !important; }
+  .bars1 { display: flex; }
+  .topnav.responsive .top2 { display: none !important; }
+  .topnav img { height: 22px !important; }
+  .login2 { 
+    padding: 6px 12px !important; font-size: 11px !important; 
+    border-radius: 6px !important; min-width: auto !important;
+    display: inline-block !important;
+    white-space: nowrap;
+    color: #fff !important;
+    flex-shrink: 0;
+  }
+  .login2:first-child { margin-right: 8px; }
+  
+  /* Dashboard navbar hamburger - polished */
+  .navbar { padding: 6px 12px !important; height: auto !important; justify-content: flex-start !important; }
+  .navbar > * { flex-shrink: 0; }
+  #icon {
+    display: flex !important;
+    background: rgba(255,255,255,0.1) !important;
+    color: #fff !important;
+    border-radius: 8px !important;
+    padding: 8px 12px !important;
+    min-width: auto !important;
+    min-height: auto !important;
+    align-items: center; justify-content: center;
+    font-size: 18px;
+    margin-right: 10px;
+    border: 1px solid rgba(255,255,255,0.15);
+    transition: all 0.2s;
+  }
+  #icon:hover { background: rgba(255,255,255,0.2) !important; }
+  .navbar img { height: 26px !important; margin-right: 8px !important; }
+  .logoss { font-size: 1.1rem !important; margin-right: auto !important; }
+  .userbox { margin-left: auto !important; }
+  .welcuser { display: none !important; }
+}
   .top2 { display: none !important; }
   .loginsmall { display: block !important; }
   .bars1 { display: flex; }
