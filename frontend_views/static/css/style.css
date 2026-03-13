@@ -1081,6 +1081,14 @@ input[type=submit]:hover {
   display: inline-block; padding: 10px 16px; border-radius: 8px;
   font-weight: 600; font-size: 13px; text-decoration: none; transition: all 0.2s;
 }
+.hero-auth-buttons { display: flex; gap: 10px; justify-content: space-between; flex-wrap: wrap; margin-top: 12px; }
+.hero-auth-buttons a {
+  flex: 1; display: inline-block; padding: 10px 16px; border-radius: 8px;
+  font-weight: 600; font-size: 13px; text-decoration: none; transition: all 0.2s;
+  text-align: center; max-width: 48%;
+}
+.hero-auth-buttons a:first-child { margin-right: 8px; }
+
 @media (min-width: 768px) {
   .hero { padding: 80px 24px 64px; }
   .hero h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); margin: 0 0 16px; }
