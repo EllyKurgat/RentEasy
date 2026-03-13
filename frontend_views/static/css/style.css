@@ -329,8 +329,8 @@ button:active, input[type=submit]:active { transform: translateY(0); }
   .dashcont {
     margin-left: 0;
     width: 100%;
-    padding: 12px;
-    padding-top: 56px;
+    padding: 16px;
+    padding-top: 64px;
   }
 }
 
@@ -1056,32 +1056,32 @@ input[type=submit]:hover {
   }
   .login2:first-child { margin-right: 8px; }
   
-  /* Dashboard navbar - polished horizontal layout */
+  /* Dashboard navbar - always show hamburger */
   .navbar { 
-    padding: 6px 12px !important; height: auto !important; 
+    padding: 8px 16px !important; height: auto !important; 
     justify-content: space-between !important;
     position: relative;
   }
   .navbar > * { flex-shrink: 0; }
   .navbar-center { position: static !important; transform: none !important; }
-  .navbar-center img { height: 24px !important; }
-  .navbar-center .logoss { font-size: 0.95rem !important; }
+  .navbar-center img { height: 28px !important; }
+  .navbar-center .logoss { font-size: 1.1rem !important; }
   .userbox { margin-left: 0 !important; }
-  .userbox img { width: 28px !important; height: 28px !important; }
+  .userbox img { width: 32px !important; height: 32px !important; }
   #icon {
     display: flex !important;
-    background: rgba(255,255,255,0.1) !important;
-    color: #fff !important;
-    border-radius: 8px !important;
-    padding: 8px 10px !important;
+    background: transparent !important;
+    color: #1F2937 !important;
+    border: none !important;
+    padding: 8px !important;
     min-width: auto !important;
     min-height: auto !important;
     align-items: center; justify-content: center;
-    font-size: 16px;
-    border: 1px solid rgba(255,255,255,0.15);
+    font-size: 24px !important;
+    font-weight: bold;
     transition: all 0.2s;
   }
-  #icon:hover { background: rgba(255,255,255,0.2) !important; }
+  #icon:hover { color: #3B82F6 !important; transform: scale(1.1); }
   .welcuser { display: none !important; }
 }
   .top2 { display: none !important; }
