@@ -1014,13 +1014,7 @@ input[type=submit]:hover {
 @media (max-width: 1000px) {
   .topnav { flex-wrap: nowrap !important; height: auto !important; padding: 6px 12px !important; justify-content: space-between !important; background: #1F2937 !important; align-items: center; }
   .topnav > a:first-child { order: 1; flex-shrink: 0; }
-  .icon { 
-    display: flex !important; order: 2; align-items: center; justify-content: center; 
-    min-width: 36px; min-height: 36px; 
-    color: #fff !important; font-size: 22px; cursor: pointer; flex-shrink: 0;
-    background: #1e3a5f !important; border-radius: 6px !important;
-    padding: 6px !important;
-  }
+  .icon { display: none !important; }
   .userbox2 { 
     order: 3; margin-left: auto !important;
     flex-wrap: nowrap !important; gap: 8px !important; 
@@ -1052,6 +1046,7 @@ input[type=submit]:hover {
     border-radius: 6px !important;
     padding: 6px !important;
     min-width: 36px; min-height: 36px;
+    align-items: center; justify-content: center;
   }
   .navbar img { height: 20px !important; }
   .logoss { font-size: 1rem !important; }
