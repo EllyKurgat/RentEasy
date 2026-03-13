@@ -1029,19 +1029,26 @@ input[type=submit]:hover {
 
 /* ── Hero Section ── */
 .hero {
-  text-align: center; padding: 80px 24px 64px;
+  text-align: center; padding: 48px 16px 40px;
   max-width: 760px; margin: 0 auto;
 }
 .hero h1 {
-  font-size: clamp(2.2rem, 5vw, 3.2rem); font-weight: 700;
-  color: var(--re-text, #111827); margin: 0 0 16px; line-height: 1.2;
+  font-size: clamp(1.8rem, 5vw, 3.2rem); font-weight: 700;
+  color: var(--re-text, #111827); margin: 0 0 12px; line-height: 1.2;
 }
 .hero h1 span { color: var(--re-primary, #3B82F6); }
-.hero .tagline { font-size: 1.15rem; color: var(--re-text-secondary, #6B7280); margin-bottom: 36px; line-height: 1.6; }
-.hero-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.hero .tagline { font-size: 1rem; color: var(--re-text-secondary, #6B7280); margin-bottom: 24px; line-height: 1.6; }
+.hero-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 .hero-buttons a {
-  display: inline-block; padding: 14px 28px; border-radius: 8px;
-  font-weight: 600; font-size: 16px; text-decoration: none; transition: all 0.2s;
+  display: inline-block; padding: 12px 20px; border-radius: 8px;
+  font-weight: 600; font-size: 14px; text-decoration: none; transition: all 0.2s;
+}
+@media (min-width: 768px) {
+  .hero { padding: 80px 24px 64px; }
+  .hero h1 { font-size: clamp(2.2rem, 5vw, 3.2rem); margin: 0 0 16px; }
+  .hero .tagline { font-size: 1.15rem; margin-bottom: 36px; }
+  .hero-buttons { gap: 16px; }
+  .hero-buttons a { padding: 14px 28px; font-size: 16px; }
 }
 .btn-primary { background: var(--re-primary, #3B82F6); color: #fff; border: 2px solid var(--re-primary, #3B82F6); }
 .btn-primary:hover { background: var(--re-primary-hover, #2563EB); border-color: var(--re-primary-hover, #2563EB); color: #fff; transform: translateY(-1px); }
@@ -1126,26 +1133,42 @@ input[type=submit]:hover {
 
 /* ── Vision/Mission Cards (about page) ── */
 .vision-card {
-  display: flex; gap: 32px; align-items: center;
-  max-width: 1000px; margin: 32px auto; padding: 0 24px;
+  display: flex; gap: 24px; align-items: center;
+  max-width: 1000px; margin: 24px auto; padding: 0 16px;
   flex-wrap: wrap;
 }
-.vision-image { flex: 1; min-width: 280px; }
-.vision-image img { width: 100%; border-radius: 12px; object-fit: cover; }
-.vision-text { flex: 1; min-width: 280px; }
-.vision-text h3 { font-size: 1.3rem; color: var(--re-primary, #3B82F6); margin: 0 0 12px; }
-.vision-text p { color: var(--re-text-secondary, #6B7280); line-height: 1.7; font-size: 0.95rem; }
+.vision-image { flex: 1; min-width: 100%; }
+.vision-image img { width: 100%; border-radius: 12px; object-fit: cover; height: 200px; }
+.vision-text { flex: 1; min-width: 100%; }
+.vision-text h3 { font-size: 1.2rem; color: var(--re-primary, #3B82F6); margin: 0 0 10px; }
+.vision-text p { color: var(--re-text-secondary, #6B7280); line-height: 1.7; font-size: 0.9rem; }
+
+@media (min-width: 768px) {
+  .vision-card { gap: 32px; margin: 32px auto; padding: 0 24px; }
+  .vision-image { min-width: 280px; }
+  .vision-image img { height: auto; }
+  .vision-text { min-width: 280px; }
+  .vision-text h3 { font-size: 1.3rem; margin: 0 0 12px; }
+  .vision-text p { font-size: 0.95rem; }
+}
 
 /* ── Counter Section ── */
 .counter-container {
-  display: flex; justify-content: center; gap: 48px; flex-wrap: wrap;
-  padding: 48px 24px; background: #1F2937; margin: 40px 0;
+  display: flex; justify-content: center; gap: 24px; flex-wrap: wrap;
+  padding: 32px 16px; background: #1F2937; margin: 24px 0;
 }
 .counter {
-  text-align: center; min-width: 160px;
+  text-align: center; min-width: 80px;
 }
-.counter h3 { color: #93C5FD; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 8px; }
-.counter p { color: #fff; font-size: 2.5rem; font-weight: 700; margin: 0; }
+.counter h3 { color: #93C5FD; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 6px; }
+.counter p { color: #fff; font-size: 1.8rem; font-weight: 700; margin: 0; }
+
+@media (min-width: 768px) {
+  .counter-container { gap: 48px; padding: 48px 24px; margin: 40px 0; }
+  .counter { min-width: 160px; }
+  .counter h3 { font-size: 0.9rem; margin: 0 0 8px; }
+  .counter p { font-size: 2.5rem; }
+}
 
 /* ── How It Works ── */
 .how {
@@ -1192,21 +1215,35 @@ input[type=submit]:hover {
 
 /* ── Landing Footer (Dark) ── */
 .footer, footer.footer {
-  background: #111827; color: #D1D5DB; padding: 48px 24px 24px; margin-top: 48px;
+  background: #111827; color: #D1D5DB; padding: 32px 16px 20px; margin-top: 32px;
 }
-.col-contfoot { max-width: 1000px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 32px; justify-content: space-between; }
-.colfoot { flex: 1; min-width: 200px; }
-.colfoot img { height: 44px; margin-bottom: 12px; filter: brightness(0) invert(1); }
-.address3 { font-size: 0.9rem; margin: 12px 0 6px; font-weight: 600; color: #fff; }
-.address4 { font-size: 0.9rem; color: #9CA3AF; margin: 0 0 4px; line-height: 1.6; }
-.textd { font-size: 0.9rem; font-weight: 600; color: #fff; margin: 0 0 12px; }
-.quicklinks { display: flex; flex-direction: column; gap: 6px; }
-.quicklinks a { color: #93C5FD; text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+.col-contfoot { max-width: 1000px; margin: 0 auto; display: flex; flex-wrap: wrap; gap: 24px; justify-content: space-between; }
+.colfoot { flex: 1; min-width: 140px; }
+.colfoot img { height: 36px; margin-bottom: 10px; filter: brightness(0) invert(1); }
+.address3 { font-size: 0.8rem; margin: 10px 0 4px; font-weight: 600; color: #fff; }
+.address4 { font-size: 0.8rem; color: #9CA3AF; margin: 0 0 4px; line-height: 1.6; }
+.textd { font-size: 0.8rem; font-weight: 600; color: #fff; margin: 0 0 10px; }
+.quicklinks { display: flex; flex-direction: column; gap: 4px; }
+.quicklinks a { color: #93C5FD; text-decoration: none; font-size: 0.8rem; transition: color 0.2s; }
 .quicklinks a:hover { color: #fff; }
-.colfoot .fa, .colfoot .fa-brands { color: #93C5FD; font-size: 1.2rem; margin-right: 12px; text-decoration: none; transition: color 0.2s; }
+.colfoot .fa, .colfoot .fa-brands { color: #93C5FD; font-size: 1.1rem; margin-right: 10px; text-decoration: none; transition: color 0.2s; }
 .colfoot .fa:hover, .colfoot .fa-brands:hover { color: #fff; }
-.footer .developer { color: #6B7280; border-top: 1px solid #1F2937; padding-top: 20px; margin-top: 24px; width: 100%; }
+.footer .developer { color: #6B7280; border-top: 1px solid #1F2937; padding-top: 16px; margin-top: 20px; width: 100%; font-size: 0.8rem; }
 .footer .developer a { color: #93C5FD; }
+
+@media (min-width: 768px) {
+  .footer { padding: 48px 24px 24px; margin-top: 48px; }
+  .col-contfoot { gap: 32px; }
+  .colfoot { min-width: 200px; }
+  .colfoot img { height: 44px; margin-bottom: 12px; }
+  .address3 { font-size: 0.9rem; margin: 12px 0 6px; }
+  .address4 { font-size: 0.9rem; margin: 0 0 4px; }
+  .textd { font-size: 0.9rem; margin: 0 0 12px; }
+  .quicklinks { gap: 6px; }
+  .quicklinks a { font-size: 0.9rem; }
+  .colfoot .fa, .colfoot .fa-brands { font-size: 1.2rem; margin-right: 12px; }
+  .footer .developer { padding-top: 20px; margin-top: 24px; font-size: 0.9rem; }
+}
 
 /* ================================================================
    LANDING PAGE – NEW SECTIONS (v2)

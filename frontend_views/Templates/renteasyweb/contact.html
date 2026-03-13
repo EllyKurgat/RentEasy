@@ -40,8 +40,8 @@
     <h1 class="abouth">Contact</h1>
   </div>
   
-  <div class="contact">
-    <h1 class="advant3" style="text-align: center">Send us a Message</h1>
+  <div class="contact" style="max-width:600px;margin:0 auto;padding:24px 16px;">
+    <h1 class="advant3" style="text-align:center;font-size:1.5rem;">Send us a Message</h1>
     <div class="contactform">
       <form action="{% url 'contact' %}" method="POST" class="containercontact">
         {% csrf_token %}
