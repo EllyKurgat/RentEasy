@@ -723,7 +723,82 @@ def LandLord_add_tenant(request):
             unit.save(update_fields=["status"])
             Listing.objects.filter(unit=unit, status="active").update(status="filled")
 
-        messages.success(request, "Tenant and lease created successfully.")
+        # Send invitation email if tenant was created with email
+        invite_url = None
+        if email and not existing:
+            token = secrets.token_urlsafe(32)
+            expires_at = timezone.now() + timedelta(days=7)
+            invite_url = request.build_absolute_uri(f"/invite/accept/{token}/")
+
+            # Create tenant invite for password setup
+            TenantInvite.objects.create(
+                token=token,
+                tenant_email=email,
+                tenant_name=name,
+                tenant_phone=phone,
+                landlord=request.user,
+                property=prop,
+                unit=unit,
+                lease=lease,
+                status="sent",
+                expires_at=expires_at,
+            )
+
+            # Send invitation email
+            subject = f"You're invited to join {prop.name} – RentEasy"
+            body = f"""Hi {name},
+
+{request.user.name} has added you as a tenant for {prop.name} on RentEasy.
+
+Click the link below to set up your password and login (link expires in 7 days):
+
+{invite_url}
+
+If you didn't expect this invite, you can ignore this email.
+"""
+            try:
+                send_mail(
+                    subject,
+                    body,
+                    None,
+                    [email],
+                    fail_silently=False,
+                )
+                messages.success(request, f"Tenant added successfully. Invitation sent to {email}.")
+            except Exception:
+                logger.exception("Failed to send tenant invite email")
+                messages.success(
+                    request,
+                    f"Tenant added successfully. Couldn't send email - share this link: {invite_url}",
+                )
+        elif email and existing:
+            # For existing users, send a notification email
+            subject = f"You've been added as a tenant – RentEasy"
+            body = f"""Hi {name},
+
+{request.user.name} has added you as a tenant for {prop.name} on RentEasy.
+
+Please log in to view your rental details:
+
+https://rms-n8h7.onrender.com/
+
+If you didn't expect this, please contact your landlord.
+"""
+            try:
+                send_mail(
+                    subject,
+                    body,
+                    None,
+                    [email],
+                    fail_silently=False,
+                )
+                messages.success(request, f"Tenant added successfully. Notification sent to {email}.")
+            except Exception:
+                logger.exception("Failed to send notification email")
+                messages.success(request, f"Tenant added successfully.")
+        else:
+            messages.success(request, "Tenant added successfully (no email - this is a placeholder account).")
+
         return redirect("mytenants")
 
     return render(request, "landlord/add_tenant.html", {"properties": properties, "units": units})
