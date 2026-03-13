@@ -43,27 +43,10 @@
         .sidebar-card button:hover { background:var(--re-primary-hover); }
         .apply-link { display:block; text-align:center; padding:12px; background:var(--re-surface-alt); color:var(--re-primary); font-weight:600; text-decoration:none; border-radius:8px; border:2px solid var(--re-primary); transition:all 0.2s; }
         .apply-link:hover { background:var(--re-primary); color:#fff; }
-        .reviews-section { margin-top:32px; }
-        .reviews-section h2 { color:var(--re-text); font-size:1.3rem; margin:0 0 16px; }
-        .review-card { background:var(--re-surface); border-radius:10px; padding:16px 20px; margin-bottom:12px; border:1px solid var(--re-border); }
-        .review-card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
-        .review-card-header .reviewer { font-weight:600; color:var(--re-text); }
-        .review-card-header .date { font-size:0.8rem; color:var(--re-text-secondary); }
-        .review-stars { color:#f59e0b; font-size:0.95rem; margin-bottom:6px; }
-        .review-stars .empty { color:var(--re-input-border); }
-        .review-comment { color:var(--re-text-secondary); font-size:0.95rem; line-height:1.6; }
-        .review-form { background:var(--re-surface); border-radius:10px; padding:20px; border:1px solid var(--re-border); margin-bottom:16px; }
-        .review-form h3 { margin:0 0 12px; color:var(--re-text); }
-        .star-input { display:flex; gap:4px; margin-bottom:12px; direction:rtl; justify-content:flex-end; }
-        .star-input input { display:none; }
-        .star-input label { font-size:1.6rem; color:var(--re-input-border); cursor:pointer; transition:color 0.15s; }
-        .star-input label:hover, .star-input label:hover ~ label,
-        .star-input input:checked ~ label { color:#f59e0b; }
         .msg-flash { padding:12px 16px; margin:0 0 16px; border-radius:8px; font-size:0.95rem; }
         .msg-flash.success { background:#ecfdf5; border-left:4px solid #10b981; color:#065f46; }
         .msg-flash.error { background:#fef2f2; border-left:4px solid #ef4444; color:#991b1b; }
         body.dark .sidebar-card { background:var(--re-surface); box-shadow:0 4px 16px rgba(0,0,0,0.2); }
-        body.dark .review-card, body.dark .review-form { background:var(--re-surface); border-color:var(--re-border); }
     </style>
 </head>
 <body class="theme-landlord landing-body">
@@ -159,59 +142,6 @@
             </div>
             {% endif %}
 
-            <!-- ── Reviews Section ── -->
-            <div class="reviews-section">
-                <h2><i class="fa-solid fa-star" style="color:#f59e0b;"></i> Reviews {% if review_count %}({{ review_count }}){% endif %}</h2>
-
-                <!-- Review Form (logged-in users who haven't reviewed) -->
-                {% if can_review %}
-                <div class="review-form">
-                    <h3>Write a review</h3>
-                    <form method="post">
-                        {% csrf_token %}
-                        <input type="hidden" name="form_action" value="review">
-                        <div class="star-input">
-                            {% for i in "54321" %}
-                            <input type="radio" name="rating" value="{{ i }}" id="star{{ i }}">
-                            <label for="star{{ i }}"><i class="fa-solid fa-star"></i></label>
-                            {% endfor %}
-                        </div>
-                        <textarea name="comment" placeholder="Share your experience (optional)" rows="3" style="width:100%;padding:10px 12px;border:1px solid var(--re-input-border);border-radius:8px;font-size:0.95rem;background:var(--re-input-bg);color:var(--re-text);box-sizing:border-box;resize:vertical;"></textarea>
-                        <button type="submit" style="margin-top:10px;padding:10px 24px;background:var(--re-primary);color:#fff;border:none;border-radius:8px;font-weight:600;cursor:pointer;">Submit Review</button>
-                    </form>
-                </div>
-                {% elif user_review %}
-                <div class="review-form" style="background:var(--re-surface-alt);">
-                    <p style="margin:0;color:var(--re-text-secondary);"><i class="fa-solid fa-check-circle" style="color:#10b981;"></i> You rated this {{ user_review.rating }}★</p>
-                </div>
-                {% elif not request.user.is_authenticated %}
-                <div class="review-form" style="background:var(--re-surface-alt);">
-                    <p style="margin:0;color:var(--re-text-secondary);"><a href="{% url 'user_login' %}" style="color:var(--re-primary);font-weight:600;">Log in</a> to leave a review.</p>
-                </div>
-                {% elif not is_tenant_of_property %}
-                <div class="review-form" style="background:var(--re-surface-alt);">
-                    <p style="margin:0;color:var(--re-text-secondary);"><i class="fa-solid fa-lock" style="color:#ef4444;margin-right:6px;"></i> Only current or past tenants of this property can leave a review.</p>
-                </div>
-                {% endif %}
-
-                <!-- Review List -->
-                {% for r in reviews %}
-                <div class="review-card">
-                    <div class="review-card-header">
-                        <span class="reviewer"><i class="fa-solid fa-user-circle" style="color:var(--re-primary);margin-right:6px;"></i>{{ r.reviewer.name }}</span>
-                        <span class="date">{{ r.created_at|date:"M d, Y" }}</span>
-                    </div>
-                    <div class="review-stars">
-                        {% for i in "12345" %}
-                            {% if r.rating >= forloop.counter %}<i class="fa-solid fa-star"></i>{% else %}<i class="fa-regular fa-star empty"></i>{% endif %}
-                        {% endfor %}
-                    </div>
-                    {% if r.comment %}<p class="review-comment">{{ r.comment }}</p>{% endif %}
-                </div>
-                {% empty %}
-                <p style="color:var(--re-text-secondary);font-style:italic;">No reviews yet. Be the first to review!</p>
-                {% endfor %}
-            </div>
         </div>
 
         <!-- ── Sidebar ── -->
