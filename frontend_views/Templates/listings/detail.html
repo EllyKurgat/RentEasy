@@ -20,7 +20,10 @@
         .detail-price { display:flex; gap:24px; flex-wrap:wrap; align-items:center; margin-bottom:16px; }
         .detail-price .price { font-size:1.5rem; font-weight:700; color:var(--re-text); }
         .detail-price .deposit { font-size:1rem; color:var(--re-text-secondary); background:var(--re-surface-alt); padding:6px 14px; border-radius:20px; }
-        .detail-grid { display:grid; grid-template-columns:1fr 360px; gap:32px; }
+        .detail-grid { display:flex; flex-direction:column; gap:32px; max-width:700px; margin:0 auto; }
+        @media(min-width:901px) { 
+            .detail-grid { max-width:900px; }
+        }
         @media(max-width:900px) { .detail-grid { grid-template-columns:1fr; } }
         .detail-main .desc { color:var(--re-text); line-height:1.8; margin-bottom:12px; }
         .detail-avail { display:inline-flex; align-items:center; gap:8px; padding:8px 16px; background:var(--re-surface-alt); border-radius:8px; color:var(--re-text-secondary); font-size:0.95rem; margin-bottom:24px; }
@@ -56,15 +59,13 @@
         <div class="top2">
             <a href="{% url 'home' %}">HOME</a>
             <a href="{% url 'listing_list' %}" class="active10">BROWSE RENTALS</a>
-            <a href="{% url 'about' %}">ABOUT</a>
-            <a href="{% url 'contact' %}">CONTACT</a>
         </div>
         <div class="userbox2">
             <a class="login2" href="{% url 'home' %}"><i class="fa-solid fa-house"></i> Home</a>
             {% if user.is_authenticated %}
             <a class="login2 primary" href="{% url 'userdash' %}">Dashboard</a>
             {% else %}
-            <a class="login2 primary" href="{% url 'user_login' %}">Login</a>
+            <a class="login2 primary" href="{% url 'user_login' %}">Sign In</a>
             {% endif %}
         </div>
     </div>
@@ -146,7 +147,7 @@
             </a>
             <!-- Contact Landlord -->
             {% if landlord.phone %}
-            <a class="apply-link" href="https://wa.me/{{ landlord.phone|cut:' '|cut:'+' }}?text=Hi, I'm interested in {{ listing.title }}" target="_blank" style="margin-top:12px;background:#25D366;color:#fff;border-color:#25D366;">
+            <a class="apply-link" href="https://wa.me/{{ landlord.phone|cut:' '|cut:'+' }}?text=Hi, I'm interested in {{ listing.title }}" target="_blank" style="margin-top:12px;background:#25D366;color:#fff;border-color:#25D366;display:block;text-align:center;">
                 <i class="fa-brands fa-whatsapp"></i> Contact on WhatsApp
             </a>
             {% else %}
