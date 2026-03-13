@@ -20,10 +20,6 @@
         .detail-price { display:flex; gap:24px; flex-wrap:wrap; align-items:center; margin-bottom:16px; }
         .detail-price .price { font-size:1.5rem; font-weight:700; color:var(--re-text); }
         .detail-price .deposit { font-size:1rem; color:var(--re-text-secondary); background:var(--re-surface-alt); padding:6px 14px; border-radius:20px; }
-        .detail-rating-summary { display:flex; align-items:center; gap:8px; margin-bottom:24px; }
-        .detail-rating-summary .stars { color:#f59e0b; font-size:1.1rem; }
-        .detail-rating-summary .stars .empty { color:var(--re-input-border); }
-        .detail-rating-summary .count { color:var(--re-text-secondary); font-size:0.9rem; }
         .detail-grid { display:grid; grid-template-columns:1fr 360px; gap:32px; }
         @media(max-width:900px) { .detail-grid { grid-template-columns:1fr; } }
         .detail-main .desc { color:var(--re-text); line-height:1.8; margin-bottom:24px; }
@@ -63,7 +59,7 @@
             <a href="{% url 'contact' %}">CONTACT</a>
         </div>
         <div class="userbox2">
-            <a class="login2" href="{% url 'listing_list' %}"><i class="fa-solid fa-arrow-left"></i> Back</a>
+            <a class="login2" href="{% url 'home' %}"><i class="fa-solid fa-house"></i> Home</a>
             {% if user.is_authenticated %}
             <a class="login2 primary" href="{% url 'userdash' %}">Dashboard</a>
             {% else %}
@@ -71,13 +67,6 @@
             {% endif %}
         </div>
     </div>
-    <a href="javascript:void(0);" class="icon" onclick="document.getElementById('topnav').classList.toggle('responsive');">
-        <div class="bars1">
-            <span class="line20 line21"></span>
-            <span class="line20 line22"></span>
-            <span class="line20 line23"></span>
-        </div>
-    </a>
 </nav>
 
 <div class="detail-wrap">
@@ -93,19 +82,6 @@
         <div class="detail-price">
             <span class="price">KSh {{ listing.rent_amount|intcomma }}/mo</span>
             {% if listing.deposit_amount %}<span class="deposit">Deposit: KSh {{ listing.deposit_amount|intcomma }}</span>{% endif %}
-        </div>
-        <!-- Average rating summary -->
-        {% if review_count %}
-        <div class="detail-rating-summary">
-            <span class="stars">
-                {% for i in "12345" %}
-                    {% if avg_rating >= forloop.counter %}<i class="fa-solid fa-star"></i>{% elif avg_rating >= forloop.counter|add:"-0.5" %}<i class="fa-solid fa-star-half-stroke"></i>{% else %}<i class="fa-regular fa-star empty"></i>{% endif %}
-                {% endfor %}
-            </span>
-            <strong>{{ avg_rating|floatformat:1 }}</strong>
-            <span class="count">({{ review_count }} review{{ review_count|pluralize }})</span>
-        </div>
-        {% endif %}
     </div>
 
     <!-- ── Photos ── -->
