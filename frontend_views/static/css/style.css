@@ -1057,22 +1057,34 @@ input[type=submit]:hover {
 
 /* ── Roles / About Section ── */
 .roles-section {
-  padding: 48px 24px; background: #fff; margin: 0 24px 40px;
+  padding: 24px 16px; background: #fff; margin: 0 16px 24px;
   border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.06);
   transition: background 0.2s ease;
 }
-.roles-cards { display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; margin-top: 24px; }
-.role-card { text-align: left; padding: 24px 32px; max-width: 280px; border-radius: 12px; transition: all 0.2s; }
+.roles-cards { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-top: 16px; }
+.role-card { text-align: left; padding: 16px 20px; max-width: 200px; border-radius: 12px; transition: all 0.2s; }
 .role-card:hover { background: var(--re-primary-light, #DBEAFE); }
-.role-card i { font-size: 2.5rem; color: var(--re-primary, #3B82F6); margin-bottom: 12px; }
-.role-card h3 { font-size: 1.2rem; color: var(--re-text, #111827); margin: 0 0 8px; }
-.role-card p { font-size: 0.95rem; color: var(--re-text-secondary, #6B7280); margin: 0; line-height: 1.5; }
+.role-card i { font-size: 1.8rem; color: var(--re-primary, #3B82F6); margin-bottom: 10px; }
+.role-card h3 { font-size: 1rem; color: var(--re-text, #111827); margin: 0 0 6px; }
+.role-card p { font-size: 0.85rem; color: var(--re-text-secondary, #6B7280); margin: 0; line-height: 1.4; }
 .section-title {
-  text-align: center; font-size: 1.75rem; font-weight: 600;
-  color: var(--re-text, #111827); margin: 0 0 24px; padding: 0 24px;
+  text-align: center; font-size: 1.3rem; font-weight: 600;
+  color: var(--re-text, #111827); margin: 0 0 16px; padding: 0 16px;
 }
-.about { padding: 24px; text-align: center; }
-.abouth { font-size: 1.5rem; color: var(--re-primary, #3B82F6); margin: 0; font-weight: 600; }
+.about { padding: 16px; text-align: center; }
+.abouth { font-size: 1.2rem; color: var(--re-primary, #3B82F6); margin: 0; font-weight: 600; }
+
+@media (min-width: 768px) {
+  .roles-section { padding: 48px 24px; margin: 0 24px 40px; }
+  .roles-cards { gap: 32px; margin-top: 24px; }
+  .role-card { padding: 24px 32px; max-width: 280px; }
+  .role-card i { font-size: 2.5rem; margin-bottom: 12px; }
+  .role-card h3 { font-size: 1.2rem; margin: 0 0 8px; }
+  .role-card p { font-size: 0.95rem; }
+  .section-title { font-size: 1.75rem; margin: 0 0 24px; padding: 0 24px; }
+  .about { padding: 24px; }
+  .abouth { font-size: 1.5rem; }
+}
 
 /* ── Search & Filter ── */
 .container2 { max-width: 900px; margin: 0 auto 32px; padding: 0 24px; }
@@ -1154,14 +1166,21 @@ input[type=submit]:hover {
 
 /* ── Counter Section ── */
 .counter-container {
-  display: flex; justify-content: center; gap: 24px; flex-wrap: wrap;
-  padding: 32px 16px; background: #1F2937; margin: 24px 0;
+  display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;
+  padding: 20px 12px; background: #1F2937; margin: 16px 0;
 }
 .counter {
-  text-align: center; min-width: 80px;
+  text-align: center; min-width: 70px;
 }
-.counter h3 { color: #93C5FD; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 6px; }
-.counter p { color: #fff; font-size: 1.8rem; font-weight: 700; margin: 0; }
+.counter h3 { color: #93C5FD; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.5px; margin: 0 0 4px; }
+.counter p { color: #fff; font-size: 1.2rem; font-weight: 700; margin: 0; }
+
+@media (min-width: 480px) {
+  .counter-container { gap: 24px; padding: 24px 16px; margin: 20px 0; }
+  .counter { min-width: 80px; }
+  .counter h3 { font-size: 0.7rem; }
+  .counter p { font-size: 1.5rem; }
+}
 
 @media (min-width: 768px) {
   .counter-container { gap: 48px; padding: 48px 24px; margin: 40px 0; }
@@ -1172,21 +1191,31 @@ input[type=submit]:hover {
 
 /* ── How It Works ── */
 .how {
-  max-width: 1000px; margin: 48px auto; padding: 0 24px; text-align: center;
+  max-width: 1000px; margin: 24px auto; padding: 0 16px; text-align: center;
 }
-.how h2 { font-size: 1.5rem; color: var(--re-text, #111827); margin-bottom: 32px; }
-.steps { display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; }
+.how h2 { font-size: 1.3rem; color: var(--re-text, #111827); margin-bottom: 20px; }
+.steps { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
 .step {
-  flex: 1; min-width: 180px; max-width: 220px; text-align: center;
-  padding: 24px; background: #fff; border-radius: 12px;
+  flex: 1; min-width: 140px; max-width: 180px; text-align: center;
+  padding: 16px; background: #fff; border-radius: 12px;
   border: 1px solid var(--re-border, #E5E7EB);
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
   transition: all 0.2s;
 }
 .step:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.08); }
-.step i { font-size: 2rem; color: var(--re-primary, #3B82F6); margin-bottom: 12px; }
-.step h3 { font-size: 0.95rem; font-weight: 700; color: var(--re-text, #111827); margin: 0 0 8px; letter-spacing: 0.5px; }
-.step p { font-size: 0.9rem; color: var(--re-text-secondary, #6B7280); margin: 0; line-height: 1.5; }
+.step i { font-size: 1.6rem; color: var(--re-primary, #3B82F6); margin-bottom: 10px; }
+.step h3 { font-size: 0.85rem; font-weight: 700; color: var(--re-text, #111827); margin: 0 0 6px; letter-spacing: 0.5px; }
+.step p { font-size: 0.8rem; color: var(--re-text-secondary, #6B7280); margin: 0; line-height: 1.4; }
+
+@media (min-width: 768px) {
+  .how { margin: 48px auto; padding: 0 24px; }
+  .how h2 { font-size: 1.5rem; margin-bottom: 32px; }
+  .steps { gap: 24px; }
+  .step { min-width: 180px; max-width: 220px; padding: 24px; }
+  .step i { font-size: 2rem; margin-bottom: 12px; }
+  .step h3 { font-size: 0.95rem; margin: 0 0 8px; }
+  .step p { font-size: 0.9rem; }
+}
 
 /* ── Get Started CTA ── */
 .col-cont {
@@ -1357,24 +1386,24 @@ input[type=submit]:hover {
 
 /* ── Feature Highlights Grid ── */
 .features-section {
-  padding: 64px 24px;
+  padding: 32px 16px;
   background: var(--re-surface-alt, #F9FAFB);
 }
 .features-grid {
-  display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 24px; max-width: 1100px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: 12px; max-width: 1100px; margin: 0 auto;
 }
 .feature-card {
-  padding: 28px 24px; background: var(--re-surface, #fff);
+  padding: 20px 16px; background: var(--re-surface, #fff);
   border-radius: 14px; text-align: center;
   border: 1px solid var(--re-border); transition: all 0.3s ease;
   box-shadow: 0 1px 4px rgba(0,0,0,0.03);
 }
 .feature-card:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
 .feature-icon {
-  width: 56px; height: 56px; border-radius: 14px; margin: 0 auto 16px;
+  width: 44px; height: 44px; border-radius: 12px; margin: 0 auto 12px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 22px;
+  font-size: 18px;
 }
 .feature-icon.green  { background: #DBEAFE; color: #1E40AF; }
 .feature-icon.blue   { background: #DBEAFE; color: #1E40AF; }
@@ -1382,10 +1411,16 @@ input[type=submit]:hover {
 .feature-icon.purple  { background: #E0E7FF; color: #1F2937; }
 .feature-icon.teal   { background: #DBEAFE; color: #1E40AF; }
 .feature-icon.red    { background: #E0E7FF; color: #1F2937; }
-.feature-card h3 { font-size: 1.05rem; font-weight: 600; color: var(--re-text); margin: 0 0 8px; }
-.feature-card p  { font-size: 0.88rem; color: var(--re-text-secondary); margin: 0; line-height: 1.6; }
-@media (max-width: 900px) { .features-grid { grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 600px) { .features-grid { grid-template-columns: 1fr; } }
+.feature-card h3 { font-size: 0.9rem; font-weight: 600; color: var(--re-text); margin: 0 0 6px; }
+.feature-card p  { font-size: 0.8rem; color: var(--re-text-secondary); margin: 0; line-height: 1.5; }
+@media (min-width: 768px) {
+  .features-section { padding: 64px 24px; }
+  .features-grid { grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .feature-card { padding: 28px 24px; }
+  .feature-icon { width: 56px; height: 56px; margin: 0 auto 16px; font-size: 22px; }
+  .feature-card h3 { font-size: 1.05rem; margin: 0 0 8px; }
+  .feature-card p { font-size: 0.88rem; }
+}
 
 /* ── CTA Banner ── */
 .cta-banner {

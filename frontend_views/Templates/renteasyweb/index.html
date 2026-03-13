@@ -541,8 +541,6 @@ function goToTestimonial(idx) {
   if (dots[currentTestimonial]) dots[currentTestimonial].classList.add('active');
 }
 function changeTestimonial(dir) { goToTestimonial(currentTestimonial + dir); }
-// Auto-rotate every 6s
-setInterval(function() { changeTestimonial(1); }, 6000);
 
 /* ── FAQ accordion ── */
 function toggleFaq(btn) {
