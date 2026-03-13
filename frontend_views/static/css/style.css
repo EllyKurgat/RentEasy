@@ -984,7 +984,7 @@ input[type=submit]:hover {
   flex-wrap: wrap; gap: 12px;
   transition: background 0.2s ease;
 }
-.topnav img { height: 38px; width: auto; filter: brightness(0) invert(1); }
+.topnav img { height: 42px; width: auto; filter: brightness(0) invert(1); }
 .top2 {
   display: flex; align-items: center; gap: 4px;
 }
@@ -1012,8 +1012,9 @@ input[type=submit]:hover {
 .line20 { display: block; width: 22px; height: 2px; background: #fff; border-radius: 2px; transition: 0.3s; }
 
 @media (max-width: 1000px) {
-  .topnav { flex-wrap: nowrap !important; height: auto !important; padding: 6px 12px !important; justify-content: space-between !important; background: #1F2937 !important; align-items: center; }
+  .topnav { flex-wrap: nowrap !important; height: auto !important; padding: 8px 16px !important; justify-content: space-between !important; background: #1F2937 !important; align-items: center; }
   .topnav > a:first-child { order: 1; flex-shrink: 0; }
+  .topnav > a:first-child img { height: 32px !important; }
   .icon { display: none !important; }
   .userbox2 { 
     order: 3; margin-left: auto !important;
