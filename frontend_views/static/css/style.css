@@ -1988,8 +1988,8 @@ button.theme-toggle, button.theme-switch {
    MOBILE BOTTOM NAVIGATION
    ================================================================ */
 .mobile-bottom-nav {
-  display: none;
-  position: fixed;
+  display: none !important;
+}
   bottom: 0;
   left: 0;
   right: 0;
