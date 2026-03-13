@@ -1007,48 +1007,48 @@ input[type=submit]:hover {
 .login2:hover { background: rgba(255,255,255,0.1); color: #fff; border-color: rgba(255,255,255,0.5); }
 .login2.primary { background: var(--re-primary, #3B82F6); color: #fff; border-color: var(--re-primary, #3B82F6); }
 .login2.primary:hover { background: var(--re-primary-hover, #2563EB); border-color: var(--re-primary-hover, #2563EB); }
-.icon { display: none; cursor: pointer; padding: 8px; color: #fff; font-size: 22px; margin-left: auto; text-decoration: none; }
+.icon { display: none; cursor: pointer; padding: 8px; color: #fff !important; font-size: 22px; margin-left: auto; text-decoration: none; }
 .bars1 { display: none; flex-direction: column; gap: 5px; }
 .line20 { display: block; width: 22px; height: 2px; background: #fff; border-radius: 2px; transition: 0.3s; }
 
 @media (max-width: 1000px) {
-  .topnav { flex-wrap: wrap; height: auto; padding: 4px 8px !important; justify-content: space-between !important; }
+  .topnav { flex-wrap: wrap !important; height: auto !important; padding: 6px 12px !important; justify-content: space-between !important; background: #1F2937 !important; }
   .topnav > a:first-child { order: 1; }
-  .icon { order: 2; }
+  .icon { display: flex !important; order: 2; align-items: center; justify-content: center; min-width: 32px; min-height: 32px; color: #fff !important; font-size: 20px; cursor: pointer; }
   .userbox2 { 
-    order: 3; margin-left: auto;
-    flex-wrap: nowrap !important; gap: 6px !important; 
+    order: 3; margin-left: auto !important;
+    flex-wrap: nowrap !important; gap: 8px !important; 
     display: flex !important;
+    align-items: center;
   }
-  .top2 { display: none; order: 4; width: 100%; flex-direction: column; gap: 0; }
+  .top2 { display: none !important; order: 4; width: 100%; flex-direction: column; gap: 0; }
   .top2 a { 
-    padding: 8px 10px; width: 100%; border-radius: 0; 
+    padding: 10px 12px; width: 100%; border-radius: 0; 
     border-bottom: 1px solid rgba(255,255,255,0.06); 
-    box-sizing: border-box; font-size: 12px;
+    box-sizing: border-box; font-size: 13px; color: #fff !important;
   }
   .loginsmall { display: block !important; }
-  .icon { display: flex !important; align-items: center; justify-content: center; min-width: 28px; min-height: 28px; }
   .bars1 { display: flex; }
-  .topnav.responsive .top2 { display: flex; }
-  .topnav img { height: 20px; }
+  .topnav.responsive .top2 { display: flex !important; }
+  .topnav img { height: 22px !important; }
   .login2 { 
-    padding: 4px 10px !important; font-size: 9px !important; 
-    border-radius: 4px !important; min-width: auto !important;
+    padding: 6px 12px !important; font-size: 11px !important; 
+    border-radius: 6px !important; min-width: auto !important;
     display: inline-block !important;
     white-space: nowrap;
+    color: #fff !important;
   }
-  .top2 a { font-size: 11px; padding: 6px 10px; }
+  .top2 a { font-size: 12px; padding: 8px 12px; }
 }
 
 @media (max-width: 480px) {
   .topnav { padding: 6px 10px !important; }
-  .topnav img { height: 24px; }
-  .userbox2 { gap: 4px !important; margin-right: 4px; }
+  .topnav img { height: 20px !important; }
+  .userbox2 { gap: 6px !important; }
   .login2 { 
-    padding: 6px 8px !important; font-size: 10px !important; 
-    min-width: 45px !important;
+    padding: 5px 10px !important; font-size: 10px !important; 
   }
-  .icon { padding: 4px; font-size: 18px; min-width: 32px; min-height: 32px; }
+  .icon { min-width: 28px; min-height: 28px; font-size: 18px; }
 }
 
 /* ── Hero Section ── */
