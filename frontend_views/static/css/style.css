@@ -212,21 +212,21 @@ button:active, input[type=submit]:active { transform: translateY(0); }
   width: 240px;
   background: var(--re-sidebar-bg, #1F2937);
   position: fixed;
-  top: 72px; left: 0;
-  height: calc(100% - 72px);
+  top: 56px; left: 0;
+  height: calc(100% - 56px);
   overflow-y: auto;
   font-size: 14px;
   list-style-type: none;
-  transition: width 0.3s ease-in-out, background 0.2s ease;
+  transition: transform 0.3s ease-in-out, background 0.2s ease;
 }
 .sidebar li a {
   display: flex; align-items: center; gap: 14px;
-  color: rgba(255,255,255,0.9);
-  padding: 11px 20px;
+  color: rgba(255,255,255,0.85);
+  padding: 14px 20px;
   text-decoration: none;
   border-bottom: none;
   border-left: 3px solid transparent;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
   font-weight: 500;
   font-size: 14px;
 }
@@ -286,20 +286,31 @@ button:active, input[type=submit]:active { transform: translateY(0); }
 @media (max-width: 1000px) {
   .sidebar > ul {
     width: 0; overflow: hidden; z-index: 99;
+    position: fixed;
+    top: 0; left: 0;
+    height: 100%;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    box-shadow: none;
   }
   .sidebar.active > ul {
-    width: 260px;
-    box-shadow: 4px 0 20px rgba(0,0,0,0.15);
+    width: 280px;
+    transform: translateX(0);
+    box-shadow: 4px 0 25px rgba(0,0,0,0.3);
   }
 }
-/* Sidebar backdrop overlay on mobile (I1 fix) */
+/* Sidebar backdrop overlay on mobile */
 .sidebar-overlay {
   display: none; position: fixed; inset: 0;
-  background: rgba(0,0,0,0.4); z-index: 98;
+  background: rgba(0,0,0,0.5); z-index: 98;
+  opacity: 0; transition: opacity 0.3s ease;
 }
 @media (max-width: 1000px) {
   .sidebar.active ~ .sidebar-overlay,
-  .sidebar-overlay.active { display: block; }
+  .sidebar-overlay.active { 
+    display: block;
+    opacity: 1;
+  }
 }
 
 /* ================================================================
@@ -309,7 +320,7 @@ button:active, input[type=submit]:active { transform: translateY(0); }
   background: var(--re-bg, #F3F4F6);
   margin-left: 240px;
   padding: 24px 32px;
-  padding-top: 60px;
+  padding-top: 56px;
   min-height: 100vh;
   transition: margin-left 0.3s ease, background 0.2s ease;
   box-sizing: border-box;
