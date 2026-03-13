@@ -1007,37 +1007,41 @@ input[type=submit]:hover {
 .line20 { display: block; width: 22px; height: 2px; background: #fff; border-radius: 2px; transition: 0.3s; }
 
 @media (max-width: 1000px) {
-  .topnav { flex-wrap: wrap; height: auto; padding: 10px 16px; }
+  .topnav { flex-wrap: wrap; height: auto; padding: 8px 12px !important; }
   .top2 { display: none; order: 3; width: 100%; flex-direction: column; gap: 0; }
   .top2 a { 
-    padding: 14px 16px; width: 100%; border-radius: 0; 
+    padding: 12px 14px; width: 100%; border-radius: 0; 
     border-bottom: 1px solid rgba(255,255,255,0.06); 
-    box-sizing: border-box; font-size: 15px;
+    box-sizing: border-box; font-size: 14px;
   }
-  .userbox2 { order: 2; margin-left: auto; margin-right: 12px; flex-wrap: wrap; gap: 10px; }
+  .userbox2 { 
+    order: 2; margin-left: auto; margin-right: 8px; 
+    flex-wrap: nowrap !important; gap: 8px !important; 
+    display: flex !important;
+  }
   .loginsmall { display: block !important; }
-  .icon { display: flex !important; order: 3; margin-left: 0; align-items: center; justify-content: center; min-width: 40px; min-height: 40px; }
+  .icon { display: flex !important; order: 3; margin-left: 0; align-items: center; justify-content: center; min-width: 36px; min-height: 36px; }
   .bars1 { display: flex; }
   .topnav.responsive .top2 { display: flex; }
-  .topnav img { height: 32px; }
-  .login2 { padding: 10px 18px; font-size: 13px; border-radius: 8px; min-width: 70px; }
-  .top2 a { font-size: 14px; padding: 12px 16px; }
-}
-
-@media (max-width: 600px) {
-  .topnav { padding: 8px 12px; }
   .topnav img { height: 28px; }
-  .userbox2 { gap: 8px; margin-right: 8px; }
-  .login2 { padding: 8px 14px; font-size: 12px; min-width: 60px; }
-  .icon { padding: 6px; font-size: 20px; }
+  .login2 { 
+    padding: 8px 10px !important; font-size: 11px !important; 
+    border-radius: 6px !important; min-width: 50px !important;
+    display: inline-block !important;
+    white-space: nowrap;
+  }
+  .top2 a { font-size: 13px; padding: 10px 14px; }
 }
 
 @media (max-width: 480px) {
-  .topnav { padding: 8px 12px; }
-  .topnav img { height: 26px; }
-  .userbox2 { gap: 6px; margin-right: 6px; }
-  .login2 { padding: 8px 12px; font-size: 11px; min-width: 55px; }
-  .icon { padding: 6px; font-size: 20px; }
+  .topnav { padding: 6px 10px !important; }
+  .topnav img { height: 24px; }
+  .userbox2 { gap: 4px !important; margin-right: 4px; }
+  .login2 { 
+    padding: 6px 8px !important; font-size: 10px !important; 
+    min-width: 45px !important;
+  }
+  .icon { padding: 4px; font-size: 18px; min-width: 32px; min-height: 32px; }
 }
 
 /* ── Hero Section ── */
@@ -1338,20 +1342,27 @@ input[type=submit]:hover {
 .hero-badge {
   display: inline-block; padding: 6px 18px; border-radius: 50px;
   background: var(--re-primary-light, #DBEAFE); color: var(--re-primary);
-  font-size: 0.82rem; font-weight: 600; margin-bottom: 12px;
+  font-size: 0.82rem; font-weight: 600; margin-bottom: 8px;
   letter-spacing: 0.3px;
 }
 .hero-badge i { margin-right: 4px; }
 .hero-landing h1 {
-  font-size: clamp(2rem, 5vw, 3rem); font-weight: 700;
-  color: var(--re-text); margin: 0 0 18px; line-height: 1.2;
+  font-size: clamp(1.6rem, 5vw, 3rem); font-weight: 700;
+  color: var(--re-text); margin: 0 0 12px; line-height: 1.2;
 }
 .hero-landing h1 span { color: var(--re-primary); }
 .hero-landing .tagline {
-  font-size: 1.1rem; color: var(--re-text-secondary);
-  margin-bottom: 32px; line-height: 1.7; max-width: 620px; margin-left: auto; margin-right: auto;
+  font-size: 0.95rem; color: var(--re-text-secondary);
+  margin-bottom: 20px; line-height: 1.5; max-width: 620px; margin-left: auto; margin-right: auto;
 }
 .hero-landing .hero-buttons a i { margin-right: 6px; }
+
+@media (min-width: 768px) {
+  .hero-landing { padding: 100px 24px 80px; }
+  .hero-badge { margin-bottom: 12px; }
+  .hero-landing h1 { margin: 0 0 18px; }
+  .hero-landing .tagline { font-size: 1.1rem; margin-bottom: 32px; }
+}
 
 /* ── Animated Stats Section ── */
 .stats-section {
