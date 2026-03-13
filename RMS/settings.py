@@ -63,7 +63,7 @@ ROOT_URLCONF = 'RMS.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'Templates')],
+        'DIRS': [BASE_DIR / 'frontend_views' / 'Templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
