@@ -1074,9 +1074,10 @@ input[type=submit]:hover {
   #icon {
     display: flex !important;
     background: transparent !important;
-    color: #1F2937 !important;
+    box-shadow: none !important;
+    color: #3B82F6 !important;
     border: none !important;
-    padding: 8px !important;
+    padding: 4px 8px !important;
     min-width: auto !important;
     min-height: auto !important;
     align-items: center; justify-content: center;
@@ -1084,7 +1085,7 @@ input[type=submit]:hover {
     font-weight: bold;
     transition: all 0.2s;
   }
-  #icon:hover { color: #3B82F6 !important; transform: scale(1.1); }
+  #icon:hover { color: #1D4ED8 !important; transform: scale(1.1); }
   .welcuser { display: none !important; }
 }
   .top2 { display: none !important; }
