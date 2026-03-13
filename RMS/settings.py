@@ -136,6 +136,10 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 # Enable WhiteNoise to serve static files
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+# WhiteNoise configuration to serve media files
+WHITENOISE_ROOT = BASE_DIR / 'staticfiles'
+WHITENOISE_MEDIA_FILES = True
+
 # Uploaded files (avatars, property images, etc.)
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "frontend_views" / "static" / "media"
