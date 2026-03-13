@@ -1007,30 +1007,30 @@ input[type=submit]:hover {
 .line20 { display: block; width: 22px; height: 2px; background: #fff; border-radius: 2px; transition: 0.3s; }
 
 @media (max-width: 1000px) {
-  .topnav { flex-wrap: wrap; height: auto; padding: 6px 10px !important; }
+  .topnav { flex-wrap: wrap; height: auto; padding: 4px 8px !important; }
   .top2 { display: none; order: 3; width: 100%; flex-direction: column; gap: 0; }
   .top2 a { 
-    padding: 10px 12px; width: 100%; border-radius: 0; 
+    padding: 8px 10px; width: 100%; border-radius: 0; 
     border-bottom: 1px solid rgba(255,255,255,0.06); 
-    box-sizing: border-box; font-size: 13px;
+    box-sizing: border-box; font-size: 12px;
   }
   .userbox2 { 
-    order: 2; margin-left: auto; margin-right: 6px; 
-    flex-wrap: nowrap !important; gap: 6px !important; 
+    order: 2; margin-left: auto; margin-right: 4px; 
+    flex-wrap: nowrap !important; gap: 4px !important; 
     display: flex !important;
   }
   .loginsmall { display: block !important; }
-  .icon { display: flex !important; order: 3; margin-left: 0; align-items: center; justify-content: center; min-width: 32px; min-height: 32px; }
+  .icon { display: flex !important; order: 3; margin-left: 0; align-items: center; justify-content: center; min-width: 28px; min-height: 28px; }
   .bars1 { display: flex; }
   .topnav.responsive .top2 { display: flex; }
-  .topnav img { height: 24px; }
+  .topnav img { height: 20px; }
   .login2 { 
-    padding: 6px 8px !important; font-size: 10px !important; 
-    border-radius: 4px !important; min-width: 42px !important;
+    padding: 4px 6px !important; font-size: 9px !important; 
+    border-radius: 4px !important; min-width: 38px !important;
     display: inline-block !important;
     white-space: nowrap;
   }
-  .top2 a { font-size: 12px; padding: 8px 12px; }
+  .top2 a { font-size: 11px; padding: 6px 10px; }
 }
 
 @media (max-width: 480px) {
@@ -1323,7 +1323,7 @@ input[type=submit]:hover {
 /* ── Hero (new, with background shapes) ── */
 .hero-landing {
   position: relative; text-align: center;
-  padding: 60px 20px 50px; overflow: hidden;
+  padding: 40px 16px 40px; overflow: hidden;
   background: linear-gradient(160deg, var(--re-bg) 0%, #DBEAFE 50%, var(--re-bg) 100%);
 }
 .hero-shapes { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
@@ -1340,26 +1340,26 @@ input[type=submit]:hover {
 }
 .hero-content { position: relative; z-index: 1; max-width: 780px; margin: 0 auto; }
 .hero-badge {
-  display: inline-block; padding: 6px 18px; border-radius: 50px;
+  display: inline-block; padding: 4px 14px; border-radius: 50px;
   background: var(--re-primary-light, #DBEAFE); color: var(--re-primary);
-  font-size: 0.82rem; font-weight: 600; margin-bottom: 8px;
+  font-size: 0.75rem; font-weight: 600; margin-bottom: 6px;
   letter-spacing: 0.3px;
 }
 .hero-badge i { margin-right: 4px; }
 .hero-landing h1 {
-  font-size: clamp(1.6rem, 5vw, 3rem); font-weight: 700;
-  color: var(--re-text); margin: 0 0 12px; line-height: 1.2;
+  font-size: clamp(1.4rem, 5vw, 3rem); font-weight: 700;
+  color: var(--re-text); margin: 0 0 8px; line-height: 1.2;
 }
 .hero-landing h1 span { color: var(--re-primary); }
 .hero-landing .tagline {
-  font-size: 0.95rem; color: var(--re-text-secondary);
-  margin-bottom: 20px; line-height: 1.5; max-width: 620px; margin-left: auto; margin-right: auto;
+  font-size: 0.85rem; color: var(--re-text-secondary);
+  margin-bottom: 16px; line-height: 1.4; max-width: 620px; margin-left: auto; margin-right: auto;
 }
 .hero-landing .hero-buttons a i { margin-right: 6px; }
 
 @media (min-width: 768px) {
   .hero-landing { padding: 100px 24px 80px; }
-  .hero-badge { margin-bottom: 12px; }
+  .hero-badge { margin-bottom: 12px; padding: 6px 18px; }
   .hero-landing h1 { margin: 0 0 18px; }
   .hero-landing .tagline { font-size: 1.1rem; margin-bottom: 32px; }
 }
