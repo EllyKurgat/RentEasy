@@ -109,7 +109,7 @@ button:active, input[type=submit]:active { transform: translateY(0); }
    ================================================================ */
 .navbar {
   position: fixed; top: 0; left: 0; width: 100%;
-  padding: 0 28px; height: 72px;
+  padding: 0 16px; height: 56px;
   background: var(--re-navbar-bg, #ffffff);
   color: var(--re-navbar-text, #1e293b);
   display: flex; align-items: center; justify-content: space-between;
@@ -119,32 +119,37 @@ button:active, input[type=submit]:active { transform: translateY(0); }
   transition: background 0.2s ease, box-shadow 0.2s ease;
 }
 .navbar img {
-  margin: 0 12px;
-  width: 36px; height: auto;
+  margin: 0 8px;
+  width: 28px; height: auto;
   object-fit: cover;
 }
 #icon {
-  font-size: 24px;
+  font-size: 20px;
   background: none;
   border: none;
   cursor: pointer;
   display: none;
   color: var(--re-navbar-text, #333);
-  padding: 10px;
-  min-width: 44px;
-  min-height: 44px;
+  padding: 8px;
+  min-width: 36px;
+  min-height: 36px;
   align-items: center;
   justify-content: center;
+  border-radius: 6px;
 }
+#icon:hover { background: rgba(0,0,0,0.05); }
 @media (max-width: 1000px) {
   #icon { display: flex !important; }
-  .navbar img { width: 28px; }
+  .navbar img { width: 24px; }
+  .navbar { padding: 0 12px; height: 48px; }
+  .logoss { font-size: 1rem !important; }
+  .welcuser { display: none; }
 }
 @media (min-width: 1001px) {
   #icon { display: none !important; }
 }
 @media (max-width: 430px) {
-  .navbar img { margin: 0 8px; width: 28px; }
+  .navbar img { margin: 0 6px; width: 22px; }
 }
 @media (max-width: 375px) {
   .userbox a span { display: none; }
@@ -298,7 +303,7 @@ button:active, input[type=submit]:active { transform: translateY(0); }
   background: var(--re-bg, #F3F4F6);
   margin-left: 240px;
   padding: 24px 32px;
-  padding-top: 76px;
+  padding-top: 60px;
   min-height: 100vh;
   transition: margin-left 0.3s ease, background 0.2s ease;
   box-sizing: border-box;
@@ -307,8 +312,8 @@ button:active, input[type=submit]:active { transform: translateY(0); }
   .dashcont {
     margin-left: 0;
     width: 100%;
-    padding: 16px;
-    padding-top: 76px;
+    padding: 12px;
+    padding-top: 56px;
   }
 }
 
