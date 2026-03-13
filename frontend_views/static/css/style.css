@@ -161,6 +161,12 @@ button:active, input[type=submit]:active { transform: translateY(0); }
   font-family: "Poppins", sans-serif;
 }
 .logoss span:last-child { color: var(--re-primary, #3B82F6); }
+.navbar-center {
+  display: flex; align-items: center; gap: 8px;
+  position: absolute; left: 50%; transform: translateX(-50%);
+}
+.navbar-center img { height: 32px; }
+.navbar-center .logoss { font-size: 1.1rem; }
 .userbox {
   display: flex; align-items: center; justify-content: center;
   font-size: 16px; margin-left: auto; height: 100%;
@@ -1039,27 +1045,32 @@ input[type=submit]:hover {
   }
   .login2:first-child { margin-right: 8px; }
   
-  /* Dashboard navbar hamburger - polished */
-  .navbar { padding: 6px 12px !important; height: auto !important; justify-content: flex-start !important; }
+  /* Dashboard navbar - polished horizontal layout */
+  .navbar { 
+    padding: 6px 12px !important; height: auto !important; 
+    justify-content: space-between !important;
+    position: relative;
+  }
   .navbar > * { flex-shrink: 0; }
+  .navbar-center { position: static !important; transform: none !important; }
+  .navbar-center img { height: 24px !important; }
+  .navbar-center .logoss { font-size: 0.95rem !important; }
+  .userbox { margin-left: 0 !important; }
+  .userbox img { width: 28px !important; height: 28px !important; }
   #icon {
     display: flex !important;
     background: rgba(255,255,255,0.1) !important;
     color: #fff !important;
     border-radius: 8px !important;
-    padding: 8px 12px !important;
+    padding: 8px 10px !important;
     min-width: auto !important;
     min-height: auto !important;
     align-items: center; justify-content: center;
-    font-size: 18px;
-    margin-right: 10px;
+    font-size: 16px;
     border: 1px solid rgba(255,255,255,0.15);
     transition: all 0.2s;
   }
   #icon:hover { background: rgba(255,255,255,0.2) !important; }
-  .navbar img { height: 26px !important; margin-right: 8px !important; }
-  .logoss { font-size: 1.1rem !important; margin-right: auto !important; }
-  .userbox { margin-left: auto !important; }
   .welcuser { display: none !important; }
 }
   .top2 { display: none !important; }

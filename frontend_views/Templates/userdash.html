@@ -18,15 +18,16 @@
 <!-- Navbar -->
 <nav>
   <div class="navbar" id="navbar">
-    <button id="icon"><i class="fa-solid fa-bars"></i></button>
-    <img src="{% static 'img/renteasylogo.png' %}" alt="Logo">
-    <div class="logoss"><span>RENT</span><span style="color: var(--re-primary);">EASY</span></div>
     <div class="userbox">
       <a href="{% url 'profile' %}">
         <img id="Profile" src="{% static 'img/user.jpg' %}" alt="Profile">
-        <span class="welcuser">Hi, {{ request.user.name|default:"User" }}!</span>
       </a>
     </div>
+    <div class="navbar-center">
+      <img src="{% static 'img/renteasylogo.png' %}" alt="Logo">
+      <span class="logoss"><span>RENT</span><span style="color: var(--re-primary);">EASY</span></span>
+    </div>
+    <button id="icon"><i class="fa-solid fa-bars"></i></button>
   </div>
 </nav>
 
