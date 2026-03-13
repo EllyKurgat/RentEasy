@@ -109,12 +109,12 @@ button:active, input[type=submit]:active { transform: translateY(0); }
    ================================================================ */
 .navbar {
   position: fixed; top: 0; left: 0; width: 100%;
-  padding: 0 16px; height: 56px;
+  padding: 10px 16px; height: auto;
   background: var(--re-navbar-bg, #ffffff);
   color: var(--re-navbar-text, #1e293b);
   display: flex; align-items: center; justify-content: space-between;
   z-index: 1000;
-  box-shadow: var(--re-navbar-shadow, 0 1px 4px rgba(0,0,0,0.10));
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
   box-sizing: border-box;
   transition: background 0.2s ease, box-shadow 0.2s ease;
 }
@@ -997,10 +997,10 @@ input[type=submit]:hover {
 /* ── Top Navigation (Dark Charcoal) ── */
 .topnav {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 0 32px; height: 64px;
+  padding: 12px 32px; height: auto;
   background: #1F2937;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.15);
-  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
   flex-wrap: wrap; gap: 12px;
   transition: background 0.2s ease;
 }
@@ -1416,7 +1416,7 @@ input[type=submit]:hover {
 /* ── Hero (new, with background shapes) ── */
 .hero-landing {
   position: relative; text-align: center;
-  padding: 40px 16px 40px; overflow: hidden;
+  padding: 80px 16px 40px; overflow: hidden;
   background: linear-gradient(160deg, var(--re-bg) 0%, #DBEAFE 50%, var(--re-bg) 100%);
 }
 .hero-shapes { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
