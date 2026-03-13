@@ -2249,6 +2249,18 @@ button.theme-toggle, button.theme-switch {
 .auth-card .auth-header p {
   font-size: 0.92rem; color: var(--re-text-secondary); margin: 0; line-height: 1.5;
 }
+
+@media (max-width: 480px) {
+  .auth-nav { padding: 10px 16px; }
+  .auth-nav img { height: 28px; }
+  .auth-nav .brand { font-size: 1rem; }
+  .auth-nav .back-link { font-size: 0.8rem; }
+  .auth-container { padding: 20px 12px; }
+  .auth-card { padding: 20px 16px; border-radius: 12px; }
+  .auth-card .auth-header { margin-bottom: 20px; }
+  .auth-card .auth-header h1 { font-size: 1.25rem; }
+  .auth-card .auth-header p { font-size: 0.85rem; }
+}
 .auth-card .auth-footer {
   text-align: center; margin-top: 20px; font-size: 0.88rem; color: var(--re-text-secondary);
 }
