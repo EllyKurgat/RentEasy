@@ -1005,7 +1005,7 @@ input[type=submit]:hover {
 .bars1 { display: none; flex-direction: column; gap: 5px; }
 .line20 { display: block; width: 22px; height: 2px; background: #fff; border-radius: 2px; transition: 0.3s; }
 
-@media (max-width: 768px) {
+@media (max-width: 1000px) {
   .topnav { flex-wrap: wrap; height: auto; padding: 10px 16px; }
   .top2 { display: none; order: 3; width: 100%; flex-direction: column; gap: 0; }
   .top2 a { 
@@ -1015,7 +1015,7 @@ input[type=submit]:hover {
   }
   .userbox2 { order: 2; margin-left: auto; margin-right: 8px; flex-wrap: wrap; gap: 8px; }
   .loginsmall { display: block !important; }
-  .icon { display: block !important; order: 3; margin-left: 0; }
+  .icon { display: flex !important; order: 3; margin-left: 0; align-items: center; justify-content: center; min-width: 40px; min-height: 40px; }
   .bars1 { display: flex; }
   .topnav.responsive .top2 { display: flex; }
   .topnav img { height: 32px; }
@@ -1023,11 +1023,19 @@ input[type=submit]:hover {
   .top2 a { font-size: 14px; padding: 12px 16px; }
 }
 
-@media (max-width: 480px) {
-  .topnav { padding: 10px 12px; }
+@media (max-width: 600px) {
+  .topnav { padding: 8px 12px; }
   .topnav img { height: 28px; }
-  .userbox2 { gap: 4px; }
-  .login2 { padding: 5px 10px; font-size: 11px; }
+  .userbox2 { gap: 6px; }
+  .login2 { padding: 8px 12px; font-size: 12px; }
+  .icon { padding: 6px; font-size: 20px; }
+}
+
+@media (max-width: 480px) {
+  .topnav { padding: 8px 12px; }
+  .topnav img { height: 28px; }
+  .userbox2 { gap: 4px; flex-wrap: wrap; }
+  .login2 { padding: 8px 10px; font-size: 11px; }
   .icon { padding: 6px; font-size: 20px; }
 }
 
