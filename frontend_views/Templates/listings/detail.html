@@ -12,31 +12,40 @@
     <title>{{ listing.title }} - RentEasy</title>
     <link rel="icon" href="{% static 'img/faviclogo.png' %}">
     <style>
-        .detail-wrap { max-width:900px; margin:0 auto; padding:32px 24px; }
-        .detail-header { margin-bottom:24px; }
-        .detail-header h1 { color:var(--re-primary); margin:0 0 6px; font-size:1.8rem; }
-        .detail-header .location { color:var(--re-text-secondary); font-size:1rem; margin:0 0 12px; }
-        .detail-header .location i { margin-right:6px; }
-        .detail-price { display:flex; gap:24px; flex-wrap:wrap; align-items:center; margin-bottom:16px; }
-        .detail-price .price { font-size:1.5rem; font-weight:700; color:var(--re-text); }
-        .detail-price .deposit { font-size:1rem; color:var(--re-text-secondary); background:var(--re-surface-alt); padding:6px 14px; border-radius:20px; }
-        .detail-grid { display:flex; flex-direction:column; gap:32px; max-width:700px; margin:0 auto; }
-        @media(min-width:901px) { 
+        .detail-wrap { max-width:900px; margin:0 auto; padding:20px 16px; }
+        .detail-header h1 { color:var(--re-primary); margin:0 0 6px; font-size:1.4rem; }
+        .detail-header .location { color:var(--re-text-secondary); font-size:0.9rem; margin:0 0 10px; }
+        .detail-price { display:flex; gap:16px; flex-wrap:wrap; align-items:center; margin-bottom:12px; }
+        .detail-price .price { font-size:1.3rem; font-weight:700; color:var(--re-text); }
+        .detail-price .deposit { font-size:0.85rem; color:var(--re-text-secondary); background:var(--re-surface-alt); padding:4px 10px; border-radius:20px; }
+        .detail-grid { display:flex; flex-direction:column; gap:24px; max-width:700px; margin:0 auto; }
+        @media(min-width:768px) { 
             .detail-grid { max-width:900px; }
+            .detail-header h1 { font-size:1.8rem; }
+            .detail-price { gap:24px; margin-bottom:16px; }
+            .detail-price .price { font-size:1.5rem; }
+            .detail-price .deposit { font-size:1rem; padding:6px 14px; }
         }
-        @media(max-width:900px) { .detail-grid { grid-template-columns:1fr; } }
-        .detail-main .desc { color:var(--re-text); line-height:1.8; margin-bottom:12px; }
-        .detail-avail { display:inline-flex; align-items:center; gap:8px; padding:8px 16px; background:var(--re-surface-alt); border-radius:8px; color:var(--re-text-secondary); font-size:0.95rem; margin-bottom:24px; }
-        .amenities-list { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:24px; }
-        .amenity-tag { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; background:var(--re-surface); border:1px solid var(--re-border); border-radius:20px; font-size:0.85rem; color:var(--re-text); }
+        .detail-main .desc { color:var(--re-text); line-height:1.8; margin-bottom:12px; font-size:0.95rem; }
+        .detail-avail { display:inline-flex; align-items:center; gap:8px; padding:6px 12px; background:var(--re-surface-alt); border-radius:8px; color:var(--re-text-secondary); font-size:0.85rem; margin-bottom:20px; }
+        .amenities-list { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+        .amenity-tag { display:inline-flex; align-items:center; gap:4px; padding:4px 10px; background:var(--re-surface); border:1px solid var(--re-border); border-radius:20px; font-size:0.75rem; color:var(--re-text); }
         .amenity-tag i { color:var(--re-primary); }
-        .photos-gallery { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:12px; margin-bottom:24px; }
-        .photos-gallery img { width:100%; height:160px; object-fit:cover; border-radius:10px; cursor:pointer; transition:transform 0.2s; }
+        .photos-gallery { display:grid; grid-template-columns:repeat(2, 1fr); gap:8px; margin-bottom:20px; }
+        .photos-gallery img { width:100%; height:120px; object-fit:cover; border-radius:8px; cursor:pointer; transition:transform 0.2s; }
+        @media(min-width:768px) {
+            .photos-gallery { grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:12px; margin-bottom:24px; }
+            .photos-gallery img { height:160px; }
+            .amenities-list { gap:10px; margin-bottom:24px; }
+            .amenity-tag { padding:6px 14px; font-size:0.85rem; }
+            .detail-avail { padding:8px 16px; font-size:0.95rem; margin-bottom:24px; }
+            .detail-main .desc { margin-bottom:12px; }
+        }
         .photos-gallery img:hover { transform:scale(1.03); }
-        .no-photos { background:var(--re-surface-alt); border-radius:10px; padding:48px; text-align:center; color:var(--re-text-secondary); }
-        .sidebar-card { background:var(--re-surface); border-radius:12px; padding:24px; box-shadow:0 4px 16px rgba(0,0,0,0.08); margin-bottom:24px; }
-        .sidebar-card h3 { margin:0 0 16px; color:var(--re-text); font-size:1.1rem; }
-        .sidebar-card label { display:block; font-size:0.9rem; color:var(--re-text-secondary); margin-bottom:4px; font-weight:500; }
+        .no-photos { background:var(--re-surface-alt); border-radius:10px; padding:32px; text-align:center; color:var(--re-text-secondary); }
+        .sidebar-card { background:var(--re-surface); border-radius:12px; padding:20px; box-shadow:0 4px 16px rgba(0,0,0,0.08); margin-bottom:20px; }
+        .sidebar-card h3 { margin:0 0 12px; color:var(--re-text); font-size:1rem; }
+        .sidebar-card label { display:block; font-size:0.85rem; color:var(--re-text-secondary); margin-bottom:4px; font-weight:500; }
         .sidebar-card input, .sidebar-card textarea { width:100%; padding:10px 12px; border:1px solid var(--re-input-border); border-radius:8px; font-size:0.95rem; background:var(--re-input-bg); color:var(--re-text); margin-bottom:12px; box-sizing:border-box; }
         .sidebar-card textarea { resize:vertical; min-height:80px; }
         .sidebar-card button { width:100%; padding:12px; background:var(--re-primary); color:#fff; border:none; border-radius:8px; font-weight:600; font-size:1rem; cursor:pointer; transition:background 0.2s; }
@@ -123,7 +132,7 @@
         </div>
 
         <!-- ── Sidebar ── -->
-        <div class="detail-sidebar">
+        <div class="detail-sidebar" style="max-width:500px;margin:0 auto;width:100%;">
             <!-- Enquiry Form -->
             <div class="sidebar-card">
                 <h3><i class="fa-solid fa-envelope" style="color:var(--re-primary);margin-right:6px;"></i> Enquire about this property</h3>

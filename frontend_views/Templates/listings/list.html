@@ -14,29 +14,57 @@
     <style>
         .listing-card { background:var(--re-surface); border-radius:12px; overflow:hidden; box-shadow:0 4px 16px rgba(0,0,0,0.08); transition:transform 0.2s,box-shadow 0.2s; text-decoration:none; color:inherit; display:flex; flex-direction:column; }
         .listing-card:hover { transform:translateY(-4px); box-shadow:0 12px 28px rgba(0,0,0,0.14); }
-        .listing-card-body { padding:20px; flex:1; }
-        .listing-card-body h3 { margin:0 0 6px; color:var(--re-text); font-size:1.1rem; }
-        .listing-card-loc { color:var(--re-text-secondary); font-size:0.9rem; margin:0 0 10px; }
+        .listing-card-body { padding:16px; flex:1; }
+        .listing-card-body h3 { margin:0 0 4px; color:var(--re-text); font-size:1rem; }
+        .listing-card-body p { margin:0; }
+        .listing-card-loc { color:var(--re-text-secondary); font-size:0.85rem; margin-bottom:8px; }
         .listing-card-loc i { margin-right:4px; color:var(--re-primary); }
-        .listing-card-price { font-weight:700; color:var(--re-primary); font-size:1.15rem; margin:0 0 8px; }
-        .listing-card-rating { display:flex; align-items:center; gap:6px; margin-bottom:8px; }
-        .listing-card-rating .stars { color:#f59e0b; font-size:0.85rem; }
+        .listing-card-price { font-weight:700; color:var(--re-primary); font-size:1.05rem; margin-bottom:6px; }
+        .listing-card-rating { display:flex; align-items:center; gap:6px; margin-bottom:6px; }
+        .listing-card-rating .stars { color:#f59e0b; font-size:0.8rem; }
         .listing-card-rating .stars .empty { color:var(--re-input-border); }
-        .listing-card-rating .count { color:var(--re-text-secondary); font-size:0.8rem; }
-        .listing-card-footer { padding:12px 20px; border-top:1px solid var(--re-border); display:flex; justify-content:space-between; align-items:center; }
-        .listing-card-footer .avail { font-size:0.8rem; color:var(--re-text-secondary); }
-        .listing-card-footer .view-link { color:var(--re-primary); font-weight:600; font-size:0.9rem; }
-        .search-bar { background:var(--re-surface); border-radius:12px; padding:20px 24px; margin-bottom:24px; box-shadow:0 2px 12px rgba(0,0,0,0.06); }
-        .search-row { display:flex; gap:12px; flex-wrap:wrap; align-items:flex-end; }
-        .search-field { flex:1; min-width:160px; }
-        .search-field label { display:block; margin-bottom:4px; font-weight:500; font-size:0.85rem; color:var(--re-text-secondary); }
-        .search-field input, .search-field select { width:100%; padding:10px 12px; border:1px solid var(--re-input-border); border-radius:8px; font-size:0.95rem; background:var(--re-input-bg); color:var(--re-text); box-sizing:border-box; }
-        .search-btn { padding:10px 24px; background:var(--re-primary); color:#fff; border:none; border-radius:8px; font-weight:600; cursor:pointer; font-size:0.95rem; white-space:nowrap; }
+        .listing-card-rating .count { color:var(--re-text-secondary); font-size:0.75rem; }
+        .listing-card-footer { padding:10px 16px; border-top:1px solid var(--re-border); display:flex; justify-content:space-between; align-items:center; }
+        .listing-card-footer .avail { font-size:0.75rem; color:var(--re-text-secondary); }
+        .listing-card-footer .view-link { color:var(--re-primary); font-weight:600; font-size:0.85rem; }
+        .listing-card-footer .avail i { margin-right:4px; }
+        .search-bar { background:var(--re-surface); border-radius:12px; padding:16px; margin-bottom:20px; box-shadow:0 2px 12px rgba(0,0,0,0.06); }
+        .search-row { display:flex; gap:8px; flex-wrap:wrap; align-items:flex-end; }
+        .search-field { flex:1; min-width:140px; }
+        .search-field label { display:block; margin-bottom:4px; font-weight:500; font-size:0.8rem; color:var(--re-text-secondary); }
+        .search-field input, .search-field select { width:100%; padding:8px 10px; border:1px solid var(--re-input-border); border-radius:8px; font-size:0.9rem; background:var(--re-input-bg); color:var(--re-text); box-sizing:border-box; }
+        .search-btn { padding:10px 20px; background:var(--re-primary); color:#fff; border:none; border-radius:8px; font-weight:600; cursor:pointer; font-size:0.9rem; white-space:nowrap; }
         .search-btn:hover { background:var(--re-primary-hover); }
-        .sort-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:8px; }
-        .sort-row .result-count { color:var(--re-text-secondary); font-size:0.95rem; }
-        .sort-row select { padding:8px 12px; border:1px solid var(--re-input-border); border-radius:8px; background:var(--re-input-bg); color:var(--re-text); font-size:0.9rem; }
-        .listings-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr)); gap:24px; }
+        .sort-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px; }
+        .sort-row .result-count { color:var(--re-text-secondary); font-size:0.9rem; }
+        .sort-row select { padding:6px 10px; border:1px solid var(--re-input-border); border-radius:8px; background:var(--re-input-bg); color:var(--re-text); font-size:0.85rem; }
+        .listings-grid { display:grid; grid-template-columns:1fr; gap:16px; }
+        @media (min-width: 480px) {
+            .listings-grid { grid-template-columns:repeat(2, 1fr); }
+        }
+        @media (min-width: 768px) {
+            .listing-card-body { padding:20px; }
+            .listing-card-body h3 { font-size:1.1rem; }
+            .listing-card-loc { font-size:0.9rem; margin-bottom:10px; }
+            .listing-card-price { font-size:1.15rem; margin-bottom:8px; }
+            .listing-card-rating { margin-bottom:8px; }
+            .listing-card-rating .stars { font-size:0.85rem; }
+            .listing-card-rating .count { font-size:0.8rem; }
+            .listing-card-footer { padding:12px 20px; }
+            .listing-card-footer .avail { font-size:0.8rem; }
+            .listing-card-footer .view-link { font-size:0.9rem; }
+            .search-bar { padding:20px 24px; margin-bottom:24px; }
+            .search-row { gap:12px; }
+            .search-field { min-width:160px; }
+            .search-field label { font-size:0.85rem; }
+            .search-field input, .search-field select { padding:10px 12px; font-size:0.95rem; }
+            .search-btn { padding:10px 24px; font-size:0.95rem; }
+            .sort-row { margin-bottom:16px; }
+            .listings-grid { gap:24px; }
+        }
+        @media (min-width: 1024px) {
+            .listings-grid { grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); }
+        }
         @media (max-width: 480px) {
             .search-field { min-width: 100%; }
             .search-btn { width: 100%; text-align: center; justify-content: center; }
@@ -61,7 +89,7 @@
             <form method="post" action="{% url 'logout' %}" style="display:inline;">{% csrf_token %}<button type="submit" class="login2" style="background:none;border:none;cursor:pointer;font:inherit;color:inherit;padding:0;">Logout</button></form>
             {% else %}
             <a class="login2" href="{% url 'home' %}"><i class="fa-solid fa-house"></i> Home</a>
-            <a class="login2" href="{% url 'user_login' %}">Login</a>
+            <a class="login2" href="{% url 'user_login' %}">Sign In</a>
             <a class="login2 primary" href="{% url 'register' %}">Sign Up</a>
             {% endif %}
         </div>
