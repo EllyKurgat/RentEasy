@@ -132,6 +132,10 @@
         <img src="{{ photo_url }}" alt="{{ listing.title }} photo {{ forloop.counter }}">
         {% endfor %}
     </div>
+    {% else %}
+    <div class="photos-gallery">
+        <img src="{% static 'img/house.jpg' %}" alt="{{ listing.title }}">
+    </div>
     {% endif %}
 
     <div class="detail-grid">

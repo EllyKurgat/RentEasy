@@ -241,7 +241,7 @@
       {% if l.photos and l.photos.0 %}
       <img src="{{ MEDIA_URL }}{{ l.photos.0 }}" alt="{{ l.title }}" loading="lazy">
       {% else %}
-      <img src="{% static 'Img/housessrent.jpg' %}" alt="{{ l.title }}" loading="lazy">
+      <img src="{% static 'img/housessrent.jpg' %}" alt="{{ l.title }}" loading="lazy">
       {% endif %}
       <div class="property-overlay">
         <span class="property-badge">{{ l.get_category_display|default:"Rental" }}</span>
