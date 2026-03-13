@@ -305,6 +305,9 @@ button:active, input[type=submit]:active { transform: translateY(0); }
   background: rgba(0,0,0,0.5); z-index: 98;
   opacity: 0; transition: opacity 0.3s ease;
 }
+/* Prevent body scroll when sidebar is open */
+body.sidebar-open { overflow: hidden; }
+
 @media (max-width: 1000px) {
   .sidebar.active ~ .sidebar-overlay,
   .sidebar-overlay.active { 
