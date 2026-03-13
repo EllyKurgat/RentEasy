@@ -1130,6 +1130,7 @@ def listing_detail(request, pk):
 
     return render(request, "listings/detail.html", {
         "listing": listing,
+        "landlord": listing.unit.property.landlord,
         "reviews": reviews,
         "avg_rating": avg_rating,
         "review_count": review_count,

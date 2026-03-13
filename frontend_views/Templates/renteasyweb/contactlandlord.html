@@ -27,10 +27,12 @@
             <a href="{% url 'about' %}">ABOUT</a>
             <a href="{% url 'properties' %}">PROPERTY</a>
             <a href="{% url 'contact' %}" class="active10">CONTACT</a>
-            <a class="loginsmall" href="{% url 'user_login' %}">Login/Sign Up</a>
+            <a class="loginsmall" href="{% url 'user_login' %}">Sign In</a>
+            <a class="loginsmall" href="{% url 'register' %}">Sign Up</a>
         </div>
         <div class="userbox2">
-            <a class="login2" href="{% url 'user_login' %}">Login/Sign Up</a>
+            <a class="login2" href="{% url 'home' %}"><i class="fa-solid fa-house"></i> Home</a>
+            <a class="login2 primary" href="{% url 'user_login' %}">Sign In</a>
         </div>
     </div>
   </nav>
@@ -119,13 +121,6 @@
       </form>
     </div>
 
-    <div style="text-align:center;margin-top:20px;">
-      <a href="{% url 'listing_detail' listing.pk %}" style="color:var(--re-primary,#3B82F6);font-weight:600;text-decoration:none;font-size:0.95rem;">
-        <i class="fa-solid fa-arrow-left" style="margin-right:4px;"></i> Back to listing
-      </a>
-    </div>
-  </div>
-
   <footer class="footer">
     <div class="col-contfoot">
       <div class="colfoot" style="vertical-align:top">
@@ -149,7 +144,7 @@
           <a href="{% url 'about' %}">About</a>
           <a href="{% url 'properties' %}">Property</a>
           <a href="{% url 'contact' %}">Contact</a>
-          <a href="{% url 'user_login' %}">Login/Sign Up</a>
+          <a href="{% url 'user_login' %}">Sign In</a> / <a href="{% url 'register' %}">Sign Up</a>
         </div>
       </div>
       <div class="colfoot">
