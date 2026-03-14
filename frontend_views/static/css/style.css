@@ -1034,7 +1034,9 @@ input[type=submit]:hover {
 @media (max-width: 1000px) {
   .topnav { flex-wrap: nowrap !important; height: auto !important; padding: 6px 12px !important; justify-content: space-between !important; background: #1F2937 !important; align-items: center; }
   .topnav > a:first-child { order: 1; flex-shrink: 0; }
-  .icon { display: none !important; }
+  .top2 { display: none !important; }
+  .topnav.responsive .top2 { display: none !important; }
+  .icon { display: flex !important; color: #fff !important; font-size: 20px; cursor: pointer; padding: 4px 8px; text-decoration: none; }
   .userbox2 { 
     order: 3; margin-left: auto !important;
     flex-wrap: nowrap !important; gap: 0 !important; 
@@ -1044,12 +1046,10 @@ input[type=submit]:hover {
     width: 100% !important;
     justify-content: flex-end;
   }
-  .top2 { display: none !important; }
   .loginsmall { display: block !important; }
   .bars1 { display: flex; }
-  .topnav.responsive .top2 { display: none !important; }
   .topnav img { height: 22px !important; }
-  .login2 { 
+  .login2 {
     padding: 6px 12px !important; font-size: 11px !important; 
     border-radius: 6px !important; min-width: auto !important;
     display: inline-block !important;
@@ -1058,65 +1058,6 @@ input[type=submit]:hover {
     flex-shrink: 0;
   }
   .login2:first-child { margin-right: 8px; }
-  
-  /* Dashboard navbar - always show hamburger */
-  .navbar { 
-    padding: 8px 16px !important; height: auto !important; 
-    justify-content: space-between !important;
-    position: relative;
-  }
-  .navbar > * { flex-shrink: 0; }
-  .navbar-center { position: static !important; transform: none !important; }
-  .navbar-center img { height: 28px !important; }
-  .navbar-center .logoss { font-size: 1.1rem !important; }
-  .userbox { margin-left: 0 !important; }
-  .userbox img { width: 32px !important; height: 32px !important; }
-  #icon {
-    display: flex !important;
-    background: transparent !important;
-    box-shadow: none !important;
-    color: #3B82F6 !important;
-    border: none !important;
-    padding: 4px 8px !important;
-    min-width: auto !important;
-    min-height: auto !important;
-    align-items: center; justify-content: center;
-    font-size: 24px !important;
-    font-weight: bold;
-    transition: all 0.2s;
-  }
-  #icon:hover { color: #1D4ED8 !important; transform: scale(1.1); }
-  .welcuser { display: none !important; }
-}
-  .top2 { display: none !important; }
-  .loginsmall { display: block !important; }
-  .bars1 { display: flex; }
-  .topnav.responsive .top2 { display: none !important; }
-  .topnav img { height: 22px !important; }
-  .login2 { 
-    padding: 6px 12px !important; font-size: 11px !important; 
-    border-radius: 6px !important; min-width: auto !important;
-    display: inline-block !important;
-    white-space: nowrap;
-    color: #fff !important;
-    flex-shrink: 0;
-  }
-  .login2:first-child { margin-right: 8px; }
-  
-  /* Dashboard navbar hamburger */
-  .navbar { padding: 6px 12px !important; height: auto !important; }
-  #icon {
-    display: flex !important;
-    background: #1e3a5f !important;
-    color: #fff !important;
-    border-radius: 6px !important;
-    padding: 6px !important;
-    min-width: 36px; min-height: 36px;
-    align-items: center; justify-content: center;
-  }
-  .navbar img { height: 20px !important; }
-  .logoss { font-size: 1rem !important; }
-  .welcuser { display: none !important; }
 }
 
 @media (max-width: 480px) {
