@@ -12,17 +12,17 @@
     <link rel="icon" href="{% static 'img/faviclogo.png' %}">
     <style>
         .application-container {
-            max-width: 600px;
+            max-width: 700px;
             margin: 0 auto;
             padding: 20px;
         }
 
-        .property-card {
+        .property-summary {
             background: var(--re-surface);
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 32px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
             border: 1px solid var(--re-border);
         }
 
@@ -33,20 +33,20 @@
         }
 
         .property-icon {
-            width: 48px;
-            height: 48px;
+            width: 40px;
+            height: 40px;
             background: linear-gradient(135deg, var(--re-primary), var(--re-primary-dark));
-            border-radius: 12px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 20px;
-            margin-right: 16px;
+            font-size: 16px;
+            margin-right: 12px;
         }
 
         .property-title {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 600;
             color: var(--re-text);
             margin: 0;
@@ -54,81 +54,86 @@
 
         .property-location {
             color: var(--re-text-light);
-            font-size: 16px;
-            margin: 8px 0 0 0;
+            font-size: 14px;
+            margin: 4px 0 0 0;
         }
 
         .property-details {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 16px;
-            margin-top: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 12px;
         }
 
         .detail-item {
             display: flex;
             align-items: center;
-            padding: 12px;
+            padding: 8px 12px;
             background: var(--re-light-bg);
             border-radius: 8px;
+            font-size: 13px;
         }
 
         .detail-icon {
             color: var(--re-primary);
-            margin-right: 8px;
-            font-size: 16px;
+            margin-right: 6px;
         }
 
-        .detail-text {
-            font-size: 14px;
-            color: var(--re-text);
-            font-weight: 500;
-        }
-
-        .application-form-card {
+        .application-form {
             background: var(--re-surface);
-            border-radius: 16px;
-            padding: 32px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
             border: 1px solid var(--re-border);
         }
 
         .form-header {
             text-align: center;
-            margin-bottom: 32px;
+            margin-bottom: 24px;
         }
 
         .form-title {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 700;
             color: var(--re-text);
-            margin: 0 0 8px 0;
+            margin: 0 0 4px 0;
         }
 
         .form-subtitle {
             color: var(--re-text-light);
-            font-size: 16px;
+            font-size: 14px;
             margin: 0;
         }
 
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
         .form-group {
-            margin-bottom: 24px;
+            margin-bottom: 16px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
         }
 
         .form-label {
             display: block;
             font-weight: 600;
             color: var(--re-text);
-            margin-bottom: 8px;
-            font-size: 14px;
+            margin-bottom: 6px;
+            font-size: 13px;
         }
 
         .form-input {
             width: 100%;
-            padding: 16px;
+            padding: 12px 16px;
             border: 2px solid var(--re-border);
-            border-radius: 12px;
-            font-size: 16px;
+            border-radius: 8px;
+            font-size: 14px;
             transition: all 0.3s ease;
             background: var(--re-light-bg);
             color: var(--re-text);
@@ -151,46 +156,47 @@
 
         .input-icon i {
             position: absolute;
-            right: 16px;
+            right: 12px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--re-text-light);
-            font-size: 16px;
+            font-size: 14px;
         }
 
         .input-icon .form-input {
-            padding-right: 48px;
+            padding-right: 40px;
+        }
+
+        .submit-section {
+            text-align: center;
+            margin-top: 24px;
         }
 
         .submit-btn {
             width: 100%;
-            padding: 18px;
+            padding: 16px;
             background: linear-gradient(135deg, var(--re-primary), var(--re-primary-dark));
             color: white;
             border: none;
-            border-radius: 12px;
-            font-size: 18px;
+            border-radius: 8px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 8px;
         }
 
         .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(74, 144, 226, 0.3);
-        }
-
-        .submit-btn:active {
-            transform: translateY(0);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(74, 144, 226, 0.3);
         }
 
         .alert {
-            padding: 16px;
-            border-radius: 12px;
-            margin-bottom: 24px;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
+            font-size: 14px;
         }
 
         .alert-error {
@@ -200,26 +206,18 @@
         }
 
         .alert i {
-            margin-right: 12px;
-            font-size: 18px;
+            margin-right: 10px;
+            font-size: 16px;
         }
 
-        .back-link {
-            display: inline-flex;
-            align-items: center;
-            color: var(--re-primary);
-            text-decoration: none;
-            font-weight: 500;
-            margin-bottom: 24px;
-            transition: color 0.3s ease;
-        }
-
-        .back-link:hover {
-            color: var(--re-primary-dark);
-        }
-
-        .back-link i {
-            margin-right: 8px;
+        .terms-text {
+            text-align: center;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--re-border);
+            color: var(--re-text-light);
+            font-size: 12px;
+            line-height: 1.4;
         }
 
         @media (max-width: 768px) {
@@ -227,8 +225,12 @@
                 padding: 16px;
             }
 
-            .property-card, .application-form-card {
-                padding: 20px;
+            .property-summary, .application-form {
+                padding: 16px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
             }
 
             .property-header {
@@ -238,11 +240,45 @@
 
             .property-icon {
                 margin-right: 0;
-                margin-bottom: 12px;
+                margin-bottom: 8px;
             }
 
             .form-title {
-                font-size: 24px;
+                font-size: 20px;
+            }
+
+            .submit-btn {
+                padding: 14px;
+                font-size: 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .application-container {
+                padding: 12px;
+            }
+
+            .property-summary, .application-form {
+                padding: 12px;
+            }
+
+            .property-details {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+
+            .detail-item {
+                padding: 6px 10px;
+                font-size: 12px;
+            }
+
+            .form-input {
+                padding: 10px 12px;
+                font-size: 14px;
+            }
+
+            .form-title {
+                font-size: 18px;
             }
         }
     </style>
@@ -259,18 +295,15 @@
 </nav>
 
 <div class="application-container">
-    <!-- Property Summary Card -->
-    <div class="property-card">
+    <!-- Property Summary -->
+    <div class="property-summary">
         <div class="property-header">
             <div class="property-icon">
-                <i class="fas fa-building"></i>
+                <i class="fas fa-home"></i>
             </div>
             <div>
                 <h1 class="property-title">{{ listing.title }}</h1>
-                <p class="property-location">
-                    <i class="fas fa-map-marker-alt"></i>
-                    {{ listing.unit.property.name }}, {{ listing.unit.property.city }}
-                </p>
+                <p class="property-location"><i class="fas fa-map-marker-alt"></i> {{ listing.unit.property.name }}, {{ listing.unit.property.city }}</p>
             </div>
         </div>
 
@@ -278,56 +311,44 @@
             {% if listing.unit.monthly_rent %}
             <div class="detail-item">
                 <i class="fas fa-dollar-sign detail-icon"></i>
-                <div>
-                    <div class="detail-text">KSh {{ listing.unit.monthly_rent|floatformat:0 }}</div>
-                    <small style="color: var(--re-text-light);">Monthly Rent</small>
-                </div>
+                <span>KSh {{ listing.unit.monthly_rent|floatformat:0 }}</span>
             </div>
             {% endif %}
 
             {% if listing.unit.unit_number %}
             <div class="detail-item">
                 <i class="fas fa-door-open detail-icon"></i>
-                <div>
-                    <div class="detail-text">{{ listing.unit.unit_number }}</div>
-                    <small style="color: var(--re-text-light);">Unit Number</small>
-                </div>
+                <span>{{ listing.unit.unit_number }}</span>
             </div>
             {% endif %}
 
             {% if listing.unit.bedrooms %}
             <div class="detail-item">
                 <i class="fas fa-bed detail-icon"></i>
-                <div>
-                    <div class="detail-text">{{ listing.unit.bedrooms }}</div>
-                    <small style="color: var(--re-text-light);">Bedrooms</small>
-                </div>
+                <span>{{ listing.unit.bedrooms }} Bedrooms</span>
             </div>
             {% endif %}
 
             {% if listing.unit.bathrooms %}
             <div class="detail-item">
                 <i class="fas fa-bath detail-icon"></i>
-                <div>
-                    <div class="detail-text">{{ listing.unit.bathrooms }}</div>
-                    <small style="color: var(--re-text-light);">Bathrooms</small>
-                </div>
+                <span>{{ listing.unit.bathrooms }} Bathrooms</span>
             </div>
             {% endif %}
         </div>
     </div>
 
-    <!-- Application Form Card -->
-    <div class="application-form-card">
+    <!-- Application Form -->
+    <div class="application-form">
         <div class="form-header">
-            <h2 class="form-title">Submit Your Application</h2>
-            <p class="form-subtitle">Fill out the form below to apply for this property</p>
+            <h2 class="form-title">Apply for this Property</h2>
+            <p class="form-subtitle">Fill in your details to submit your rental application</p>
         </div>
 
         {% if messages %}
             {% for message in messages %}
                 <div class="alert alert-error">
-                    <i class="fas fa-exclamation-circle"></i>
+                    <i class="fas fa-exclamation-triangle"></i>
                     {{ message }}
                 </div>
             {% endfor %}
@@ -336,68 +357,54 @@
         <form method="post" id="applicationForm">
             {% csrf_token %}
 
-            <div class="form-group">
-                <label class="form-label" for="name">
-                    <i class="fas fa-user" style="margin-right: 8px; color: var(--re-primary);"></i>
-                    Full Name *
-                </label>
-                <div class="input-icon">
-                    <input type="text" id="name" name="name" class="form-input" required
-                           placeholder="Enter your full name">
-                    <i class="fas fa-user"></i>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label class="form-label" for="name">Full Name</label>
+                    <div class="input-icon">
+                        <input type="text" id="name" name="name" class="form-input" required
+                               placeholder="Enter your full name">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="email">Email Address</label>
+                    <div class="input-icon">
+                        <input type="email" id="email" name="email" class="form-input" required
+                               placeholder="your@email.com">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="phone">Phone Number</label>
+                    <div class="input-icon">
+                        <input type="tel" id="phone" name="phone" class="form-input" required
+                               placeholder="+254 XXX XXX XXX">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="expected_move_in_date">Expected Move-in Date</label>
+                    <div class="input-icon">
+                        <input type="date" id="expected_move_in_date" name="expected_move_in_date"
+                               class="form-input" required min="{% now 'Y-m-d' %}">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label class="form-label" for="email">
-                    <i class="fas fa-envelope" style="margin-right: 8px; color: var(--re-primary);"></i>
-                    Email Address *
-                </label>
-                <div class="input-icon">
-                    <input type="email" id="email" name="email" class="form-input" required
-                           placeholder="your.email@example.com">
-                    <i class="fas fa-envelope"></i>
-                </div>
+            <div class="submit-section">
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <i class="fas fa-paper-plane"></i> Submit Application
+                </button>
             </div>
-
-            <div class="form-group">
-                <label class="form-label" for="phone">
-                    <i class="fas fa-phone" style="margin-right: 8px; color: var(--re-primary);"></i>
-                    Phone Number *
-                </label>
-                <div class="input-icon">
-                    <input type="tel" id="phone" name="phone" class="form-input" required
-                           placeholder="+254 XXX XXX XXX">
-                    <i class="fas fa-phone"></i>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label" for="expected_move_in_date">
-                    <i class="fas fa-calendar-alt" style="margin-right: 8px; color: var(--re-primary);"></i>
-                    Expected Move-in Date *
-                </label>
-                <div class="input-icon">
-                    <input type="date" id="expected_move_in_date" name="expected_move_in_date"
-                           class="form-input" required min="{% now 'Y-m-d' %}">
-                    <i class="fas fa-calendar-alt"></i>
-                </div>
-                <small style="color: var(--re-text-light); font-size: 12px; margin-top: 4px; display: block;">
-                    Select when you plan to move in
-                </small>
-            </div>
-
-            <button type="submit" class="submit-btn" id="submitBtn">
-                <i class="fas fa-paper-plane" style="margin-right: 8px;"></i>
-                Submit Application
-            </button>
         </form>
 
-        <div style="text-align: center; margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--re-border);">
-            <p style="color: var(--re-text-light); font-size: 14px; margin: 0;">
-                By submitting this application, you agree to our terms and conditions.
-                The landlord will review your application and contact you soon.
-            </p>
+        <div class="terms-text">
+            By submitting this application, you agree to our terms and conditions.
+            We'll review your application and contact you within 24-48 hours.
         </div>
     </div>
 </div>
