@@ -49,7 +49,7 @@
               <i class="fas fa-{% if notification.is_read %}envelope-open{% else %}envelope{% endif %}"></i>
             </div>
             <div class="notif-content">
-              <p>{{ notification.message }}</p>
+              <p>{% autoescape off %}{{ notification.message|safe }}{% endautoescape %}</p>
             </div>
             <button onclick="event.stopPropagation();deleteNotification({{ notification.id }})" title="Dismiss" style="background:none;border:none;color:var(--re-text-light);cursor:pointer;padding:4px 8px;font-size:.9rem;border-radius:6px" onmouseover="this.style.color='var(--re-danger)'" onmouseout="this.style.color='var(--re-text-light)'">
               <i class="fas fa-times"></i>

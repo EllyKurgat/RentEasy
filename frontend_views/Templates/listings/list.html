@@ -69,6 +69,20 @@
             .search-field { min-width: 100%; }
             .search-btn { width: 100%; text-align: center; justify-content: center; }
         }
+        .amenity-chip { display:inline-flex; align-items:center; gap:4px; padding:3px 8px; background:var(--re-light-bg); border:1px solid var(--re-border); border-radius:12px; font-size:0.7rem; color:var(--re-text-secondary); font-weight:500; }
+        .amenity-chip i { color:var(--re-primary); font-size:0.65rem; }
+        .feature-item { display:flex; align-items:center; font-size:0.8rem; color:var(--re-text); }
+        .feature-item i { margin-right:3px; }
+        @media (max-width: 480px) {
+            .amenity-chip { font-size:0.65rem; padding:2px 6px; }
+        }
+        .filter-btn { padding:6px 12px; border:1px solid var(--re-border); background:var(--re-light-bg); color:var(--re-text-secondary); border-radius:20px; font-size:0.8rem; cursor:pointer; transition:all 0.2s; white-space:nowrap; }
+        .filter-btn:hover { background:var(--re-primary); color:#fff; border-color:var(--re-primary); }
+        .filter-btn.active { background:var(--re-primary); color:#fff; border-color:var(--re-primary); }
+        .quick-filters { display:flex; gap:8px; flex-wrap:wrap; }
+        @media (max-width: 768px) {
+            .quick-filters { display:none; } /* Hide on mobile to save space */
+        }
         body.dark .search-bar { background:var(--re-surface); box-shadow:0 2px 12px rgba(0,0,0,0.2); }
         body.dark .listing-card { background:var(--re-surface); box-shadow:0 4px 16px rgba(0,0,0,0.2); }
     </style>
@@ -79,7 +93,6 @@
     <div class="topnav" id="topnav">
         <a href="{% url 'home' %}"><img src="{% static 'img/renteasylogo10.png' %}" alt="RentEasy"></a>
         <div class="top2">
-            <a href="{% url 'home' %}">HOME</a>
             <a href="{% url 'listing_list' %}" class="active10">BROWSE RENTALS</a>
         </div>
         <div class="userbox2">
@@ -101,44 +114,65 @@
     <p style="color:var(--re-text-secondary);margin:0 0 20px;">Find your perfect rental property</p>
 
     <!-- ── Search / Filter Bar ── -->
-    <form method="get" class="search-bar" id="searchForm">
-        <div class="search-row">
-            <div class="search-field" style="flex:2;">
-                <label><i class="fa-solid fa-magnifying-glass"></i> Search</label>
-                <input type="text" name="q" value="{{ q }}" placeholder="Location, title, keyword...">
+    <div class="search-bar">
+        <form method="get" id="searchForm">
+            <div class="search-row">
+                <div class="search-field" style="flex:2;">
+                    <label><i class="fa-solid fa-magnifying-glass"></i> Search Location or Property</label>
+                    <input type="text" name="q" value="{{ q }}" placeholder="e.g. Kilimani, Westlands, bedsitter...">
+                </div>
+                <div class="search-field">
+                    <label><i class="fa-solid fa-home"></i> Property Type</label>
+                    <select name="category">
+                        <option value="">All Types</option>
+                        <option value="bedsitter" {% if category == 'bedsitter' %}selected{% endif %}>Bedsitter</option>
+                        <option value="1bedroom" {% if category == '1bedroom' %}selected{% endif %}>1 Bedroom</option>
+                        <option value="2bedroom" {% if category == '2bedroom' %}selected{% endif %}>2 Bedroom</option>
+                        <option value="officeroom" {% if category == 'officeroom' %}selected{% endif %}>Office Room</option>
+                        <option value="residential" {% if category == 'residential' %}selected{% endif %}>Residential</option>
+                    </select>
+                </div>
+                <div class="search-field">
+                    <label><i class="fa-solid fa-coins"></i> Price Range</label>
+                    <div style="display:flex;gap:8px;">
+                        <input type="number" name="rent_min" value="{{ rent_min }}" placeholder="Min" style="flex:1;">
+                        <input type="number" name="rent_max" value="{{ rent_max }}" placeholder="Max" style="flex:1;">
+                    </div>
+                </div>
+                <div class="search-field">
+                    <label><i class="fa-solid fa-calendar"></i> Available From</label>
+                    <input type="date" name="available_from" value="{{ available_from }}">
+                </div>
+                <!-- hidden sort field preserved across searches -->
+                <input type="hidden" name="sort" id="sortInput" value="{{ sort }}">
+                <button type="submit" class="search-btn"><i class="fa-solid fa-search"></i> Search</button>
             </div>
-            <div class="search-field">
-                <label>Category</label>
-                <select name="category">
-                    <option value="">All types</option>
-                    <option value="1bedroom" {% if category == '1bedroom' %}selected{% endif %}>1 Bedroom</option>
-                    <option value="2bedroom" {% if category == '2bedroom' %}selected{% endif %}>2 Bedroom</option>
-                    <option value="bedsitter" {% if category == 'bedsitter' %}selected{% endif %}>Bedsitter</option>
-                    <option value="officeroom" {% if category == 'officeroom' %}selected{% endif %}>Office</option>
-                    <option value="residential" {% if category == 'residential' %}selected{% endif %}>Residential</option>
-                </select>
-            </div>
-            <div class="search-field" style="min-width:100px;">
-                <label>Min rent</label>
-                <input type="number" name="rent_min" value="{{ rent_min }}" placeholder="0" step="500">
-            </div>
-            <div class="search-field" style="min-width:100px;">
-                <label>Max rent</label>
-                <input type="number" name="rent_max" value="{{ rent_max }}" placeholder="Any" step="500">
-            </div>
-            <div class="search-field" style="min-width:130px;">
-                <label>Available by</label>
-                <input type="date" name="available_from" value="{{ available_from }}">
-            </div>
-            <!-- hidden sort field preserved across searches -->
-            <input type="hidden" name="sort" id="sortInput" value="{{ sort }}">
-            <button type="submit" class="search-btn"><i class="fa-solid fa-search"></i> Search</button>
-        </div>
-    </form>
+        </form>
+    </div>
 
     <!-- ── Sort Row ── -->
     <div class="sort-row">
-        <span class="result-count">{{ listings|length }} listing{{ listings|length|pluralize }} found</span>
+        <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+            <span class="result-count">
+                <i class="fa-solid fa-home" style="margin-right:6px;color:var(--re-primary);"></i>
+                {{ listings|length }} listing{{ listings|length|pluralize }} found
+            </span>
+            <!-- Quick filters -->
+            <div class="quick-filters" style="display:flex;gap:8px;flex-wrap:wrap;">
+                <button type="button" class="filter-btn {% if not category and not rent_min and not rent_max %}active{% endif %}" onclick="clearFilters()">
+                    <i class="fa-solid fa-list"></i> All
+                </button>
+                <button type="button" class="filter-btn" onclick="setCategory('bedsitter')">
+                    <i class="fa-solid fa-bed"></i> Bedsitters
+                </button>
+                <button type="button" class="filter-btn" onclick="setCategory('1bedroom')">
+                    <i class="fa-solid fa-home"></i> 1 Bedroom
+                </button>
+                <button type="button" class="filter-btn" onclick="setPriceRange(0, 15000)">
+                    <i class="fa-solid fa-coins"></i> Under 15K
+                </button>
+            </div>
+        </div>
         <div style="display:flex;align-items:center;gap:8px;">
             <label style="font-size:0.9rem;color:var(--re-text-secondary);white-space:nowrap;">Sort by:</label>
             <select id="sortSelect" onchange="document.getElementById('sortInput').value=this.value;document.getElementById('searchForm').submit();">
@@ -154,31 +188,130 @@
     <div class="listings-grid">
         {% for l in listings %}
         <a href="{% url 'listing_detail' l.pk %}" class="listing-card">
-            <div style="height:170px;overflow:hidden;background:#F1F5F9;">
+            <div style="position:relative;height:180px;overflow:hidden;background:#F1F5F9;border-radius:12px 12px 0 0;">
                 {% if l.photos and l.photos.0 %}
                 <img src="{{ MEDIA_URL }}{{ l.photos.0 }}" alt="{{ l.title }}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
                 {% else %}
                 <img src="{% static 'img/housessrent.jpg' %}" alt="{{ l.title }}" style="width:100%;height:100%;object-fit:cover;" loading="lazy">
                 {% endif %}
+                <!-- Property type badge -->
+                <div style="position:absolute;top:12px;left:12px;background:var(--re-primary);color:#fff;padding:4px 10px;border-radius:20px;font-size:0.7rem;font-weight:600;text-transform:uppercase;">
+                    {% if l.unit.property.property_type == 'bedsitter' %}Bedsitter{% elif l.unit.property.property_type == '1bedroom' %}1 Bedroom{% elif l.unit.property.property_type == '2bedroom' %}2 Bedroom{% elif l.unit.property.property_type == 'officeroom' %}Office{% else %}Residential{% endif %}
+                </div>
+                <!-- Price badge -->
+                <div style="position:absolute;top:12px;right:12px;background:#fff;color:var(--re-primary);padding:6px 12px;border-radius:20px;font-size:0.8rem;font-weight:700;box-shadow:0 2px 8px rgba(0,0,0,0.15);">
+                    KSh {{ l.rent_amount|intcomma }}
+                </div>
             </div>
             <div class="listing-card-body">
-                <h3>{{ l.title }}</h3>
-                <p class="listing-card-loc"><i class="fa-solid fa-location-dot"></i> {{ l.property_location }}</p>
-                <p class="listing-card-price">KSh {{ l.rent_amount|intcomma }}/mo</p>
+                <h3 style="margin:0 0 8px 0;color:var(--re-text);font-size:1.1rem;line-height:1.3;">{{ l.title }}</h3>
+                <div class="listing-card-loc" style="margin-bottom:12px;">
+                    <i class="fa-solid fa-location-dot"></i> {{ l.property_location }}
+                </div>
+
+                <!-- Amenities preview -->
+                {% if l.amenities %}
+                <div class="amenities-preview" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;">
+                    {% if l.amenities.distance_from_tarmac %}
+                    <span class="amenity-chip"><i class="fa-solid fa-road"></i> {{ l.amenities.distance_from_tarmac }}km</span>
+                    {% endif %}
+                    {% if l.amenities.parking %}
+                    <span class="amenity-chip"><i class="fa-solid fa-car"></i> Parking</span>
+                    {% endif %}
+                    {% if l.amenities.water_availability %}
+                    <span class="amenity-chip"><i class="fa-solid fa-tint"></i> Water</span>
+                    {% endif %}
+                    {% if l.amenities.distance_from_town %}
+                    <span class="amenity-chip"><i class="fa-solid fa-city"></i> {{ l.amenities.distance_from_town }}km town</span>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <!-- Property features -->
+                <div class="property-features" style="display:flex;gap:16px;margin-bottom:12px;">
+                    {% if l.unit.bedrooms %}
+                    <div class="feature-item">
+                        <i class="fa-solid fa-bed" style="color:var(--re-primary);margin-right:4px;"></i>
+                        <span style="font-size:0.85rem;color:var(--re-text-secondary);">{{ l.unit.bedrooms }} bed{{ l.unit.bedrooms|pluralize }}</span>
+                    </div>
+                    {% endif %}
+                    {% if l.unit.bathrooms %}
+                    <div class="feature-item">
+                        <i class="fa-solid fa-bath" style="color:var(--re-primary);margin-right:4px;"></i>
+                        <span style="font-size:0.85rem;color:var(--re-text-secondary);">{{ l.unit.bathrooms }} bath{{ l.unit.bathrooms|pluralize }}</span>
+                    </div>
+                    {% endif %}
+                </div>
             </div>
             <div class="listing-card-footer">
-                <span class="avail">{% if l.available_from %}<i class="fa-regular fa-calendar"></i> {{ l.available_from|date:"M d, Y" }}{% else %}Available now{% endif %}</span>
+                <span class="avail">
+                    {% if l.available_from %}
+                    <i class="fa-regular fa-calendar"></i> Available {{ l.available_from|date:"M d, Y" }}
+                    {% else %}
+                    <i class="fa-solid fa-check-circle" style="color:#10b981;"></i> Available now
+                    {% endif %}
+                </span>
                 <span class="view-link">View details <i class="fa-solid fa-arrow-right"></i></span>
             </div>
         </a>
         {% empty %}
-        <div style="grid-column:1/-1;text-align:center;padding:48px;background:var(--re-surface);border-radius:12px;">
-            <i class="fa-solid fa-house-circle-xmark" style="font-size:2.5rem;color:var(--re-text-secondary);margin-bottom:12px;"></i>
-            <p style="color:var(--re-text-secondary);font-size:1.1rem;">No listings found. Try different search filters.</p>
+        <div style="grid-column:1/-1;text-align:center;padding:64px 32px;background:var(--re-surface);border-radius:16px;border:2px dashed var(--re-border);">
+            <div style="max-width:400px;margin:0 auto;">
+                <i class="fa-solid fa-house-circle-xmark" style="font-size:3rem;color:var(--re-text-secondary);margin-bottom:16px;display:block;"></i>
+                <h3 style="color:var(--re-text);margin:0 0 8px;font-size:1.3rem;">No listings found</h3>
+                <p style="color:var(--re-text-secondary);margin:0 0 20px;font-size:1rem;">Try adjusting your search filters or browse different categories.</p>
+                <a href="{% url 'listing_list' %}" class="search-btn" style="display:inline-block;text-decoration:none;padding:12px 24px;border-radius:8px;">Browse All Listings</a>
+            </div>
         </div>
         {% endfor %}
     </div>
 </div>
+
+<script>
+function clearFilters() {
+    const form = document.getElementById('searchForm');
+    form.q.value = '';
+    form.category.value = '';
+    form.rent_min.value = '';
+    form.rent_max.value = '';
+    form.available_from.value = '';
+    form.submit();
+}
+
+function setCategory(category) {
+    const form = document.getElementById('searchForm');
+    form.category.value = category;
+    form.submit();
+}
+
+function setPriceRange(min, max) {
+    const form = document.getElementById('searchForm');
+    form.rent_min.value = min;
+    form.rent_max.value = max;
+    form.submit();
+}
+
+// Update active filter button
+document.addEventListener('DOMContentLoaded', function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const category = urlParams.get('category');
+    const rentMin = urlParams.get('rent_min');
+    const rentMax = urlParams.get('rent_max');
+
+    document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+
+    if (!category && !rentMin && !rentMax) {
+        document.querySelector('.filter-btn').classList.add('active');
+    } else if (category === 'bedsitter') {
+        document.querySelector('[onclick*="bedsitter"]').classList.add('active');
+    } else if (category === '1bedroom') {
+        document.querySelector('[onclick*="1bedroom"]').classList.add('active');
+    } else if (rentMax === '15000') {
+        document.querySelector('[onclick*="15000"]').classList.add('active');
+    }
+});
+</script>
+
 </body>
 </html>
 

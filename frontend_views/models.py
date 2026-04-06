@@ -80,6 +80,7 @@ class Property(models.Model):
     monthly_rent = models.PositiveIntegerField(default=0)
     rooms_total = models.PositiveIntegerField(default=1)
     image = models.FileField(upload_to="property_images/", blank=True, null=True)
+    amenities = models.JSONField(default=dict)
     created_at = models.DateTimeField(default=timezone.now)
 
     def __str__(self) -> str:

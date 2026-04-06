@@ -23,7 +23,6 @@ urlpatterns = [
     path('landlord/listings/', views.LandLord_listings, name='landlord_listings'),
     path('landlord/listings/create/', views.LandLord_create_listing, name='create_listing'),
     path('landlord/applications/', views.LandLord_applications, name='landlord_applications'),
-    path('landlord/applications/suggestions/', views.LandLord_application_suggestions, name='landlord_application_suggestions'),
     path('landlord/applications/<int:pk>/action/', views.LandLord_application_action, name='application_action'),
     path('landlord/maintenance/', views.LandLord_maintenance, name='landlord_maintenance'),
     path('landlord/maintenance/<int:pk>/', views.LandLord_maintenance_detail, name='landlord_maintenance_detail'),

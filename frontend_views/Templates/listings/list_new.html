@@ -1,0 +1,450 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}?v=23">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}?v=23">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/e1db635686.js" crossorigin="anonymous"></script>
+    <title>Browse Listings - RentEasy</title>
+    <link rel="icon" href="{% static 'img/faviclogo.png' %}">
+    <style>
+        /* ── Reset & base ── */
+        *, *::before, *::after { box-sizing: border-box; }
+
+        /* ── Page wrapper ── */
+        .re-page { max-width: 1140px; margin: 0 auto; padding: 32px 20px 56px; }
+
+        /* ── Page header ── */
+        .re-page-header { margin-bottom: 28px; }
+        .re-page-header h1 { font-size: 1.6rem; font-weight: 600; color: var(--re-primary); margin: 0 0 4px; }
+        .re-page-header p  { font-size: 0.9rem; color: var(--re-text-secondary); margin: 0; }
+
+        /* ── Search box ── */
+        .re-search { background: var(--re-surface); border: 1px solid var(--re-border); border-radius: 14px; padding: 20px 22px; margin-bottom: 22px; }
+        .re-search-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: flex-end; }
+        .re-field { display: flex; flex-direction: column; gap: 5px; }
+        .re-field.grow  { flex: 2; min-width: 200px; }
+        .re-field.shrink { flex: 1; min-width: 130px; }
+        .re-field label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--re-text-secondary); }
+        .re-field input,
+        .re-field select {
+            padding: 9px 11px;
+            border: 1px solid var(--re-input-border);
+            border-radius: 8px;
+            font-size: 0.875rem;
+            background: var(--re-input-bg);
+            color: var(--re-text);
+            outline: none;
+            transition: border-color 0.15s;
+            font-family: inherit;
+        }
+        .re-field input:focus,
+        .re-field select:focus { border-color: var(--re-primary); }
+        .re-price-pair { display: flex; gap: 6px; }
+        .re-price-pair input { flex: 1; }
+        .re-search-btn {
+            padding: 9px 22px;
+            background: var(--re-primary);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background 0.15s;
+            font-family: inherit;
+        }
+        .re-search-btn:hover { background: var(--re-primary-hover); }
+
+        /* ── Toolbar ── */
+        .re-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 10px; }
+        .re-toolbar-left { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+        .re-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+        .re-chip {
+            padding: 5px 13px;
+            border: 1px solid var(--re-border);
+            border-radius: 20px;
+            font-size: 0.78rem;
+            color: var(--re-text-secondary);
+            background: var(--re-light-bg);
+            cursor: pointer;
+            transition: all 0.15s;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+        .re-chip:hover { border-color: var(--re-primary); color: var(--re-primary); background: var(--re-surface); }
+        .re-chip.active { background: var(--re-primary); color: #fff; border-color: var(--re-primary); }
+        .re-result-count { font-size: 0.85rem; color: var(--re-text-secondary); }
+        .re-result-count strong { color: var(--re-text); }
+        .re-sort-select {
+            padding: 7px 11px;
+            border: 1px solid var(--re-input-border);
+            border-radius: 8px;
+            font-size: 0.82rem;
+            background: var(--re-input-bg);
+            color: var(--re-text-secondary);
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        /* ── Listings grid ── */
+        .re-grid { display: grid; grid-template-columns: 1fr; gap: 18px; }
+        @media (min-width: 520px)  { .re-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 900px)  { .re-grid { grid-template-columns: repeat(3, 1fr); } }
+
+        /* ── Card ── */
+        .re-card {
+            background: var(--re-surface);
+            border: 1px solid var(--re-border);
+            border-radius: 14px;
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.18s, border-color 0.18s, box-shadow 0.18s;
+        }
+        .re-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--re-primary);
+            box-shadow: 0 8px 28px rgba(0,0,0,0.09);
+        }
+
+        /* Card image */
+        .re-card-img { position: relative; height: 172px; overflow: hidden; background: var(--re-light-bg); }
+        .re-card-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.3s; }
+        .re-card:hover .re-card-img img { transform: scale(1.03); }
+        .re-card-img-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; opacity: 0.15; }
+        .re-card-img-placeholder i { font-size: 2.5rem; color: var(--re-text-secondary); }
+
+        /* Badges on image */
+        .re-badge {
+            position: absolute;
+            font-size: 0.68rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+            line-height: 1;
+        }
+        .re-badge-type {
+            top: 10px; left: 10px;
+            background: rgba(255,255,255,0.92);
+            color: #222;
+            border: 1px solid rgba(0,0,0,0.08);
+        }
+        body.dark .re-badge-type { background: rgba(30,30,30,0.88); color: #eee; border-color: rgba(255,255,255,0.1); }
+        .re-badge-price {
+            top: 10px; right: 10px;
+            background: var(--re-primary);
+            color: #fff;
+            font-size: 0.75rem;
+        }
+        .re-badge-avail {
+            bottom: 10px; left: 10px;
+            background: rgba(255,255,255,0.9);
+            color: #444;
+            display: flex; align-items: center; gap: 5px;
+            border: 1px solid rgba(0,0,0,0.07);
+        }
+        body.dark .re-badge-avail { background: rgba(30,30,30,0.88); color: #ccc; border-color: rgba(255,255,255,0.1); }
+        .re-avail-dot { width: 6px; height: 6px; background: #22c55e; border-radius: 50%; flex-shrink: 0; }
+
+        /* Card body */
+        .re-card-body { padding: 14px 16px; flex: 1; display: flex; flex-direction: column; gap: 8px; }
+        .re-card-title { font-size: 0.95rem; font-weight: 600; color: var(--re-text); line-height: 1.35; }
+        .re-card-loc  { font-size: 0.8rem; color: var(--re-text-secondary); display: flex; align-items: center; gap: 5px; }
+        .re-card-loc i { color: var(--re-primary); font-size: 0.75rem; }
+
+        /* Amenity chips */
+        .re-amenities { display: flex; flex-wrap: wrap; gap: 5px; }
+        .re-amenity {
+            font-size: 0.7rem;
+            color: var(--re-text-secondary);
+            background: var(--re-light-bg);
+            border: 1px solid var(--re-border);
+            padding: 2px 8px;
+            border-radius: 10px;
+            display: flex; align-items: center; gap: 3px;
+        }
+        .re-amenity i { color: var(--re-primary); font-size: 0.65rem; }
+
+        /* Card footer */
+        .re-card-footer {
+            padding: 10px 16px;
+            border-top: 1px solid var(--re-border);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .re-features { display: flex; gap: 12px; }
+        .re-feat { font-size: 0.78rem; color: var(--re-text-secondary); display: flex; align-items: center; gap: 4px; }
+        .re-feat i { color: var(--re-primary); font-size: 0.72rem; }
+        .re-view-link { font-size: 0.8rem; font-weight: 600; color: var(--re-primary); display: flex; align-items: center; gap: 4px; }
+
+        /* ── Empty state ── */
+        .re-empty {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 64px 32px;
+            background: var(--re-surface);
+            border: 2px dashed var(--re-border);
+            border-radius: 16px;
+        }
+        .re-empty i { font-size: 2.8rem; color: var(--re-text-secondary); display: block; margin-bottom: 14px; }
+        .re-empty h3 { font-size: 1.2rem; color: var(--re-text); margin: 0 0 8px; }
+        .re-empty p  { font-size: 0.95rem; color: var(--re-text-secondary); margin: 0 0 20px; }
+        .re-empty a  { display: inline-block; padding: 10px 22px; background: var(--re-primary); color: #fff; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem; }
+        .re-empty a:hover { background: var(--re-primary-hover); }
+
+        /* ── Mobile tweaks ── */
+        @media (max-width: 480px) {
+            .re-field.grow, .re-field.shrink { min-width: 100%; }
+            .re-search-btn { width: 100%; text-align: center; }
+            .re-chips { display: none; }
+        }
+    </style>
+</head>
+<body class="theme-landlord landing-body">
+<script src="{% static 'Js/theme.js' %}?v=23"></script>
+
+<!-- ── Nav ── -->
+<nav>
+    <div class="topnav" id="topnav">
+        <a href="{% url 'home' %}"><img src="{% static 'img/renteasylogo10.png' %}" alt="RentEasy"></a>
+        <div class="top2">
+            <a href="{% url 'home' %}">HOME</a>
+            <a href="{% url 'listing_list' %}" class="active10">BROWSE RENTALS</a>
+        </div>
+        <div class="userbox2">
+            {% if user.is_authenticated %}
+            <a class="login2" href="{% url 'home' %}"><i class="fa-solid fa-house"></i> Home</a>
+            <a class="login2 primary" href="{% url 'userdash' %}">Dashboard</a>
+            <form method="post" action="{% url 'logout' %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="login2" style="background:none;border:none;cursor:pointer;font:inherit;color:inherit;padding:0;">Logout</button>
+            </form>
+            {% else %}
+            <a class="login2" href="{% url 'home' %}"><i class="fa-solid fa-house"></i> Home</a>
+            <a class="login2" href="{% url 'user_login' %}">Sign In</a>
+            <a class="login2 primary" href="{% url 'register' %}">Sign Up</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+<!-- ── Page ── -->
+<div class="re-page">
+
+    <!-- Header -->
+    <div class="re-page-header">
+        <h1>Browse rentals</h1>
+        <p>Find your perfect home in Kenya</p>
+    </div>
+
+    <!-- Search bar -->
+    <div class="re-search">
+        <form method="get" id="searchForm">
+            <div class="re-search-row">
+                <div class="re-field grow">
+                    <label><i class="fa-solid fa-magnifying-glass"></i> Location or property</label>
+                    <input type="text" name="q" value="{{ q }}" placeholder="e.g. Kilimani, bedsitter, Westlands…">
+                </div>
+                <div class="re-field shrink">
+                    <label><i class="fa-solid fa-home"></i> Type</label>
+                    <select name="category">
+                        <option value="">All types</option>
+                        <option value="bedsitter"   {% if category == 'bedsitter'   %}selected{% endif %}>Bedsitter</option>
+                        <option value="1bedroom"    {% if category == '1bedroom'    %}selected{% endif %}>1 Bedroom</option>
+                        <option value="2bedroom"    {% if category == '2bedroom'    %}selected{% endif %}>2 Bedroom</option>
+                        <option value="officeroom"  {% if category == 'officeroom'  %}selected{% endif %}>Office room</option>
+                        <option value="residential" {% if category == 'residential' %}selected{% endif %}>Residential</option>
+                    </select>
+                </div>
+                <div class="re-field shrink">
+                    <label><i class="fa-solid fa-coins"></i> Price range (KSh)</label>
+                    <div class="re-price-pair">
+                        <input type="number" name="rent_min" value="{{ rent_min }}" placeholder="Min">
+                        <input type="number" name="rent_max" value="{{ rent_max }}" placeholder="Max">
+                    </div>
+                </div>
+                <div class="re-field shrink">
+                    <label><i class="fa-regular fa-calendar"></i> Available from</label>
+                    <input type="date" name="available_from" value="{{ available_from }}">
+                </div>
+                <!-- Preserve sort across searches -->
+                <input type="hidden" name="sort" id="sortInput" value="{{ sort }}">
+                <button type="submit" class="re-search-btn">
+                    <i class="fa-solid fa-search"></i> Search
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="re-toolbar">
+        <div class="re-toolbar-left">
+            <!-- Quick-filter chips -->
+            <div class="re-chips">
+                <button type="button"
+                    class="re-chip {% if not category and not rent_min and not rent_max %}active{% endif %}"
+                    onclick="clearFilters()">
+                    All
+                </button>
+                <button type="button"
+                    class="re-chip {% if category == 'bedsitter' %}active{% endif %}"
+                    onclick="setCategory('bedsitter')">
+                    Bedsitters
+                </button>
+                <button type="button"
+                    class="re-chip {% if category == '1bedroom' %}active{% endif %}"
+                    onclick="setCategory('1bedroom')">
+                    1 Bedroom
+                </button>
+                <button type="button"
+                    class="re-chip {% if rent_max == '15000' %}active{% endif %}"
+                    onclick="setPriceRange(0, 15000)">
+                    Under 15K
+                </button>
+            </div>
+            <span class="re-result-count">
+                <strong>{{ listings|length }}</strong> listing{{ listings|length|pluralize }} found
+            </span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+            <label style="font-size:0.82rem;color:var(--re-text-secondary);white-space:nowrap;">Sort:</label>
+            <select class="re-sort-select" id="sortSelect"
+                onchange="document.getElementById('sortInput').value=this.value;document.getElementById('searchForm').submit();">
+                <option value="newest"     {% if sort == 'newest'     %}selected{% endif %}>Newest first</option>
+                <option value="price_asc"  {% if sort == 'price_asc'  %}selected{% endif %}>Price: low → high</option>
+                <option value="price_desc" {% if sort == 'price_desc' %}selected{% endif %}>Price: high → low</option>
+                <option value="rating"     {% if sort == 'rating'     %}selected{% endif %}>Top rated</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Listings grid -->
+    <div class="re-grid">
+        {% for l in listings %}
+        <a href="{% url 'listing_detail' l.pk %}" class="re-card">
+
+            <!-- Image -->
+            <div class="re-card-img">
+                {% if l.photos and l.photos.0 %}
+                <img src="{{ MEDIA_URL }}{{ l.photos.0 }}" alt="{{ l.title }}" loading="lazy">
+                {% else %}
+                <div class="re-card-img-placeholder">
+                    <i class="fa-solid fa-building"></i>
+                </div>
+                {% endif %}
+
+                <!-- Type badge -->
+                <span class="re-badge re-badge-type">
+                    {% if l.unit.property.property_type == 'bedsitter' %}Bedsitter
+                    {% elif l.unit.property.property_type == '1bedroom' %}1 Bedroom
+                    {% elif l.unit.property.property_type == '2bedroom' %}2 Bedroom
+                    {% elif l.unit.property.property_type == 'officeroom' %}Office
+                    {% else %}Residential{% endif %}
+                </span>
+
+                <!-- Price badge -->
+                <span class="re-badge re-badge-price">KSh {{ l.rent_amount|intcomma }}</span>
+
+                <!-- Availability badge -->
+                <span class="re-badge re-badge-avail">
+                    {% if l.available_from %}
+                    <i class="fa-regular fa-calendar" style="font-size:0.65rem;"></i>
+                    {{ l.available_from|date:"M d, Y" }}
+                    {% else %}
+                    <span class="re-avail-dot"></span>
+                    Available now
+                    {% endif %}
+                </span>
+            </div>
+
+            <!-- Body -->
+            <div class="re-card-body">
+                <div class="re-card-title">{{ l.title }}</div>
+                <div class="re-card-loc">
+                    <i class="fa-solid fa-location-dot"></i>
+                    {{ l.property_location }}
+                </div>
+
+                <!-- Amenity chips -->
+                {% if l.amenities %}
+                <div class="re-amenities">
+                    {% if l.amenities.distance_from_tarmac %}
+                    <span class="re-amenity"><i class="fa-solid fa-road"></i> {{ l.amenities.distance_from_tarmac }}km tarmac</span>
+                    {% endif %}
+                    {% if l.amenities.parking %}
+                    <span class="re-amenity"><i class="fa-solid fa-car"></i> Parking</span>
+                    {% endif %}
+                    {% if l.amenities.water_availability %}
+                    <span class="re-amenity"><i class="fa-solid fa-droplet"></i> Water</span>
+                    {% endif %}
+                    {% if l.amenities.distance_from_town %}
+                    <span class="re-amenity"><i class="fa-solid fa-city"></i> {{ l.amenities.distance_from_town }}km town</span>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Footer -->
+            <div class="re-card-footer">
+                <div class="re-features">
+                    {% if l.unit.bedrooms %}
+                    <span class="re-feat">
+                        <i class="fa-solid fa-bed"></i>
+                        {{ l.unit.bedrooms }} bed{{ l.unit.bedrooms|pluralize }}
+                    </span>
+                    {% endif %}
+                    {% if l.unit.bathrooms %}
+                    <span class="re-feat">
+                        <i class="fa-solid fa-bath"></i>
+                        {{ l.unit.bathrooms }} bath{{ l.unit.bathrooms|pluralize }}
+                    </span>
+                    {% endif %}
+                </div>
+                <span class="re-view-link">View <i class="fa-solid fa-arrow-right" style="font-size:0.7rem;"></i></span>
+            </div>
+        </a>
+        {% empty %}
+        <div class="re-empty">
+            <i class="fa-solid fa-house-circle-xmark"></i>
+            <h3>No listings found</h3>
+            <p>Try adjusting your filters or browse all available properties.</p>
+            <a href="{% url 'listing_list' %}">Browse all listings</a>
+        </div>
+        {% endfor %}
+    </div>
+
+</div><!-- /re-page -->
+
+<script>
+function clearFilters() {
+    const f = document.getElementById('searchForm');
+    f.q.value = '';
+    f.category.value = '';
+    f.rent_min.value = '';
+    f.rent_max.value = '';
+    f.available_from.value = '';
+    f.submit();
+}
+
+function setCategory(cat) {
+    document.getElementById('searchForm').category.value = cat;
+    document.getElementById('searchForm').submit();
+}
+
+function setPriceRange(min, max) {
+    const f = document.getElementById('searchForm');
+    f.rent_min.value = min;
+    f.rent_max.value = max;
+    f.submit();
+}
+</script>
+
+</body>
+</html>

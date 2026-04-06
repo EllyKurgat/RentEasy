@@ -12,50 +12,227 @@
     <title>{{ listing.title }} - RentEasy</title>
     <link rel="icon" href="{% static 'img/faviclogo.png' %}">
     <style>
-        .detail-wrap { max-width:900px; margin:0 auto; padding:20px 16px; }
-        .detail-header h1 { color:var(--re-primary); margin:0 0 6px; font-size:1.4rem; }
-        .detail-header .location { color:var(--re-text-secondary); font-size:0.9rem; margin:0 0 10px; }
-        .detail-price { display:flex; gap:16px; flex-wrap:wrap; align-items:center; margin-bottom:12px; }
-        .detail-price .price { font-size:1.3rem; font-weight:700; color:var(--re-text); }
-        .detail-price .deposit { font-size:0.85rem; color:var(--re-text-secondary); background:var(--re-surface-alt); padding:4px 10px; border-radius:20px; }
-        .detail-grid { display:flex; flex-direction:column; gap:24px; max-width:700px; margin:0 auto; }
-        @media(min-width:768px) { 
-            .detail-grid { max-width:900px; }
-            .detail-header h1 { font-size:1.8rem; }
-            .detail-price { gap:24px; margin-bottom:16px; }
-            .detail-price .price { font-size:1.5rem; }
-            .detail-price .deposit { font-size:1rem; padding:6px 14px; }
+        /* ── Reset & base ── */
+        *, *::before, *::after { box-sizing: border-box; }
+
+        /* ── Page wrapper ── */
+        .detail-wrap { max-width: 1140px; margin: 80px auto 0; padding: 32px 20px 56px; }
+
+        /* ── Page header ── */
+        .detail-header { margin-bottom: 28px; text-align: center; }
+        .detail-header h1 { font-size: 2.2rem; font-weight: 700; color: var(--re-primary); margin: 0 0 8px; line-height: 1.2; }
+        .detail-header .location { color: var(--re-text-secondary); font-size: 1.1rem; margin: 0; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .detail-header .location i { color: var(--re-primary); font-size: 1.2rem; }
+
+        /* ── Hero section ── */
+        .detail-hero { display: grid; grid-template-columns: 1fr 400px; gap: 32px; margin-bottom: 32px; }
+        @media (max-width: 1024px) { .detail-hero { grid-template-columns: 1fr; gap: 24px; } }
+
+        /* Photo gallery */
+        .detail-photos { position: relative; border-radius: 16px; overflow: hidden; background: var(--re-light-bg); min-height: 400px; }
+        .detail-photos img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .detail-photos-placeholder { width: 100%; height: 400px; display: flex; align-items: center; justify-content: center; background: var(--re-light-bg); border-radius: 16px; }
+        .detail-photos-placeholder i { font-size: 4rem; color: var(--re-text-secondary); opacity: 0.3; }
+
+        /* Price card */
+        .detail-price-card {
+            background: linear-gradient(135deg, var(--re-primary), var(--re-primary-dark));
+            color: #fff;
+            padding: 32px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(74, 144, 226, 0.3);
+            position: relative;
+            overflow: hidden;
         }
-        .detail-main .desc { color:var(--re-text); line-height:1.8; margin-bottom:12px; font-size:0.95rem; }
-        .detail-avail { display:inline-flex; align-items:center; gap:8px; padding:6px 12px; background:var(--re-surface-alt); border-radius:8px; color:var(--re-text-secondary); font-size:0.85rem; margin-bottom:20px; }
-        .amenities-list { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
-        .amenity-tag { display:inline-flex; align-items:center; gap:4px; padding:4px 10px; background:var(--re-surface); border:1px solid var(--re-border); border-radius:20px; font-size:0.75rem; color:var(--re-text); }
-        .amenity-tag i { color:var(--re-primary); }
-        .photos-gallery { display:grid; grid-template-columns:repeat(2, 1fr); gap:8px; margin-bottom:20px; }
-        .photos-gallery img { width:100%; height:120px; object-fit:cover; border-radius:8px; cursor:pointer; transition:transform 0.2s; }
-        @media(min-width:768px) {
-            .photos-gallery { grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:12px; margin-bottom:24px; }
-            .photos-gallery img { height:160px; }
-            .amenities-list { gap:10px; margin-bottom:24px; }
-            .amenity-tag { padding:6px 14px; font-size:0.85rem; }
-            .detail-avail { padding:8px 16px; font-size:0.95rem; margin-bottom:24px; }
-            .detail-main .desc { margin-bottom:12px; }
+        .detail-price-card::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 100px; height: 100px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            transform: translate(30px, -30px);
         }
-        .photos-gallery img:hover { transform:scale(1.03); }
-        .no-photos { background:var(--re-surface-alt); border-radius:10px; padding:32px; text-align:center; color:var(--re-text-secondary); }
-        .sidebar-card { background:var(--re-surface); border-radius:12px; padding:20px; box-shadow:0 4px 16px rgba(0,0,0,0.08); margin-bottom:20px; }
-        .sidebar-card h3 { margin:0 0 12px; color:var(--re-text); font-size:1rem; }
-        .sidebar-card label { display:block; font-size:0.85rem; color:var(--re-text-secondary); margin-bottom:4px; font-weight:500; }
-        .sidebar-card input, .sidebar-card textarea { width:100%; padding:10px 12px; border:1px solid var(--re-input-border); border-radius:8px; font-size:0.95rem; background:var(--re-input-bg); color:var(--re-text); margin-bottom:12px; box-sizing:border-box; }
-        .sidebar-card textarea { resize:vertical; min-height:80px; }
-        .sidebar-card button { width:100%; padding:12px; background:var(--re-primary); color:#fff; border:none; border-radius:8px; font-weight:600; font-size:1rem; cursor:pointer; transition:background 0.2s; }
-        .sidebar-card button:hover { background:var(--re-primary-hover); }
-        .apply-link { display:block; text-align:center; padding:12px; background:var(--re-surface-alt); color:var(--re-primary); font-weight:600; text-decoration:none; border-radius:8px; border:2px solid var(--re-primary); transition:all 0.2s; }
-        .apply-link:hover { background:var(--re-primary); color:#fff; }
-        .msg-flash { padding:12px 16px; margin:0 0 16px; border-radius:8px; font-size:0.95rem; }
-        .msg-flash.success { background:#ecfdf5; border-left:4px solid #10b981; color:#065f46; }
-        .msg-flash.error { background:#fef2f2; border-left:4px solid #ef4444; color:#991b1b; }
-        body.dark .sidebar-card { background:var(--re-surface); box-shadow:0 4px 16px rgba(0,0,0,0.2); }
+        .detail-price-main { font-size: 2.5rem; font-weight: 800; margin-bottom: 8px; }
+        .detail-price-sub { font-size: 1rem; opacity: 0.9; margin-bottom: 24px; }
+        .detail-price-features { display: flex; flex-direction: column; gap: 12px; }
+        .detail-price-feature { display: flex; align-items: center; gap: 12px; font-size: 0.95rem; }
+        .detail-price-feature i { font-size: 1.1rem; opacity: 0.8; }
+
+        /* ── Property details grid ── */
+        .detail-grid { display: grid; grid-template-columns: 1fr 350px; gap: 32px; }
+        @media (max-width: 1024px) { .detail-grid { grid-template-columns: 1fr; gap: 24px; } }
+
+        /* Main content */
+        .detail-main { display: flex; flex-direction: column; gap: 24px; }
+
+        /* Info cards */
+        .info-card {
+            background: var(--re-surface);
+            border: 1px solid var(--re-border);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .info-card:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+        .info-card h3 { margin: 0 0 16px; color: var(--re-text); font-size: 1.4rem; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+        .info-card h3 i { color: var(--re-primary); font-size: 1.3rem; }
+
+        /* Property features grid */
+        .property-features { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; margin-bottom: 20px; }
+        .feature-card {
+            background: var(--re-light-bg);
+            border: 1px solid var(--re-border);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .feature-card:hover { transform: translateY(-2px); border-color: var(--re-primary); background: var(--re-surface); }
+        .feature-card i { font-size: 1.8rem; color: var(--re-primary); margin-bottom: 8px; display: block; }
+        .feature-card .value { font-size: 1.3rem; font-weight: 700; color: var(--re-text); margin-bottom: 4px; }
+        .feature-card .label { font-size: 0.85rem; color: var(--re-text-secondary); text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* Amenities */
+        .amenities-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 12px; }
+        .amenity-item {
+            background: var(--re-light-bg);
+            border: 1px solid var(--re-border);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex; align-items: center; gap: 12px;
+            font-size: 0.9rem; color: var(--re-text-secondary);
+            transition: all 0.2s;
+        }
+        .amenity-item:hover { border-color: var(--re-primary); background: var(--re-surface); }
+        .amenity-item i { color: var(--re-primary); font-size: 1.1rem; }
+
+        /* Sidebar */
+        .detail-sidebar { display: flex; flex-direction: column; gap: 20px; }
+
+        /* Contact card */
+        .contact-card {
+            background: var(--re-surface);
+            border: 1px solid var(--re-border);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+        .contact-card h3 { margin: 0 0 20px; color: var(--re-text); font-size: 1.3rem; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .contact-card h3 i { color: var(--re-primary); }
+
+        .contact-form label { display: block; font-size: 0.85rem; color: var(--re-text-secondary); margin-bottom: 6px; font-weight: 500; }
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--re-input-border);
+            border-radius: 10px;
+            font-size: 0.95rem;
+            background: var(--re-input-bg);
+            color: var(--re-text);
+            margin-bottom: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+        .contact-form input:focus,
+        .contact-form textarea:focus { border-color: var(--re-primary); outline: none; }
+        .contact-form textarea { resize: vertical; min-height: 100px; }
+
+        .contact-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--re-primary);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .contact-btn:hover { background: var(--re-primary-hover); }
+
+        /* Action buttons */
+        .action-buttons { display: flex; flex-direction: column; gap: 12px; }
+
+        .action-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 20px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            text-align: center;
+        }
+        .action-btn.primary {
+            background: var(--re-primary);
+            color: #fff;
+        }
+        .action-btn.primary:hover { background: var(--re-primary-hover); transform: translateY(-1px); }
+
+        .action-btn.secondary {
+            background: #25D366;
+            color: #fff;
+            border: 2px solid #25D366;
+        }
+        .action-btn.secondary:hover { background: #1da851; transform: translateY(-1px); }
+
+        .action-btn.outline {
+            background: transparent;
+            color: var(--re-primary);
+            border: 2px solid var(--re-primary);
+        }
+        .action-btn.outline:hover { background: var(--re-primary); color: #fff; transform: translateY(-1px); }
+
+        /* Messages */
+        .msg-flash {
+            padding: 16px 20px;
+            margin: 0 0 24px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+        .msg-flash.success {
+            background: #ecfdf5;
+            border-left: 4px solid #10b981;
+            color: #065f46;
+        }
+        .msg-flash.error {
+            background: #fef2f2;
+            border-left: 4px solid #ef4444;
+            color: #991b1b;
+        }
+
+        /* Mobile tweaks */
+        @media (max-width: 768px) {
+            .detail-wrap { padding: 20px 16px 40px; }
+            .detail-header h1 { font-size: 1.8rem; }
+            .detail-header .location { font-size: 1rem; }
+            .detail-hero { gap: 20px; }
+            .detail-price-card { padding: 24px; }
+            .detail-price-main { font-size: 2rem; }
+            .property-features { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .feature-card { padding: 12px; }
+            .feature-card i { font-size: 1.5rem; }
+            .feature-card .value { font-size: 1.1rem; }
+            .info-card { padding: 20px; }
+            .info-card h3 { font-size: 1.2rem; }
+            .contact-card { padding: 20px; }
+            .action-buttons { gap: 10px; }
+        }
+
+        @media (max-width: 480px) {
+            .property-features { grid-template-columns: 1fr; }
+            .detail-price-card { padding: 20px; }
+            .detail-price-main { font-size: 1.8rem; }
+            .detail-price-feature { font-size: 0.85rem; }
+        }
     </style>
 </head>
 <body class="theme-landlord landing-body">
@@ -66,7 +243,6 @@
     <div class="topnav" id="topnav">
         <a href="{% url 'home' %}"><img src="{% static 'img/renteasylogo10.png' %}" alt="RentEasy"></a>
         <div class="top2">
-            <a href="{% url 'home' %}">HOME</a>
             <a href="{% url 'listing_list' %}" class="active10">BROWSE RENTALS</a>
         </div>
         <div class="userbox2">
@@ -81,78 +257,132 @@
 </nav>
 
 <div class="detail-wrap">
-    <!-- ── Messages ── -->
-    {% if messages %}{% for m in messages %}
-    <div class="msg-flash {% if m.tags %}{{ m.tags }}{% endif %}">{{ m }}</div>
-    {% endfor %}{% endif %}
 
-    <!-- ── Header ── -->
-    <div class="detail-header">
-        <h1>{{ listing.title }}</h1>
-        <p class="location"><i class="fa-solid fa-location-dot"></i> {{ listing.property_location }}</p>
-        <div class="detail-price">
-            <span class="price">KSh {{ listing.rent_amount|intcomma }}/mo</span>
-            {% if listing.deposit_amount %}<span class="deposit">Deposit: KSh {{ listing.deposit_amount|intcomma }}</span>{% endif %}
-    </div>
 
-    <!-- ── Photos ── -->
-    {% if listing.photos and listing.photos.0 %}
-    <div class="photos-gallery">
-        {% for photo_url in listing.photos|slice:":4" %}
-        <img src="{{ photo_url }}" alt="{{ listing.title }} photo {{ forloop.counter }}">
-        {% endfor %}
-    </div>
-    {% else %}
-    <div class="no-photos">
-        <p>No images available</p>
-    </div>
-    {% endif %}
 
+
+
+
+    <!-- ── Main Content Grid ── -->
     <div class="detail-grid">
-        <!-- ── Main Column ── -->
+        <!-- Main Column -->
         <div class="detail-main">
-            <div class="desc">{{ listing.description|truncatewords:50|linebreaks }}</div>
 
-            {% if listing.available_from %}
-            <div class="detail-avail" style="margin-top:12px;">
-                <i class="fa-regular fa-calendar"></i> Available from {{ listing.available_from|date:"M d, Y" }}
+
+            <!-- Property Details -->
+            <div class="info-card">
+                <h3><i class="fa-solid fa-info-circle"></i> Property Details</h3>
+
+                <!-- Property Summary -->
+                <div class="property-summary" style="margin-bottom: 24px; padding: 16px; background: var(--re-light-bg); border-radius: 12px; border: 1px solid var(--re-border);">
+                    <h4 style="margin: 0 0 12px; color: var(--re-text); font-size: 1.1rem; font-weight: 600;">Property Summary</h4>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-building" style="color: var(--re-primary); font-size: 1rem;"></i>
+                            <span style="color: var(--re-text); font-size: 0.95rem;"><strong>Name:</strong> {{ listing.title }}</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-location-dot" style="color: var(--re-primary); font-size: 1rem;"></i>
+                            <span style="color: var(--re-text); font-size: 0.95rem;"><strong>Location:</strong> {{ listing.property_location }}</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-dollar-sign" style="color: var(--re-primary); font-size: 1rem;"></i>
+                            <span style="color: var(--re-text); font-size: 0.95rem;"><strong>Price:</strong> KSh {{ listing.rent_amount|intcomma }} per month</span>
+                        </div>
+                        {% if listing.unit.bedrooms %}
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-bed" style="color: var(--re-primary); font-size: 1rem;"></i>
+                            <span style="color: var(--re-text); font-size: 0.95rem;"><strong>Bedrooms:</strong> {{ listing.unit.bedrooms }}</span>
+                        </div>
+                        {% endif %}
+                        {% if listing.unit.bathrooms %}
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-bath" style="color: var(--re-primary); font-size: 1rem;"></i>
+                            <span style="color: var(--re-text); font-size: 0.95rem;"><strong>Bathrooms:</strong> {{ listing.unit.bathrooms }}</span>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Amenities -->
+                {% if listing.amenities %}
+                <div class="amenities-grid">
+                    {% if listing.amenities.distance_from_tarmac %}
+                    <div class="amenity-item">
+                        <i class="fa-solid fa-road"></i>
+                        <span>{{ listing.amenities.distance_from_tarmac }}km from tarmac</span>
+                    </div>
+                    {% endif %}
+                    {% if listing.amenities.parking %}
+                    <div class="amenity-item">
+                        <i class="fa-solid fa-car"></i>
+                        <span>Parking available</span>
+                    </div>
+                    {% endif %}
+                    {% if listing.amenities.water_availability %}
+                    <div class="amenity-item">
+                        <i class="fa-solid fa-tint"></i>
+                        <span>Water: {{ listing.amenities.water_availability|title }}</span>
+                    </div>
+                    {% endif %}
+                    {% if listing.amenities.distance_from_town %}
+                    <div class="amenity-item">
+                        <i class="fa-solid fa-city"></i>
+                        <span>{{ listing.amenities.distance_from_town }}km from town</span>
+                    </div>
+                    {% endif %}
+                </div>
+                {% else %}
+                <p style="color: var(--re-text-secondary); font-style: italic; margin: 0;">No listed amenities</p>
+                {% endif %}
             </div>
-            {% endif %}
+
+
         </div>
 
-        <!-- ── Sidebar ── -->
-        <div class="detail-sidebar" style="max-width:500px;margin:0 auto;width:100%;">
-            <!-- Enquiry Form -->
-            <div class="sidebar-card">
-                <h3><i class="fa-solid fa-envelope" style="color:var(--re-primary);margin-right:6px;"></i> Enquire about this property</h3>
-                <form method="post">
+        <!-- Sidebar -->
+        <div class="detail-sidebar">
+            <!-- Contact Form -->
+            <div class="contact-card">
+                <h3><i class="fa-solid fa-envelope"></i> Contact Landlord</h3>
+                <form method="post" class="contact-form">
                     {% csrf_token %}
                     <input type="hidden" name="form_action" value="enquiry">
                     <label>Name *</label>
                     <input type="text" name="name" required{% if request.user.is_authenticated %} value="{{ request.user.name }}"{% endif %}>
+
                     <label>Email *</label>
                     <input type="email" name="email" required{% if request.user.is_authenticated %} value="{{ request.user.email }}"{% endif %}>
+
                     <label>Phone</label>
                     <input type="tel" name="phone"{% if request.user.is_authenticated %} value="{{ request.user.phone }}"{% endif %}>
+
                     <label>Message *</label>
                     <textarea name="message" required placeholder="I'm interested in this property..."></textarea>
-                    <button type="submit">Send Enquiry</button>
+
+                    <button type="submit" class="contact-btn">Send Enquiry</button>
                 </form>
             </div>
-            <!-- Apply Link -->
-            <a class="apply-link" href="{% url 'application_create' listing.pk %}">
-                <i class="fa-solid fa-paper-plane"></i> Apply for this Rental
-            </a>
-            <!-- Contact Landlord -->
-            {% if landlord.phone %}
-            <a class="apply-link" href="https://wa.me/{{ landlord.phone|cut:' '|cut:'+' }}?text=Hi, I'm interested in {{ listing.title }}" target="_blank" style="margin-top:12px;background:#25D366;color:#fff;border-color:#25D366;display:block;text-align:center;">
-                <i class="fa-brands fa-whatsapp"></i> Contact on WhatsApp
-            </a>
-            {% else %}
-            <a class="apply-link" href="{% url 'contactlandlord' listing.pk %}" style="margin-top:12px;background:#1F2937;color:#fff;border-color:#1F2937;">
-                <i class="fa-solid fa-user"></i> Contact Landlord
-            </a>
-            {% endif %}
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a class="action-btn primary" href="{% url 'application_create' listing.pk %}">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    Apply for this Rental
+                </a>
+
+                {% if landlord.phone %}
+                <a class="action-btn secondary" href="https://wa.me/{{ landlord.phone|cut:' '|cut:'+' }}?text=Hi, I'm interested in {{ listing.title }}" target="_blank">
+                    <i class="fa-brands fa-whatsapp"></i>
+                    WhatsApp Landlord
+                </a>
+                {% else %}
+                <a class="action-btn outline" href="{% url 'contactlandlord' listing.pk %}">
+                    <i class="fa-solid fa-user"></i>
+                    Contact Landlord
+                </a>
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>

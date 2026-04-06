@@ -368,9 +368,10 @@ def LandLord_messages(request):
             # Notify other members
             other_members = active_conv.members.exclude(user=user).select_related("user")
             for om in other_members:
+                messages_url = reverse('landmessages')
                 Notification.objects.create(
                     user=om.user,
-                    message=f"New message from {user.name}: {body[:80]}{'…' if len(body) > 80 else ''}",
+                    message=f"New message from {user.name}: {body[:80]}{'…' if len(body) > 80 else ''} <a href=\"{messages_url}\">View conversation</a>",
                 )
             messages.success(request, "Message sent.")
             return redirect(reverse("landmessages") + f"?conv={conv_id}")
@@ -438,9 +439,10 @@ def LandLord_earnings(request):
             )
             # Notify tenant
             if lease.tenant_id:
+                earnings_url = reverse('myearnings')
                 Notification.objects.create(
                     user_id=lease.tenant_id,
-                    message=f"Your landlord recorded a {method} payment of KSh {amount_int}. Reference: {reference or 'N/A'}.",
+                    message=f"Your landlord recorded a {method} payment of KSh {amount_int}. Reference: {reference or 'N/A'}. <a href=\"{earnings_url}\">View details</a>",
                 )
             messages.success(request, f"Payment of KSh {amount_int} recorded successfully.")
         except (Lease.DoesNotExist, ValueError):
@@ -552,6 +554,12 @@ def LandLord_properties(request):
         rooms_total = request.POST.get("rooms_total", "").strip()
         image = request.FILES.get("image")
 
+        # Amenities
+        distance_tarmac = request.POST.get("distance_tarmac", "").strip()
+        parking = request.POST.get("parking", "").strip()
+        water = request.POST.get("water", "").strip()
+        distance_town = request.POST.get("distance_town", "").strip()
+
         # Validate uploaded image
         if image:
             valid, err = validate_uploaded_file(image)
@@ -570,6 +578,23 @@ def LandLord_properties(request):
             messages.error(request, "Rent and rooms must be numbers.")
             return render(request, "landlord/myproperties.html")
 
+        # Build amenities dict
+        amenities = {}
+        if distance_tarmac:
+            try:
+                amenities["distance_from_tarmac"] = float(distance_tarmac)
+            except ValueError:
+                pass
+        if parking and parking in ["yes", "no"]:
+            amenities["parking"] = parking == "yes"
+        if water and water in ["available", "limited", "not_available"]:
+            amenities["water_availability"] = water
+        if distance_town:
+            try:
+                amenities["distance_from_town"] = float(distance_town)
+            except ValueError:
+                pass
+
         prop = Property.objects.create(
             landlord=request.user,
             name=name,
@@ -578,6 +603,7 @@ def LandLord_properties(request):
             monthly_rent=monthly_rent_int,
             rooms_total=max(rooms_total_int, 1),
             image=image,
+            amenities=amenities,
         )
         for i in range(1, prop.rooms_total + 1):
             unit_obj, _created = Unit.objects.get_or_create(
@@ -1174,9 +1200,10 @@ def application_create(request, listing_pk):
         # Notify landlord
         landlord = listing.unit.property.landlord
         if landlord:
+            applications_url = reverse('landlord_applications')
             Notification.objects.create(
                 user=landlord,
-                message=f"New rental application from {name} ({email}) for listing: {listing.title}.",
+                message=f"New rental application from {name} ({email}) for listing: <a href=\"{applications_url}\">{listing.title}</a>.",
             )
         messages.success(request, "Application submitted. The landlord will review it shortly.")
         return redirect("listing_detail", pk=listing_pk)
@@ -1228,6 +1255,7 @@ def LandLord_create_listing(request):
             deposit_amount=deposit_int,
             property_location=property_location or unit.property.address,
             available_from=avail,
+            amenities=unit.property.amenities,
         )
         messages.success(request, "Listing created.")
         return redirect("landlord_listings")
@@ -1239,38 +1267,10 @@ def LandLord_applications(request):
     applications = Application.objects.filter(listing__unit__property__landlord=request.user).select_related(
         "listing", "listing__unit", "listing__unit__property"
     ).order_by("-created_at")
-    return render(request, "landlord/applications.html", {"applications": applications})
 
-
-@role_required("landlord")
-def LandLord_application_action(request, pk):
-    app = get_object_or_404(
-        Application.objects.select_related("listing", "listing__unit"),
-        pk=pk,
-        listing__unit__property__landlord=request.user,
-    )
-    action = request.POST.get("action")
-    if action == "approve":
-        app.status = "approved"
-        app.save(update_fields=["status"])
-        messages.success(request, "Application approved.")
-    elif action == "reject":
-        app.status = "rejected"
-        app.save(update_fields=["status"])
-        messages.success(request, "Application rejected.")
-    return redirect("landlord_applications")
-
-
-@role_required("landlord")
-def LandLord_application_suggestions(request):
-    """Show applications with AI-suggested actions based on applicant profile."""
-    applications = Application.objects.filter(
-        listing__unit__property__landlord=request.user,
-        status="pending"
-    ).select_related("listing", "listing__unit", "listing__unit__property").order_by("-created_at")
-
-    # Add suggested actions for each application
-    for app in applications:
+    # Add suggested actions for pending applications
+    pending_applications = [app for app in applications if app.status == "pending"]
+    for app in pending_applications:
         suggestions = []
 
         # Check move-in date - if it's soon, prioritize
@@ -1320,10 +1320,34 @@ def LandLord_application_suggestions(request):
 
         app.suggested_actions = suggestions
 
-    return render(request, "landlord/application_suggestions.html", {
+    total_pending = len(pending_applications)
+
+    return render(request, "landlord/applications.html", {
         "applications": applications,
-        "total_pending": len(applications)
+        "total_pending": total_pending
     })
+
+
+@role_required("landlord")
+def LandLord_application_action(request, pk):
+    app = get_object_or_404(
+        Application.objects.select_related("listing", "listing__unit"),
+        pk=pk,
+        listing__unit__property__landlord=request.user,
+    )
+    action = request.POST.get("action")
+    if action == "approve":
+        app.status = "approved"
+        app.save(update_fields=["status"])
+        messages.success(request, "Application approved.")
+    elif action == "reject":
+        app.status = "rejected"
+        app.save(update_fields=["status"])
+        messages.success(request, "Application rejected.")
+    return redirect("landlord_applications")
+
+
+
 
 
 @role_required("landlord")
@@ -1388,12 +1412,13 @@ def _check_expiring_leases():
         if lease.tenant:
             Notification.objects.create(
                 user=lease.tenant,
-                message=f"Your lease for {lease.property.name} has expired. Please contact your landlord.",
+                message=f"Your lease for <a href=\"{reverse('myproperties')}\">{lease.property.name}</a> has expired. Please contact your landlord.",
             )
         # Notify landlord
+        lease_detail_url = reverse('landlord_lease_detail', args=[lease.id])
         Notification.objects.create(
             user=lease.property.landlord,
-            message=f"Lease #{lease.id} for {lease.tenant.name if lease.tenant else 'unknown'} at {lease.property.name} has expired.",
+            message=f"Lease <a href=\"{lease_detail_url}\">#{lease.id}</a> for {lease.tenant.name if lease.tenant else 'unknown'} at <a href=\"{reverse('myproperties')}\">{lease.property.name}</a> has expired.",
         )
 
 
@@ -1537,9 +1562,10 @@ def LandLord_lease_detail(request, pk):
                 lease.unit.save(update_fields=["status"])
                 Listing.objects.filter(unit=lease.unit, status="active").update(status="filled")
             if lease.tenant:
+                properties_url = reverse('myproperties')
                 Notification.objects.create(
                     user=lease.tenant,
-                    message=f"Your lease for {lease.property.name} is now active!",
+                    message=f"Your lease for <a href=\"{properties_url}\">{lease.property.name}</a> is now active!",
                 )
             messages.success(request, "Lease activated.")
             return redirect("landlord_lease_detail", pk=lease.pk)
@@ -1552,9 +1578,10 @@ def LandLord_lease_detail(request, pk):
             lease.status = "active"
             lease.save(update_fields=["end_date", "status"])
             if lease.tenant:
+                properties_url = reverse('myproperties')
                 Notification.objects.create(
                     user=lease.tenant,
-                    message=f"Your lease for {lease.property.name} has been renewed until {lease.end_date}.",
+                    message=f"Your lease for <a href=\"{properties_url}\">{lease.property.name}</a> has been renewed until {lease.end_date}.",
                 )
             messages.success(request, "Lease renewed.")
             return redirect("landlord_lease_detail", pk=lease.pk)
@@ -1567,9 +1594,10 @@ def LandLord_lease_detail(request, pk):
                 lease.unit.save(update_fields=["status"])
                 _ensure_active_listing_for_unit(lease.unit)
             if lease.tenant:
+                properties_url = reverse('myproperties')
                 Notification.objects.create(
                     user=lease.tenant,
-                    message=f"Your lease for {lease.property.name} has been terminated by the landlord.",
+                    message=f"Your lease for <a href=\"{properties_url}\">{lease.property.name}</a> has been terminated by the landlord.",
                 )
             messages.success(request, "Lease terminated.")
             return redirect("landlord_lease_detail", pk=lease.pk)
@@ -1978,10 +2006,10 @@ def maintenance(request):
         # Notify landlord
         landlord = active_lease.property.landlord
         if landlord:
-            detail_url = request.build_absolute_uri(f"/landlord/maintenance/{req.pk}/")
+            detail_url = reverse('landlord_maintenance_detail', args=[req.pk])
             Notification.objects.create(
                 user=landlord,
-                message=f"Tenant {request.user.name} submitted a maintenance request: {req.get_issue_category_display()} ({req.get_urgency_display()}). {body[:80]}{'...' if len(body) > 80 else ''} <a href='{detail_url}' target='_blank'>View Details</a>",
+                message=f"Tenant {request.user.name} submitted a maintenance request: {req.get_issue_category_display()} ({req.get_urgency_display()}). {body[:80]}{'...' if len(body) > 80 else ''} <a href=\"{detail_url}\">View Details</a>",
             )
         messages.success(request, "Maintenance request submitted.")
         return redirect("maintenance")
