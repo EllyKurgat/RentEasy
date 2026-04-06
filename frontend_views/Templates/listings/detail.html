@@ -98,7 +98,7 @@
     <!-- ── Photos ── -->
     {% if listing.photos and listing.photos.0 %}
     <div class="photos-gallery">
-        {% for photo_url in listing.photos %}
+        {% for photo_url in listing.photos|slice:":4" %}
         <img src="{{ photo_url }}" alt="{{ listing.title }} photo {{ forloop.counter }}">
         {% endfor %}
     </div>
@@ -111,24 +111,13 @@
     <div class="detail-grid">
         <!-- ── Main Column ── -->
         <div class="detail-main">
-            <div class="desc">{{ listing.description|linebreaks }}</div>
+            <div class="desc">{{ listing.description|truncatewords:50|linebreaks }}</div>
 
             {% if listing.available_from %}
             <div class="detail-avail" style="margin-top:12px;">
                 <i class="fa-regular fa-calendar"></i> Available from {{ listing.available_from|date:"M d, Y" }}
             </div>
             {% endif %}
-
-            <!-- Amenities -->
-            {% if listing.amenities %}
-            <h3 style="color:var(--re-text);margin:0 0 12px;">Amenities</h3>
-            <div class="amenities-list">
-                {% for amenity in listing.amenities %}
-                <span class="amenity-tag"><i class="fa-solid fa-check"></i> {{ amenity }}</span>
-                {% endfor %}
-            </div>
-            {% endif %}
-
         </div>
 
         <!-- ── Sidebar ── -->

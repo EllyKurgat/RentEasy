@@ -303,7 +303,7 @@
             </div>
             <div>
                 <h1 class="property-title">{{ listing.title }}</h1>
-                <p class="property-location"><i class="fas fa-map-marker-alt"></i> {{ listing.unit.property.name }}, {{ listing.unit.property.city }}</p>
+                <p class="property-location"><i class="fas fa-map-marker-alt"></i> {{ listing.unit.property.city }}</p>
             </div>
         </div>
 
@@ -312,27 +312,6 @@
             <div class="detail-item">
                 <i class="fas fa-dollar-sign detail-icon"></i>
                 <span>KSh {{ listing.unit.monthly_rent|floatformat:0 }}</span>
-            </div>
-            {% endif %}
-
-            {% if listing.unit.unit_number %}
-            <div class="detail-item">
-                <i class="fas fa-door-open detail-icon"></i>
-                <span>{{ listing.unit.unit_number }}</span>
-            </div>
-            {% endif %}
-
-            {% if listing.unit.bedrooms %}
-            <div class="detail-item">
-                <i class="fas fa-bed detail-icon"></i>
-                <span>{{ listing.unit.bedrooms }} Bedrooms</span>
-            </div>
-            {% endif %}
-
-            {% if listing.unit.bathrooms %}
-            <div class="detail-item">
-                <i class="fas fa-bath detail-icon"></i>
-                <span>{{ listing.unit.bathrooms }} Bathrooms</span>
             </div>
             {% endif %}
         </div>

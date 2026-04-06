@@ -165,17 +165,6 @@
                 <h3>{{ l.title }}</h3>
                 <p class="listing-card-loc"><i class="fa-solid fa-location-dot"></i> {{ l.property_location }}</p>
                 <p class="listing-card-price">KSh {{ l.rent_amount|intcomma }}/mo</p>
-                {% if l.avg_rating %}
-                <div class="listing-card-rating">
-                    <span class="stars">
-                        {% for i in "12345" %}
-                            {% if l.avg_rating >= forloop.counter %}<i class="fa-solid fa-star"></i>{% elif l.avg_rating >= forloop.counter|add:"-0.5" %}<i class="fa-solid fa-star-half-stroke"></i>{% else %}<i class="fa-regular fa-star empty"></i>{% endif %}
-                        {% endfor %}
-                    </span>
-                    <span class="count">{{ l.avg_rating|floatformat:1 }} ({{ l.review_count }})</span>
-                </div>
-                {% endif %}
-                <p style="color:var(--re-text-secondary);font-size:0.9rem;margin:0;">{{ l.description|truncatewords:18|default:"Available for rent" }}</p>
             </div>
             <div class="listing-card-footer">
                 <span class="avail">{% if l.available_from %}<i class="fa-regular fa-calendar"></i> {{ l.available_from|date:"M d, Y" }}{% else %}Available now{% endif %}</span>
