@@ -1850,24 +1850,34 @@ def forgotpass(request):
         reset_url = request.build_absolute_uri(
             reverse('password_reset_confirm', kwargs={'uidb64': uid, 'token': token})
         )
-        send_mail(
-            subject="RentEasy – Password Reset Request",
-            message=(
-                f"Dear {user.name},\n\n"
-                f"We received a request to reset the password associated with your RentEasy account.\n\n"
-                f"Please click the link below to set a new password:\n{reset_url}\n\n"
-                f"This link will expire after one use. If you did not request a password reset, "
-                f"you may safely disregard this email.\n\n"
-                f"Best regards,\nThe RentEasy Team"
-            ),
-            from_email=None,
-            recipient_list=[user.email],
-            fail_silently=True,
-        )
-        return render(request, 'forgotpass.html', {
-            'status': 'success',
-            'status_message': f'A password reset link has been sent to {user.email}. Please check your inbox and follow the instructions to reset your password.',
-        })
+        try:
+            send_mail(
+                subject="RentEasy – Password Reset Request",
+                message=(
+                    f"Dear {user.name},\n\n"
+                    f"We received a request to reset the password associated with your RentEasy account.\n\n"
+                    f"Please click the link below to set a new password:\n{reset_url}\n\n"
+                    f"This link will expire after one use. If you did not request a password reset, "
+                    f"you may safely disregard this email.\n\n"
+                    f"Best regards,\nThe RentEasy Team"
+                ),
+                from_email=None,
+                recipient_list=[user.email],
+                fail_silently=False,
+            )
+            return render(request, 'forgotpass.html', {
+                'status': 'success',
+                'status_message': f'A password reset link has been sent to {user.email}. Please check your inbox and follow the instructions to reset your password.',
+            })
+        except Exception as e:
+            # Log the error for debugging
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f"Failed to send password reset email to {user.email}: {str(e)}")
+            return render(request, 'forgotpass.html', {
+                'status': 'error',
+                'status_message': 'We encountered an issue sending your password reset email. Please try again later or contact support.',
+            })
     return render(request, 'forgotpass.html')
 
 

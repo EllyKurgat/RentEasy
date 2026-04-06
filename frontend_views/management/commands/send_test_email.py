@@ -18,10 +18,16 @@ class Command(BaseCommand):
 
         self.stdout.write("Testing email configuration...")
         self.stdout.write(f"EMAIL_BACKEND: {settings.EMAIL_BACKEND}")
-        self.stdout.write(f"EMAIL_HOST: {getattr(settings, 'EMAIL_HOST', 'Not set')}")
-        self.stdout.write(f"EMAIL_PORT: {getattr(settings, 'EMAIL_PORT', 'Not set')}")
-        self.stdout.write(f"EMAIL_HOST_USER: {getattr(settings, 'EMAIL_HOST_USER', 'Not set')}")
-        self.stdout.write(f"EMAIL_USE_TLS: {getattr(settings, 'EMAIL_USE_TLS', 'Not set')}")
+        
+        if settings.EMAIL_BACKEND == "sendgrid_backend.SendgridBackend":
+            self.stdout.write(f"SENDGRID_API_KEY: {'***' if getattr(settings, 'SENDGRID_API_KEY', None) else 'Not set'}")
+        else:
+            self.stdout.write(f"EMAIL_HOST: {getattr(settings, 'EMAIL_HOST', 'Not set')}")
+            self.stdout.write(f"EMAIL_PORT: {getattr(settings, 'EMAIL_PORT', 'Not set')}")
+            self.stdout.write(f"EMAIL_HOST_USER: {getattr(settings, 'EMAIL_HOST_USER', 'Not set')}")
+            self.stdout.write(f"EMAIL_USE_TLS: {getattr(settings, 'EMAIL_USE_TLS', 'Not set')}")
+
+        self.stdout.write(f"DEFAULT_FROM_EMAIL: {getattr(settings, 'DEFAULT_FROM_EMAIL', 'Not set')}")
 
         try:
             # Test connection first
@@ -37,6 +43,7 @@ class Command(BaseCommand):
 
 Configuration Details:
 - Backend: {settings.EMAIL_BACKEND}
+{'- SendGrid API: Configured' if settings.EMAIL_BACKEND == 'sendgrid_backend.SendgridBackend' else f''}
 - Host: {getattr(settings, 'EMAIL_HOST', 'N/A')}
 - Port: {getattr(settings, 'EMAIL_PORT', 'N/A')}
 - User: {getattr(settings, 'EMAIL_HOST_USER', 'N/A')}
@@ -69,7 +76,6 @@ Sent from: {settings.DEFAULT_FROM_EMAIL}""",
             self.stdout.write("  2. Try SendGrid instead: https://sendgrid.com")
             self.stdout.write("  3. Verify environment variables in Render dashboard")
             self.stdout.write("  4. Check Render logs for SMTP connection errors")
-            )
         except Exception as e:
             self.stdout.write(
                 self.style.ERROR(

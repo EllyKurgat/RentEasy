@@ -165,29 +165,39 @@ AUTH_USER_MODEL = 'frontend_views.User'
 # 2) EMAIL_HOST is set
 # 3) EMAIL_HOST_USER + EMAIL_HOST_PASSWORD are both set
 #
-# Typical Gmail setup:
+# Gmail setup:
 #   EMAIL_HOST=smtp.gmail.com
 #   EMAIL_PORT=587
 #   EMAIL_USE_TLS=True
 #   EMAIL_HOST_USER=your-email@gmail.com
 #   EMAIL_HOST_PASSWORD=your-app-password
 #
+# SendGrid setup (recommended):
+#   EMAIL_BACKEND=sendgrid_backend.SendgridBackend
+#   SENDGRID_API_KEY=your_sendgrid_api_key
+#   DEFAULT_FROM_EMAIL=RentEasy <your-verified-email@domain.com>
+#
 # Gmail: Enable 2FA, then create an App Password at:
 #   https://myaccount.google.com/apppasswords
 #
-# Outlook: smtp.office365.com, port 587, TLS
+# SendGrid: Sign up at https://sendgrid.com, get API key, verify sender email
 _email_backend_env = os.environ.get("EMAIL_BACKEND", "").strip()
+_sendgrid_api_key = os.environ.get("SENDGRID_API_KEY", "").strip()
 _email_host = os.environ.get("EMAIL_HOST", "").strip()
 _email_user = os.environ.get("EMAIL_HOST_USER", "").strip()
 _email_password = os.environ.get("EMAIL_HOST_PASSWORD", "").strip()
 
+_use_sendgrid = bool(_sendgrid_api_key) or _email_backend_env == "sendgrid_backend.SendgridBackend"
 _use_smtp = (
     _email_backend_env == "django.core.mail.backends.smtp.EmailBackend"
     or bool(_email_host)
     or (bool(_email_user) and bool(_email_password))
-)
+) and not _use_sendgrid
 
-if _use_smtp:
+if _use_sendgrid:
+    EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
+    SENDGRID_API_KEY = _sendgrid_api_key
+elif _use_smtp:
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
     EMAIL_HOST = _email_host or "smtp.gmail.com"
     EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))

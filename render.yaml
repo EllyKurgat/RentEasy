@@ -24,13 +24,17 @@ services:
       - key: MPESA_ENVIRONMENT
         value: "sandbox"
       - key: MPESA_CONSUMER_KEY
-        sync: false
+        value: "GR8YDifxXnM87Pptaag2gFijlozxQSPt9wzdr3yerRIIwONF"
       - key: MPESA_CONSUMER_SECRET
-        sync: false
+        value: "TRvDXvDtVyHm8h75gtdz5d8jhmcnKbonhlhCkl7tMJtdypl2CT8E8nVD9C9og5Gb"
       - key: MPESA_SHORTCODE
         value: "174379"
+      - key: MPESA_PASSKEY
+        value: "bfb279f9aa9bdbcf158e97dd71a467cd2e0ff893f1be6d31252c8fa0ac406b91"
       - key: MPESA_CALLBACK_URL
         value: "https://rms.onrender.com/mpesa/callback/"
+      - key: EMAIL_BACKEND
+        value: "django.core.mail.backends.smtp.EmailBackend"
       - key: EMAIL_HOST
         value: "smtp.gmail.com"
       - key: EMAIL_PORT
@@ -38,11 +42,11 @@ services:
       - key: EMAIL_USE_TLS
         value: "True"
       - key: EMAIL_HOST_USER
-        sync: false
+        value: "ellykurgat00@gmail.com"
       - key: EMAIL_HOST_PASSWORD
         sync: false
       - key: DEFAULT_FROM_EMAIL
-        sync: false
+        value: "RentEasy <ellykurgat00@gmail.com>"
 
 databases:
   - name: rms-db
