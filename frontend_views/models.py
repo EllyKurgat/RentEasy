@@ -370,6 +370,7 @@ class Application(models.Model):
     employer = models.CharField(max_length=255, blank=True)
     monthly_income = models.PositiveIntegerField(null=True, blank=True)
     previous_address = models.CharField(max_length=255, blank=True)
+    expected_move_in_date = models.DateField(null=True, blank=True)
     documents = models.JSONField(default=list)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
     screening_consent = models.BooleanField(default=False)

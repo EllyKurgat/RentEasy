@@ -1152,28 +1152,24 @@ def application_create(request, listing_pk):
         name = request.POST.get("name", "").strip()
         email = request.POST.get("email", "").strip()
         phone = request.POST.get("phone", "").strip()
-        employer = request.POST.get("employer", "").strip()
-        monthly_income = request.POST.get("monthly_income", "").strip()
-        previous_address = request.POST.get("previous_address", "").strip()
-        screening_consent = request.POST.get("screening_consent") == "on"
-        if not name or not email or not phone:
-            messages.error(request, "Name, email, and phone are required.")
+        expected_move_in_date_str = request.POST.get("expected_move_in_date", "").strip()
+
+        if not name or not email or not phone or not expected_move_in_date_str:
+            messages.error(request, "All fields are required.")
             return render(request, "listings/apply.html", {"listing": listing})
-        income = None
-        if monthly_income:
-            try:
-                income = int(monthly_income)
-            except ValueError:
-                pass
+
+        try:
+            expected_move_in_date = datetime.strptime(expected_move_in_date_str, "%Y-%m-%d").date()
+        except ValueError:
+            messages.error(request, "Invalid date format.")
+            return render(request, "listings/apply.html", {"listing": listing})
+
         app = Application.objects.create(
             listing=listing,
             name=name,
             email=email,
             phone=phone,
-            employer=employer,
-            monthly_income=income,
-            previous_address=previous_address,
-            screening_consent=screening_consent,
+            expected_move_in_date=expected_move_in_date,
         )
         # Notify landlord
         landlord = listing.unit.property.landlord
@@ -1277,71 +1273,44 @@ def LandLord_application_suggestions(request):
     for app in applications:
         suggestions = []
 
-        # Check income vs rent ratio
-        rent = app.listing.unit.monthly_rent or app.listing.unit.property.monthly_rent or 0
-        if app.monthly_income and rent > 0:
-            ratio = app.monthly_income / rent
-            if ratio >= 3:
+        # Check move-in date - if it's soon, prioritize
+        if app.expected_move_in_date:
+            days_until_move_in = (app.expected_move_in_date - timezone.now().date()).days
+            if days_until_move_in <= 30:
                 suggestions.append({
-                    "action": "approve",
-                    "reason": ".1f",
+                    "action": "review_urgent",
+                    "reason": f"Tenant expects to move in soon ({app.expected_move_in_date}) - review urgently",
                     "priority": "high",
-                    "icon": "check-circle"
+                    "icon": "clock"
                 })
-            elif ratio >= 2.5:
+            elif days_until_move_in <= 90:
                 suggestions.append({
-                    "action": "approve",
-                    "reason": ".1f",
+                    "action": "review_soon",
+                    "reason": f"Tenant expects to move in within {days_until_move_in} days",
                     "priority": "medium",
-                    "icon": "check-circle"
-                })
-            else:
-                suggestions.append({
-                    "action": "request_more_info",
-                    "reason": ".1f",
-                    "priority": "low",
-                    "icon": "question-circle"
+                    "icon": "calendar"
                 })
 
-        # Check if they have employer info
-        if app.employer:
-            suggestions.append({
-                "action": "verify_employment",
-                "reason": "Applicant provided employer information - verify employment stability",
-                "priority": "medium",
-                "icon": "briefcase"
-            })
-
-        # Check screening consent
-        if app.screening_consent:
-            suggestions.append({
-                "action": "run_background_check",
-                "reason": "Applicant consented to background screening",
-                "priority": "high",
-                "icon": "shield-alt"
-            })
-        else:
-            suggestions.append({
-                "action": "request_screening_consent",
-                "reason": "No background screening consent - consider requesting or proceeding with caution",
-                "priority": "medium",
-                "icon": "exclamation-triangle"
-            })
-
-        # Default suggestions if no specific criteria met
+        # Default suggestions since we don't have income/employment data anymore
         if not suggestions:
             suggestions = [
                 {
-                    "action": "review_manually",
-                    "reason": "Review application details manually",
+                    "action": "contact_applicant",
+                    "reason": "Contact applicant to verify details and schedule viewing",
+                    "priority": "high",
+                    "icon": "phone"
+                },
+                {
+                    "action": "schedule_viewing",
+                    "reason": "Schedule a property viewing for the applicant",
                     "priority": "medium",
                     "icon": "eye"
                 },
                 {
-                    "action": "schedule_interview",
-                    "reason": "Schedule an interview to learn more about the applicant",
+                    "action": "check_references",
+                    "reason": "Request references from previous landlords",
                     "priority": "medium",
-                    "icon": "calendar"
+                    "icon": "users"
                 }
             ]
 
