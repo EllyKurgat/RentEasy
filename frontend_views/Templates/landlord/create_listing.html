@@ -15,13 +15,14 @@
 <body class="theme-landlord">
 <script src="{% static 'Js/theme.js' %}?v=22"></script>
 <nav><div class="navbar" id="navbar">
-    <button id="icon"><i class="fa-solid fa-bars"></i></button>
     <a href="{% url 'home' %}"><img src="{% static 'img/renteasylogo.png' %}" alt="RentEasy"></a>
     <div class="logoss"><span>RENT</span><span style="color: var(--re-primary);">EASY</span></div>
     <div class="userbox"><a href="{% url 'profile' %}"><img src="{% static 'img/user.jpg' %}" alt=""><span class="welcuser">Hi, {{ request.user.name }}!</span></a></div>
 </div></nav>
+
+
 {% include "landlord/_sidebar.html" %}
-<script>document.addEventListener("DOMContentLoaded",function(){var s=document.querySelector(".sidebar"),i=document.querySelector("#icon");i&&s&&i.addEventListener("click",function(){s.classList.toggle("active")})});function toggleDropdown(){event.preventDefault();var d=event.target.closest(".dropdown"),m=d?d.querySelector(".dropdown-menu"):null;if(d&&m){d.classList.toggle("active");m.style.maxHeight=m.style.maxHeight?"":m.scrollHeight+"px";}}</script>
+<script>function toggleDropdown(){event.preventDefault();var d=event.target.closest(".dropdown"),m=d?d.querySelector(".dropdown-menu"):null;if(d&&m){d.classList.toggle("active");m.style.maxHeight=m.style.maxHeight?"":m.scrollHeight+"px";}}</script>
 <div class="dashcont">
     <p><a href="{% url 'landlord_listings' %}" style="color:var(--re-primary);text-decoration:none;">← Back to Listings</a></p>
     <h1 class="advant3" style="color:var(--re-primary);">Create Listing</h1>

@@ -39,7 +39,6 @@
 <script src="{% static 'Js/theme.js' %}?v=22"></script>
 <nav>
   <div class="navbar" id="navbar">
-    <button id="icon"><i class="fa-solid fa-bars"></i></button>
     <img src="{% static 'img/renteasylogo.png' %}" alt="Renteasy Logo">
     <div class="logoss"><span>RENT</span><span style="color: var(--re-primary);">EASY</span></div>
     <div class="userbox">
@@ -50,13 +49,6 @@
     </div>
   </div>
 </nav>
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  document.querySelector("#icon").addEventListener("click", function() {
-    document.querySelector(".sidebar").classList.toggle("active");
-  });
-});
-</script>
 
 {% include "tenant/_sidebar.html" %}
 

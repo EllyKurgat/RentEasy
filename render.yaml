@@ -31,6 +31,18 @@ services:
         value: "174379"
       - key: MPESA_CALLBACK_URL
         value: "https://rms.onrender.com/mpesa/callback/"
+      - key: EMAIL_HOST
+        value: "smtp.gmail.com"
+      - key: EMAIL_PORT
+        value: "587"
+      - key: EMAIL_USE_TLS
+        value: "True"
+      - key: EMAIL_HOST_USER
+        sync: false
+      - key: EMAIL_HOST_PASSWORD
+        sync: false
+      - key: DEFAULT_FROM_EMAIL
+        sync: false
 
 databases:
   - name: rms-db

@@ -49,15 +49,7 @@
 
 <nav>
   <div class="navbar" id="navbar">
-    <button id="icon"><i class="fa-solid fa-bars"></i></button>
     <img src="{% static 'img/renteasylogo.png' %}" alt="Renteasy Logo">
-    <script>
-      document.addEventListener("DOMContentLoaded", function() {
-        document.querySelector("#icon").addEventListener("click", function() {
-          document.querySelector(".sidebar").classList.toggle("active");
-        });
-      });
-    </script>
     <div class="logoss"><span>RENT</span><span style="color:var(--re-primary);">EASY</span></div>
     <div class="userbox">
       <a href="{% url 'profile' %}">
@@ -143,7 +135,7 @@
 
           <div class="pay-form-group">
             <label for="amount">Amount (KSh)</label>
-            <input type="number" id="amount" name="amount" value="{{ active_lease.property.monthly_rent|default:0 }}" placeholder="Enter amount" step="500" required>
+            <input type="number" id="amount" name="amount" value="{{ active_lease.property.monthly_rent|default:0 }}" placeholder="Enter amount" min="1" required>
           </div>
 
           <!-- M-Pesa phone fields -->

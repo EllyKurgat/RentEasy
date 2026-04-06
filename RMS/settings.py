@@ -160,8 +160,12 @@ AUTH_USER_MODEL = 'frontend_views.User'
 
 # Email (for tenant invites)
 # By default, emails only print to the terminal (console backend).
-# To SEND real emails, set these environment variables before running the server:
+# SMTP is enabled when ANY of these are true:
+# 1) EMAIL_BACKEND is explicitly set to SMTP backend
+# 2) EMAIL_HOST is set
+# 3) EMAIL_HOST_USER + EMAIL_HOST_PASSWORD are both set
 #
+# Typical Gmail setup:
 #   EMAIL_HOST=smtp.gmail.com
 #   EMAIL_PORT=587
 #   EMAIL_USE_TLS=True
@@ -172,19 +176,28 @@ AUTH_USER_MODEL = 'frontend_views.User'
 #   https://myaccount.google.com/apppasswords
 #
 # Outlook: smtp.office365.com, port 587, TLS
-#
-if os.environ.get("EMAIL_HOST"):
+_email_backend_env = os.environ.get("EMAIL_BACKEND", "").strip()
+_email_host = os.environ.get("EMAIL_HOST", "").strip()
+_email_user = os.environ.get("EMAIL_HOST_USER", "").strip()
+_email_password = os.environ.get("EMAIL_HOST_PASSWORD", "").strip()
+
+_use_smtp = (
+    _email_backend_env == "django.core.mail.backends.smtp.EmailBackend"
+    or bool(_email_host)
+    or (bool(_email_user) and bool(_email_password))
+)
+
+if _use_smtp:
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-    EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp.gmail.com")
+    EMAIL_HOST = _email_host or "smtp.gmail.com"
     EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))
     EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "true").lower() in ("true", "1", "yes")
-    EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
-    EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+    EMAIL_USE_SSL = os.environ.get("EMAIL_USE_SSL", "false").lower() in ("true", "1", "yes")
+    EMAIL_HOST_USER = _email_user
+    EMAIL_HOST_PASSWORD = _email_password
+    EMAIL_TIMEOUT = int(os.environ.get("EMAIL_TIMEOUT", "20"))
 else:
-    EMAIL_BACKEND = os.environ.get(
-        "EMAIL_BACKEND",
-        "django.core.mail.backends.console.EmailBackend",
-    )
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "RentEasy <noreply@renteasy.com>")
 

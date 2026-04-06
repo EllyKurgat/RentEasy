@@ -37,12 +37,38 @@ def _base_url() -> str:
 # ── OAuth token ─────────────────────────────────────────────────────────────
 def get_access_token() -> str:
     """Fetch a fresh OAuth access token from Safaricom."""
-    url = f"{_base_url()}/oauth/v1/generate?grant_type=client_credentials"
     key = settings.MPESA_CONSUMER_KEY
     secret = settings.MPESA_CONSUMER_SECRET
-    resp = requests.get(url, auth=(key, secret), timeout=30)
-    resp.raise_for_status()
-    return resp.json()["access_token"]
+    
+    # Validate credentials are configured
+    if not key or not secret:
+        raise ValueError(
+            "M-Pesa credentials not configured. "
+            "Set MPESA_CONSUMER_KEY and MPESA_CONSUMER_SECRET in .env file"
+        )
+    
+    url = f"{_base_url()}/oauth/v1/generate?grant_type=client_credentials"
+    
+    logger.info(f"Fetching OAuth token from {url} with key: {key[:10]}...")
+    
+    try:
+        resp = requests.get(url, auth=(key, secret), timeout=30)
+        logger.debug(f"OAuth response status: {resp.status_code}")
+        resp.raise_for_status()
+        token = resp.json().get("access_token")
+        logger.info(f"OAuth token obtained: {token[:20]}...")
+        return token
+    except requests.exceptions.HTTPError as e:
+        logger.error(
+            f"M-Pesa OAuth failed: {e.response.status_code} {e.response.reason}\n"
+            f"URL: {url}\n"
+            f"Key used: {key[:10]}...\n"
+            f"Response: {e.response.text}"
+        )
+        raise ValueError(
+            f"M-Pesa authentication failed ({e.response.status_code}). "
+            "Check your consumer key and secret in .env are correct and activated in Safaricom Daraja."
+        ) from e
 
 
 # ── STK Push ────────────────────────────────────────────────────────────────
@@ -116,29 +142,43 @@ def initiate_stk_push(
 
     password = _generate_password(shortcode, timestamp)
 
+    # Sanitize AccountReference - Safaricom sandbox may reject special chars
+    acct_ref_clean = acct_ref.replace(" ", "").replace("-", "")[:12]
+
     payload = {
-        "BusinessShortCode": shortcode,
+        "BusinessShortCode": str(shortcode),
         "Password": password,
         "Timestamp": timestamp,
         "TransactionType": tx_type,
         "Amount": int(amount),
         "PartyA": format_phone(phone),
-        "PartyB": shortcode,
+        "PartyB": str(shortcode),
         "PhoneNumber": format_phone(phone),
         "CallBackURL": settings.MPESA_CALLBACK_URL,
-        "AccountReference": acct_ref,
-        "TransactionDesc": transaction_desc,
+        "AccountReference": acct_ref_clean,
+        "TransactionDesc": transaction_desc[:20],  # Safaricom limits this
     }
 
     url = f"{_base_url()}/mpesa/stkpush/v1/processrequest"
     headers = {"Authorization": f"Bearer {token}"}
 
     logger.info("STK Push → %s  phone=%s amount=%s dest=%s", url, format_phone(phone), amount, shortcode)
-    resp = requests.post(url, json=payload, headers=headers, timeout=30)
-    resp.raise_for_status()
-    data = resp.json()
-    logger.info("STK Push response: %s", data)
-    return data
+    logger.debug("STK Push payload: %s", payload)
+    
+    try:
+        resp = requests.post(url, json=payload, headers=headers, timeout=30)
+        resp.raise_for_status()
+        data = resp.json()
+        logger.info("STK Push response: %s", data)
+        return data
+    except requests.exceptions.HTTPError as e:
+        logger.error(
+            f"STK Push failed: {e.response.status_code}\n"
+            f"URL: {url}\n"
+            f"Payload: {payload}\n"
+            f"Response: {e.response.text}"
+        )
+        raise
 
 
 # ── STK Query (poll Safaricom for transaction result) ───────────────────────

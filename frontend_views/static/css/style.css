@@ -323,7 +323,7 @@ body.sidebar-open { overflow: hidden; }
   background: var(--re-bg, #F3F4F6);
   margin-left: 240px;
   padding: 24px 32px;
-  padding-top: 56px;
+  padding-top: 72px;
   min-height: 100vh;
   transition: margin-left 0.3s ease, background 0.2s ease;
   box-sizing: border-box;
@@ -333,7 +333,7 @@ body.sidebar-open { overflow: hidden; }
     margin-left: 0;
     width: 100%;
     padding: 16px;
-    padding-top: 64px;
+    padding-top: 76px;
   }
 }
 
@@ -350,7 +350,7 @@ body.sidebar-open { overflow: hidden; }
 .dashcont.dash-fit {
   height: 100vh;
   min-height: 0;
-  padding-top: 76px;
+  padding-top: 88px;
   padding-bottom: 12px;
   display: flex;
   flex-direction: column;
@@ -396,16 +396,17 @@ body.sidebar-open { overflow: hidden; }
 .dash-fit .dash-quick .re-card-body  { padding: 8px 16px; overflow: visible; }
 
 /* On narrow/tablet screens revert to normal scroll */
-@media (max-width: 1000px) {
-  .dashcont.dash-fit {
-    height: auto;
-    min-height: 100vh;
-    overflow-y: auto;
-    padding-top: 76px;
-    padding-bottom: 16px;
-    display: block;
-  }
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.25rem;
+  height: 60px;
 }
+
+.navbar-left  { display: flex; align-items: center; flex: 1; }
+.navbar-center { display: flex; align-items: center; gap: 8px; flex: 1; justify-content: center; }
+.navbar-right  { display: flex; align-items: center; flex: 1; justify-content: flex-end; }
 
 /* ── Stat card rows ── */
 .container3 {

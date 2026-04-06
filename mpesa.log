@@ -1,0 +1,343 @@
+Watching for file changes with StatReloader
+[06/Apr/2026 19:10:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:10:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:10:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:10:50] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:11:04] "GET /payrent/ HTTP/1.1" 200 17861
+[06/Apr/2026 19:11:04] "GET /static/Js/theme.js?v=22 HTTP/1.1" 200 3834
+[06/Apr/2026 19:11:04] "GET /static/css/theme.css?v=22 HTTP/1.1" 200 24494
+[06/Apr/2026 19:11:04] "GET /static/img/renteasylogo.png HTTP/1.1" 200 17727
+[06/Apr/2026 19:11:04] "GET /static/css/style.css?v=22 HTTP/1.1" 200 90966
+[06/Apr/2026 19:11:04] "GET /static/img/user.jpg HTTP/1.1" 200 593820
+[06/Apr/2026 19:11:05] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:11:05] "GET /static/img/faviclogo.png HTTP/1.1" 200 708
+STK Push failed: 500
+URL: https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest
+Payload: {'BusinessShortCode': '174379', 'Password': 'MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBmZjg5M2YxYmU2ZDMxMjUyYzhmYTBhYzQwNmI5MTIwMjYwNDA2MTkxMTA3', 'Timestamp': '20260406191107', 'TransactionType': 'CustomerPayBillOnline', 'Amount': 10000, 'PartyA': '254742890593', 'PartyB': '174379', 'PhoneNumber': '254742890593', 'CallBackURL': 'https://sandbox.safaricom.co.ke/mpesa/stk/testcallback', 'AccountReference': '0799892427', 'TransactionDesc': 'Rent payment for mob'}
+Response: {
+                    "requestId":"c77b-414d-bbe5-3f551f22e19978",
+                    "errorCode": "500.001.1001",
+                    "errorMessage": "Wrong credentials"
+                }
+            
+STK Push failed
+Traceback (most recent call last):
+  File "/home/joy/Desktop/RentEasy/frontend_views/views.py", line 2268, in payrent
+    resp = initiate_stk_push(
+        phone=phone,
+    ...<3 lines>...
+        landlord_payment_method=lpm,
+    )
+  File "/home/joy/Desktop/RentEasy/frontend_views/mpesa.py", line 164, in initiate_stk_push
+    resp.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/joy/Desktop/RentEasy/.venv/lib/python3.13/site-packages/requests/models.py", line 1026, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest
+[06/Apr/2026 19:11:08] "POST /payrent/ HTTP/1.1" 200 168
+STK Push failed: 500
+URL: https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest
+Payload: {'BusinessShortCode': '174379', 'Password': 'MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBmZjg5M2YxYmU2ZDMxMjUyYzhmYTBhYzQwNmI5MTIwMjYwNDA2MTkxMTE1', 'Timestamp': '20260406191115', 'TransactionType': 'CustomerPayBillOnline', 'Amount': 10000, 'PartyA': '254742890593', 'PartyB': '174379', 'PhoneNumber': '254742890593', 'CallBackURL': 'https://sandbox.safaricom.co.ke/mpesa/stk/testcallback', 'AccountReference': '0799892427', 'TransactionDesc': 'Rent payment for mob'}
+Response: {
+                    "requestId":"5a03-4cd2-a0f4-cec2d11f2c3721483",
+                    "errorCode": "500.001.1001",
+                    "errorMessage": "Wrong credentials"
+                }
+            
+STK Push failed
+Traceback (most recent call last):
+  File "/home/joy/Desktop/RentEasy/frontend_views/views.py", line 2268, in payrent
+    resp = initiate_stk_push(
+        phone=phone,
+    ...<3 lines>...
+        landlord_payment_method=lpm,
+    )
+  File "/home/joy/Desktop/RentEasy/frontend_views/mpesa.py", line 164, in initiate_stk_push
+    resp.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/joy/Desktop/RentEasy/.venv/lib/python3.13/site-packages/requests/models.py", line 1026, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest
+[06/Apr/2026 19:11:16] "POST /payrent/ HTTP/1.1" 200 168
+[06/Apr/2026 19:11:35] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+STK Push failed: 500
+URL: https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest
+Payload: {'BusinessShortCode': '174379', 'Password': 'MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBmZjg5M2YxYmU2ZDMxMjUyYzhmYTBhYzQwNmI5MTIwMjYwNDA2MTkxMTM2', 'Timestamp': '20260406191136', 'TransactionType': 'CustomerPayBillOnline', 'Amount': 10000, 'PartyA': '254742890593', 'PartyB': '174379', 'PhoneNumber': '254742890593', 'CallBackURL': 'https://sandbox.safaricom.co.ke/mpesa/stk/testcallback', 'AccountReference': '0799892427', 'TransactionDesc': 'Rent payment for mob'}
+Response: {
+                    "requestId":"df0f-4e88-9432-58f70c9d56d01794",
+                    "errorCode": "500.001.1001",
+                    "errorMessage": "Wrong credentials"
+                }
+            
+STK Push failed
+Traceback (most recent call last):
+  File "/home/joy/Desktop/RentEasy/frontend_views/views.py", line 2268, in payrent
+    resp = initiate_stk_push(
+        phone=phone,
+    ...<3 lines>...
+        landlord_payment_method=lpm,
+    )
+  File "/home/joy/Desktop/RentEasy/frontend_views/mpesa.py", line 164, in initiate_stk_push
+    resp.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/joy/Desktop/RentEasy/.venv/lib/python3.13/site-packages/requests/models.py", line 1026, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest
+[06/Apr/2026 19:11:37] "POST /payrent/ HTTP/1.1" 200 168
+STK Push failed: 403
+URL: https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest
+Payload: {'BusinessShortCode': '174379', 'Password': 'MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBmZjg5M2YxYmU2ZDMxMjUyYzhmYTBhYzQwNmI5MTIwMjYwNDA2MTkxMTQ0', 'Timestamp': '20260406191144', 'TransactionType': 'CustomerPayBillOnline', 'Amount': 10000, 'PartyA': '254742890593', 'PartyB': '174379', 'PhoneNumber': '254742890593', 'CallBackURL': 'https://sandbox.safaricom.co.ke/mpesa/stk/testcallback', 'AccountReference': '0799892427', 'TransactionDesc': 'Rent payment for mob'}
+Response: <html style="height:100%"><head><META NAME="ROBOTS" CONTENT="NOINDEX, NOFOLLOW"><meta name="format-detection" content="telephone=no"><meta name="viewport" content="initial-scale=1.0"><meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"><script type="text/javascript" src="/_Incapsula_Resource?SWJIYLWA=719d34d31c8e3a6e6fffd425f7e032f3"></script></head><body style="margin:0px;height:100%"><iframe id="main-iframe" src="/_Incapsula_Resource?CWUDNSAI=23&xinfo=54-136645858-0%200NNN%20RT%281775502704751%20153%29%20q%280%20-1%20-1%20-1%29%20r%280%20-1%29%20B15%2811%2c6926146%2c0%29%20U6&incident_id=922000310860681220-762999136308561910&edet=15&cinfo=0b000000&rpinfo=0&cip=197.232.137.30&mth=POST" frameborder=0 width="100%" height="100%" marginheight="0px" marginwidth="0px">Request unsuccessful. Incapsula incident ID: 922000310860681220-762999136308561910</iframe></body></html>
+STK Push failed
+Traceback (most recent call last):
+  File "/home/joy/Desktop/RentEasy/frontend_views/views.py", line 2268, in payrent
+    resp = initiate_stk_push(
+        phone=phone,
+    ...<3 lines>...
+        landlord_payment_method=lpm,
+    )
+  File "/home/joy/Desktop/RentEasy/frontend_views/mpesa.py", line 164, in initiate_stk_push
+    resp.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/joy/Desktop/RentEasy/.venv/lib/python3.13/site-packages/requests/models.py", line 1026, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 403 Client Error: Forbidden for url: https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest
+[06/Apr/2026 19:11:44] "POST /payrent/ HTTP/1.1" 200 156
+[06/Apr/2026 19:11:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:11:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:11:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:12:05] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+/home/joy/Desktop/RentEasy/frontend_views/mpesa.py changed, reloading.
+Performing system checks...
+
+System check identified no issues (0 silenced).
+April 06, 2026 - 19:10:32
+Django version 6.0.3, using settings 'RMS.settings'
+Starting development server at http://127.0.0.1:8000/
+Quit the server with CONTROL-C.
+
+WARNING: This is a development server. Do not use it in a production setting. Use a production WSGI or ASGI server instead.
+For more information on production servers see: https://docs.djangoproject.com/en/6.0/howto/deployment/
+Watching for file changes with StatReloader
+[06/Apr/2026 19:12:35] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:12:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:12:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:12:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:13:05] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:13:35] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:13:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:13:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:13:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:14:05] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:14:35] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:14:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:14:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:14:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:15:36] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:15:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:15:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:15:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:16:37] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:16:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:16:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:16:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:17:38] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:17:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:17:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:17:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:18:39] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:18:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:18:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:18:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:19:40] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:19:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:19:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:19:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:20:41] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:20:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:20:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:20:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:21:42] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:21:44] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:21:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:21:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:21:55] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+STK Push failed: 500
+URL: https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest
+Payload: {'BusinessShortCode': '174379', 'Password': 'MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBmZjg5M2YxYmU2ZDMxMjUyYzhmYTBhYzQwNmI5MTIwMjYwNDA2MTkyMTU1', 'Timestamp': '20260406192155', 'TransactionType': 'CustomerPayBillOnline', 'Amount': 10000, 'PartyA': '254742890593', 'PartyB': '174379', 'PhoneNumber': '254742890593', 'CallBackURL': 'https://sandbox.safaricom.co.ke/mpesa/stk/testcallback', 'AccountReference': '0799892427', 'TransactionDesc': 'Rent payment for mob'}
+Response: {
+                    "requestId":"5a03-4cd2-a0f4-cec2d11f2c3721620",
+                    "errorCode": "500.001.1001",
+                    "errorMessage": "Wrong credentials"
+                }
+            
+STK Push failed
+Traceback (most recent call last):
+  File "/home/joy/Desktop/RentEasy/frontend_views/views.py", line 2268, in payrent
+    resp = initiate_stk_push(
+        phone=phone,
+    ...<3 lines>...
+        landlord_payment_method=lpm,
+    )
+  File "/home/joy/Desktop/RentEasy/frontend_views/mpesa.py", line 170, in initiate_stk_push
+    resp.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/joy/Desktop/RentEasy/.venv/lib/python3.13/site-packages/requests/models.py", line 1026, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest
+[06/Apr/2026 19:21:56] "POST /payrent/ HTTP/1.1" 200 168
+[06/Apr/2026 19:22:05] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+STK Push failed: 500
+URL: https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest
+Payload: {'BusinessShortCode': '174379', 'Password': 'MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBmZjg5M2YxYmU2ZDMxMjUyYzhmYTBhYzQwNmI5MTIwMjYwNDA2MTkyMjA0', 'Timestamp': '20260406192204', 'TransactionType': 'CustomerPayBillOnline', 'Amount': 10000, 'PartyA': '254742890593', 'PartyB': '174379', 'PhoneNumber': '254742890593', 'CallBackURL': 'https://sandbox.safaricom.co.ke/mpesa/stk/testcallback', 'AccountReference': '0799892427', 'TransactionDesc': 'Rent payment for mob'}
+Response: {
+                    "requestId":"5a03-4cd2-a0f4-cec2d11f2c3721621",
+                    "errorCode": "500.003.02",
+                    "errorMessage": "System is busy. Please try again in few minutes."
+                }
+            
+STK Push failed
+Traceback (most recent call last):
+  File "/home/joy/Desktop/RentEasy/frontend_views/views.py", line 2268, in payrent
+    resp = initiate_stk_push(
+        phone=phone,
+    ...<3 lines>...
+        landlord_payment_method=lpm,
+    )
+  File "/home/joy/Desktop/RentEasy/frontend_views/mpesa.py", line 170, in initiate_stk_push
+    resp.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/joy/Desktop/RentEasy/.venv/lib/python3.13/site-packages/requests/models.py", line 1026, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest
+[06/Apr/2026 19:22:05] "POST /payrent/ HTTP/1.1" 200 168
+[06/Apr/2026 19:22:07] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:22:25] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:22:35] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:22:37] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:22:43] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:22:55] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:23:25] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:23:36] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:23:38] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:23:44] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:23:55] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:24:26] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:24:37] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:24:39] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:24:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:24:56] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+Not Found: /.well-known/appspecific/com.chrome.devtools.json
+[06/Apr/2026 19:25:01] "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 17303
+[06/Apr/2026 19:25:05] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+STK Push failed: 500
+URL: https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest
+Payload: {'BusinessShortCode': '174379', 'Password': 'MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBmZjg5M2YxYmU2ZDMxMjUyYzhmYTBhYzQwNmI5MTIwMjYwNDA2MTkyNTA1', 'Timestamp': '20260406192505', 'TransactionType': 'CustomerPayBillOnline', 'Amount': 10000, 'PartyA': '254742890593', 'PartyB': '174379', 'PhoneNumber': '254742890593', 'CallBackURL': 'https://sandbox.safaricom.co.ke/mpesa/stk/testcallback', 'AccountReference': '0799892427', 'TransactionDesc': 'Rent payment for mob'}
+Response: {
+                    "requestId":"c77b-414d-bbe5-3f551f22e199337",
+                    "errorCode": "500.001.1001",
+                    "errorMessage": "Wrong credentials"
+                }
+            
+STK Push failed
+Traceback (most recent call last):
+  File "/home/joy/Desktop/RentEasy/frontend_views/views.py", line 2268, in payrent
+    resp = initiate_stk_push(
+        phone=phone,
+    ...<3 lines>...
+        landlord_payment_method=lpm,
+    )
+  File "/home/joy/Desktop/RentEasy/frontend_views/mpesa.py", line 170, in initiate_stk_push
+    resp.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/joy/Desktop/RentEasy/.venv/lib/python3.13/site-packages/requests/models.py", line 1026, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest
+[06/Apr/2026 19:25:06] "POST /payrent/ HTTP/1.1" 200 168
+STK Push failed: 500
+URL: https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest
+Payload: {'BusinessShortCode': '174379', 'Password': 'MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBmZjg5M2YxYmU2ZDMxMjUyYzhmYTBhYzQwNmI5MTIwMjYwNDA2MTkyNTE4', 'Timestamp': '20260406192518', 'TransactionType': 'CustomerPayBillOnline', 'Amount': 10000, 'PartyA': '254742890593', 'PartyB': '174379', 'PhoneNumber': '254742890593', 'CallBackURL': 'https://sandbox.safaricom.co.ke/mpesa/stk/testcallback', 'AccountReference': '0799892427', 'TransactionDesc': 'Rent payment for mob'}
+Response: {
+                    "requestId":"c77b-414d-bbe5-3f551f22e199355",
+                    "errorCode": "500.001.1001",
+                    "errorMessage": "Wrong credentials"
+                }
+            
+STK Push failed
+Traceback (most recent call last):
+  File "/home/joy/Desktop/RentEasy/frontend_views/views.py", line 2268, in payrent
+    resp = initiate_stk_push(
+        phone=phone,
+    ...<3 lines>...
+        landlord_payment_method=lpm,
+    )
+  File "/home/joy/Desktop/RentEasy/frontend_views/mpesa.py", line 170, in initiate_stk_push
+    resp.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/joy/Desktop/RentEasy/.venv/lib/python3.13/site-packages/requests/models.py", line 1026, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest
+[06/Apr/2026 19:25:19] "POST /payrent/ HTTP/1.1" 200 168
+[06/Apr/2026 19:25:35] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:25:38] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:25:40] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:25:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:26:05] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+STK Push failed: 500
+URL: https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest
+Payload: {'BusinessShortCode': '174379', 'Password': 'MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBmZjg5M2YxYmU2ZDMxMjUyYzhmYTBhYzQwNmI5MTIwMjYwNDA2MTkyNjI1', 'Timestamp': '20260406192625', 'TransactionType': 'CustomerPayBillOnline', 'Amount': 1000, 'PartyA': '254742890593', 'PartyB': '174379', 'PhoneNumber': '254742890593', 'CallBackURL': 'https://sandbox.safaricom.co.ke/mpesa/stk/testcallback', 'AccountReference': '0799892427', 'TransactionDesc': 'Rent payment for mob'}
+Response: {
+                    "requestId":"c77b-414d-bbe5-3f551f22e199375",
+                    "errorCode": "500.001.1001",
+                    "errorMessage": "Wrong credentials"
+                }
+            
+STK Push failed
+Traceback (most recent call last):
+  File "/home/joy/Desktop/RentEasy/frontend_views/views.py", line 2268, in payrent
+    resp = initiate_stk_push(
+        phone=phone,
+    ...<3 lines>...
+        landlord_payment_method=lpm,
+    )
+  File "/home/joy/Desktop/RentEasy/frontend_views/mpesa.py", line 170, in initiate_stk_push
+    resp.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/joy/Desktop/RentEasy/.venv/lib/python3.13/site-packages/requests/models.py", line 1026, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest
+[06/Apr/2026 19:26:26] "POST /payrent/ HTTP/1.1" 200 168
+[06/Apr/2026 19:26:35] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:26:39] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:26:41] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:26:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:27:05] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:27:35] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:27:40] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:27:42] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+[06/Apr/2026 19:27:45] "GET /notifications/unread-count/ HTTP/1.1" 200 19
+STK Push failed: 500
+URL: https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest
+Payload: {'BusinessShortCode': '174379', 'Password': 'MTc0Mzc5YmZiMjc5ZjlhYTliZGJjZjE1OGU5N2RkNzFhNDY3Y2QyZTBmZjg5M2YxYmU2ZDMxMjUyYzhmYTBhYzQwNmI5MTIwMjYwNDA2MTkyNzQ5', 'Timestamp': '20260406192749', 'TransactionType': 'CustomerPayBillOnline', 'Amount': 1000, 'PartyA': '254742890593', 'PartyB': '174379', 'PhoneNumber': '254742890593', 'CallBackURL': 'https://sandbox.safaricom.co.ke/mpesa/stk/testcallback', 'AccountReference': '0799892427', 'TransactionDesc': 'Rent payment for mob'}
+Response: {
+                    "requestId":"c77b-414d-bbe5-3f551f22e199402",
+                    "errorCode": "500.001.1001",
+                    "errorMessage": "Wrong credentials"
+                }
+            
+STK Push failed
+Traceback (most recent call last):
+  File "/home/joy/Desktop/RentEasy/frontend_views/views.py", line 2268, in payrent
+    resp = initiate_stk_push(
+        phone=phone,
+    ...<3 lines>...
+        landlord_payment_method=lpm,
+    )
+  File "/home/joy/Desktop/RentEasy/frontend_views/mpesa.py", line 170, in initiate_stk_push
+    resp.raise_for_status()
+    ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/joy/Desktop/RentEasy/.venv/lib/python3.13/site-packages/requests/models.py", line 1026, in raise_for_status
+    raise HTTPError(http_error_msg, response=self)
+requests.exceptions.HTTPError: 500 Server Error: Internal Server Error for url: https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest
+[06/Apr/2026 19:27:50] "POST /payrent/ HTTP/1.1" 200 168
+[06/Apr/2026 19:28:05] "GET /notifications/unread-count/ HTTP/1.1" 200 19

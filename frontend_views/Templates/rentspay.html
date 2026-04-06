@@ -24,14 +24,7 @@
 
 <nav>
   <div class="navbar" id="navbar">
-    <button id="icon"><i class="fa-solid fa-bars"></i></button>
     <img src="{% static 'img/renteasylogo.png' %}" alt="Renteasy Logo">
-    <script>
-      document.addEventListener("DOMContentLoaded", function() {
-        const sidebar = document.querySelector(".sidebar");
-        document.querySelector("#icon").addEventListener("click", function() { sidebar.classList.toggle("active"); });
-      });
-    </script>
     <div class="logoss"><span>RENT</span><span style="color:var(--re-primary);">EASY</span></div>
     <div class="userbox">
       <a href="{% url 'profile' %}">
