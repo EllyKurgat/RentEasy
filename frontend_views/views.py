@@ -900,12 +900,15 @@ def LandLord_invite_tenant(request):
 
 {request.user.name} has invited you to join {prop.name} as a tenant on RentEasy.
 
-Click the link below to accept the invite and create your account (link expires in 7 days):
-
+Please click the link below to accept the invite and create your account:
 {invite_url}
 
+⚠️ This link expires in 7 days.
+
 If you didn't expect this invite, you can ignore this email.
-"""
+
+Best regards,
+RentEasy Team"""
         try:
             send_mail(
                 subject,
@@ -932,7 +935,7 @@ If you didn't expect this invite, you can ignore this email.
             user=request.user,
             message=f"Invite sent to {tenant_name} ({tenant_email}) for {prop.name}"
             f"{f' – {unit_label}' if unit else ''}. "
-            f"Invite link (valid 7 days): {invite_url}",
+            f"Invite link (valid 7 days): <a href='{invite_url}' target='_blank'>{invite_url}</a>",
         )
         return redirect("mytenants")
 
@@ -1914,9 +1917,10 @@ def maintenance(request):
         # Notify landlord
         landlord = active_lease.property.landlord
         if landlord:
+            detail_url = request.build_absolute_uri(f"/landlord/maintenance/{req.pk}/")
             Notification.objects.create(
                 user=landlord,
-                message=f"Tenant {request.user.name} submitted a maintenance request: {req.get_issue_category_display()} ({req.get_urgency_display()}). {body[:80]}{'...' if len(body) > 80 else ''}",
+                message=f"Tenant {request.user.name} submitted a maintenance request: {req.get_issue_category_display()} ({req.get_urgency_display()}). {body[:80]}{'...' if len(body) > 80 else ''} <a href='{detail_url}' target='_blank'>View Details</a>",
             )
         messages.success(request, "Maintenance request submitted.")
         return redirect("maintenance")
