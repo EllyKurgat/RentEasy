@@ -1266,6 +1266,98 @@ def LandLord_application_action(request, pk):
 
 
 @role_required("landlord")
+def LandLord_application_suggestions(request):
+    """Show applications with AI-suggested actions based on applicant profile."""
+    applications = Application.objects.filter(
+        listing__unit__property__landlord=request.user,
+        status="pending"
+    ).select_related("listing", "listing__unit", "listing__unit__property").order_by("-created_at")
+
+    # Add suggested actions for each application
+    for app in applications:
+        suggestions = []
+
+        # Check income vs rent ratio
+        rent = app.listing.unit.monthly_rent or app.listing.unit.property.monthly_rent or 0
+        if app.monthly_income and rent > 0:
+            ratio = app.monthly_income / rent
+            if ratio >= 3:
+                suggestions.append({
+                    "action": "approve",
+                    "reason": ".1f",
+                    "priority": "high",
+                    "icon": "check-circle"
+                })
+            elif ratio >= 2.5:
+                suggestions.append({
+                    "action": "approve",
+                    "reason": ".1f",
+                    "priority": "medium",
+                    "icon": "check-circle"
+                })
+            else:
+                suggestions.append({
+                    "action": "request_more_info",
+                    "reason": ".1f",
+                    "priority": "low",
+                    "icon": "question-circle"
+                })
+
+        # Check if they have employer info
+        if app.employer:
+            suggestions.append({
+                "action": "verify_employment",
+                "reason": "Applicant provided employer information - verify employment stability",
+                "priority": "medium",
+                "icon": "briefcase"
+            })
+
+        # Check screening consent
+        if app.screening_consent:
+            suggestions.append({
+                "action": "run_background_check",
+                "reason": "Applicant consented to background screening",
+                "priority": "high",
+                "icon": "shield-alt"
+            })
+        else:
+            suggestions.append({
+                "action": "request_screening_consent",
+                "reason": "No background screening consent - consider requesting or proceeding with caution",
+                "priority": "medium",
+                "icon": "exclamation-triangle"
+            })
+
+        # Default suggestions if no specific criteria met
+        if not suggestions:
+            suggestions = [
+                {
+                    "action": "review_manually",
+                    "reason": "Review application details manually",
+                    "priority": "medium",
+                    "icon": "eye"
+                },
+                {
+                    "action": "schedule_interview",
+                    "reason": "Schedule an interview to learn more about the applicant",
+                    "priority": "medium",
+                    "icon": "calendar"
+                }
+            ]
+
+        # Sort suggestions by priority
+        priority_order = {"high": 0, "medium": 1, "low": 2}
+        suggestions.sort(key=lambda x: priority_order.get(x["priority"], 1))
+
+        app.suggested_actions = suggestions
+
+    return render(request, "landlord/application_suggestions.html", {
+        "applications": applications,
+        "total_pending": len(applications)
+    })
+
+
+@role_required("landlord")
 def LandLord_lease_actions(request):
     """Lease renewal/termination actions."""
     if request.method != "POST":

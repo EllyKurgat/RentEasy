@@ -21,7 +21,12 @@
 {% include "landlord/_sidebar.html" %}
 <script>function toggleDropdown(){event.preventDefault();var d=event.target.closest(".dropdown"),m=d?d.querySelector(".dropdown-menu"):null;if(d&&m){d.classList.toggle("active");m.style.maxHeight=m.style.maxHeight?"":m.scrollHeight+"px";}}</script>
 <div class="dashcont">
-    <h1 class="advant3" style="color:var(--re-primary);">Rental Applications</h1>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h1 class="advant3" style="color:var(--re-primary); margin: 0;">Rental Applications</h1>
+        <a href="{% url 'landlord_application_suggestions' %}" class="re-btn re-btn-primary">
+            <i class="fas fa-lightbulb"></i> Get AI Suggestions
+        </a>
+    </div>
     {% if messages %}<ul class="messages">{% for m in messages %}<li class="{{ m.tags }}">{{ m }}</li>{% endfor %}</ul>{% endif %}
     <div class="recordstb"><table>
         <thead><tr><th>Name</th><th>Email</th><th>Listing</th><th>Status</th><th>Actions</th></tr></thead>
