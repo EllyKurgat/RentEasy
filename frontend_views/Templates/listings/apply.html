@@ -12,96 +12,34 @@
     <link rel="icon" href="{% static 'img/faviclogo.png' %}">
     <style>
         .application-container {
-            max-width: 700px;
+            max-width: 600px;
             margin: 0 auto;
             padding: 20px;
-        }
-
-        .property-summary {
-            background: var(--re-surface);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 24px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-            border: 1px solid var(--re-border);
-        }
-
-        .property-header {
-            display: flex;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-
-        .property-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--re-primary), var(--re-primary-dark));
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 16px;
-            margin-right: 12px;
-        }
-
-        .property-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: var(--re-text);
-            margin: 0;
-        }
-
-        .property-location {
-            color: var(--re-text-light);
-            font-size: 14px;
-            margin: 4px 0 0 0;
-        }
-
-        .property-details {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 12px;
-        }
-
-        .detail-item {
-            display: flex;
-            align-items: center;
-            padding: 8px 12px;
-            background: var(--re-light-bg);
-            border-radius: 8px;
-            font-size: 13px;
-        }
-
-        .detail-icon {
-            color: var(--re-primary);
-            margin-right: 6px;
         }
 
         .application-form {
             background: var(--re-surface);
             border-radius: 12px;
-            padding: 24px;
+            padding: 32px;
             box-shadow: 0 2px 12px rgba(0,0,0,0.08);
             border: 1px solid var(--re-border);
         }
 
         .form-header {
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 32px;
         }
 
         .form-title {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 700;
             color: var(--re-text);
-            margin: 0 0 4px 0;
+            margin: 0 0 8px 0;
         }
 
         .form-subtitle {
             color: var(--re-text-light);
-            font-size: 14px;
+            font-size: 16px;
             margin: 0;
         }
 
@@ -109,15 +47,11 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 16px;
-            margin-bottom: 16px;
+            margin-bottom: 24px;
         }
 
         .form-group {
-            margin-bottom: 16px;
-        }
-
-        .form-group.full-width {
-            grid-column: 1 / -1;
+            margin-bottom: 0;
         }
 
         .form-label {
@@ -212,7 +146,7 @@
 
         .terms-text {
             text-align: center;
-            margin-top: 16px;
+            margin-top: 24px;
             padding-top: 16px;
             border-top: 1px solid var(--re-border);
             color: var(--re-text-light);
@@ -225,26 +159,16 @@
                 padding: 16px;
             }
 
-            .property-summary, .application-form {
-                padding: 16px;
+            .application-form {
+                padding: 24px;
             }
 
             .form-grid {
                 grid-template-columns: 1fr;
             }
 
-            .property-header {
-                flex-direction: column;
-                text-align: center;
-            }
-
-            .property-icon {
-                margin-right: 0;
-                margin-bottom: 8px;
-            }
-
             .form-title {
-                font-size: 20px;
+                font-size: 24px;
             }
 
             .submit-btn {
@@ -258,18 +182,8 @@
                 padding: 12px;
             }
 
-            .property-summary, .application-form {
-                padding: 12px;
-            }
-
-            .property-details {
-                flex-wrap: wrap;
-                gap: 8px;
-            }
-
-            .detail-item {
-                padding: 6px 10px;
-                font-size: 12px;
+            .application-form {
+                padding: 20px;
             }
 
             .form-input {
@@ -278,7 +192,7 @@
             }
 
             .form-title {
-                font-size: 18px;
+                font-size: 20px;
             }
         }
     </style>
@@ -295,28 +209,6 @@
 </nav>
 
 <div class="application-container">
-    <!-- Property Summary -->
-    <div class="property-summary">
-        <div class="property-header">
-            <div class="property-icon">
-                <i class="fas fa-home"></i>
-            </div>
-            <div>
-                <h1 class="property-title">{{ listing.title }}</h1>
-                <p class="property-location"><i class="fas fa-map-marker-alt"></i> {{ listing.unit.property.city }}</p>
-            </div>
-        </div>
-
-        <div class="property-details">
-            {% if listing.unit.monthly_rent %}
-            <div class="detail-item">
-                <i class="fas fa-dollar-sign detail-icon"></i>
-                <span>KSh {{ listing.unit.monthly_rent|floatformat:0 }}</span>
-            </div>
-            {% endif %}
-        </div>
-    </div>
-
     <!-- Application Form -->
     <div class="application-form">
         <div class="form-header">
